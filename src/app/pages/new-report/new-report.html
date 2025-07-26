@@ -1,0 +1,191 @@
+<div class="min-h-screen relative overflow-hidden bg-gray-50">
+
+  <!-- Encabezado -->
+  <div class="relative z-10">
+    <app-header-client></app-header-client>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="relative z-10 container mx-auto px-4 py-14   grid grid-cols-1 lg:grid-cols-3 gap-6 md:px-16">
+
+    <!-- Formulario -->
+    <div class="lg:col-span-2 bg-white rounded-xl p-6 shadow-lg">
+
+      <!-- Título -->
+      <div class="bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-md p-4 mb-6">
+        <h2 class="text-xl font-bold flex items-center gap-2 mb-2">
+          🔥 Reporte de emergencia de incendio
+        </h2>
+        <p class="text-sm">Informar el incidente para una respuesta de emergencia inmediata</p>
+      </div>
+
+      <!-- Campos del formulario -->
+      <form class="space-y-6 pt-3">
+
+        <!-- Fila 1 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Vegetación afectada</label>
+            <select class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
+              <option disabled selected>Selecciona el tipo de vegetación</option>
+              <option>Pastizal</option>
+              <option>Bosque seco</option>
+              <option>Zona agrícola</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Posible fuente de incendio</label>
+            <select class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
+              <option disabled selected>Selecciona la fuente posible de incendio</option>
+              <option>Quema de residuos</option>
+              <option>Corto circuito</option>
+              <option>Desconocida</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Fila 2 -->
+        <div class="grid grid-cols-1 gap-4">
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Área estimada afectada</label>
+            <input type="text" placeholder="Ej. 5 hect, 2 km"
+              class="w-full border border-gray-300 rounded px-3 py-2 text-sm" />
+          </div>
+        </div>
+
+        <!-- Descripción -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+          <textarea rows="4" placeholder="Introduce tu texto"
+            class="w-full border border-gray-300 rounded px-3 py-2 text-sm"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Fotos o vídeos</label>
+          <div
+            class="border-2 border-dashed border-gray-300 rounded-md py-10 flex flex-col items-center justify-center text-center text-sm text-gray-500">
+            <div class="text-2xl">⬆️</div>
+            <p class="mt-2">Haga clic o arrastre para cargar fotos y vídeos</p>
+            <p class="text-xs text-gray-400">Soporta: JPG, PNG, JPEG, MP4</p>
+          </div>
+        </div>
+
+        <!-- Botón principal -->
+        <div>
+          <button type="submit"
+            class="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold py-3 rounded hover:opacity-90 transition">
+            Enviar mi reporte de incendio
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Ubicación GPS -->
+    <div class="bg-white rounded-xl p-6 shadow-lg flex flex-col gap-6">
+
+      <div>
+        <h3 class="text-xl font-bold flex items-center gap-2">📍 Ubicación GPS</h3>
+
+        <!-- Estado de carga de ubicación -->
+        <div *ngIf="isGettingLocation" class="text-sm text-blue-600 flex items-center gap-2 mt-2">
+          <div class="animate-spin h-4 w-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
+          Obteniendo ubicación...
+        </div>
+
+        <!-- Error de ubicación -->
+        <div *ngIf="locationError && !isGettingLocation" class="text-sm text-red-600 mt-2">
+          <p>{{locationError}}</p>
+          <button (click)="retryLocation()" class="text-blue-600 underline hover:no-underline text-xs mt-1">
+            Intentar de nuevo
+          </button>
+        </div>
+
+        <!-- Estados normales -->
+        <p class="text-sm text-gray-500" *ngIf="selectedLocation.isAutomatic && !isGettingLocation && !locationError">
+          Ubicación GPS automática
+        </p>
+        <p class="text-sm text-gray-500" *ngIf="!selectedLocation.isAutomatic && !isGettingLocation">
+          Ubicación seleccionada manualmente
+        </p>
+
+        <!-- Información de ubicación -->
+        <p class="text-green-600 font-medium mt-2"
+          *ngIf="selectedLocation.isAutomatic && !isGettingLocation && !locationError">
+          Ubicación GPS adquirida: Lat: {{selectedLocation.latitude}} – Long: {{selectedLocation.longitude}}
+        </p>
+        <p class="text-green-600 font-medium mt-2" *ngIf="!selectedLocation.isAutomatic && !isGettingLocation">
+          {{selectedLocation.cityName}}, {{selectedLocation.country}}: Lat: {{selectedLocation.latitude}} – Long:
+          {{selectedLocation.longitude}}
+        </p>
+      </div>
+      <button (click)="openModal()"
+        class="w-full border border-blue-500 text-blue-600 font-medium rounded py-2 hover:bg-blue-50 transition flex items-center justify-center gap-2">
+          <svg width="24" height="24" viewBox="0 0 24 24">
+          <use xlink:href="/assets/sprite.svg#search" />
+        </svg>
+        Buscar ciudad
+      </button>
+      <button (click)="retryLocation()"
+        class="w-full border border-green-500 text-green-600 font-medium rounded py-2 hover:bg-green-50 transition flex items-center justify-center gap-2">
+      <svg class="size-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <use xlink:href="/assets/sprite.svg#reload" />
+        </svg>
+        Obtener mi ubicación GPS
+      </button>
+
+      <!-- Mapa dinámico que se actualiza con la ubicación -->
+      <div class="w-full h-64 rounded border overflow-hidden">
+        <iframe [src]="getMapUrl()" class="w-full h-full border-0" allowfullscreen loading="lazy">
+        </iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de búsqueda de ciudades -->
+  <div *ngIf="isModalOpen" class="fixed inset-0 z-50 flex items-center justify-center" (keydown)="onKeydown($event)">
+    <div class="fixed inset-0 bg-black/50 bg-opacity-50 modal-overlay" (click)="closeModal()"></div>
+
+    <div class="relative bg-white rounded-md border shadow-md w-80 p-0 z-50 max-h-96 flex flex-col modal-content">
+      <div class="flex items-center border-b px-3">
+        <svg width="24" height="24" viewBox="0 0 24 24"
+          class="mr-2 h-4 w-4 shrink-0 opacity-50">
+          <use xlink:href="/assets/sprite.svg#search" />
+        </svg>
+        <input [(ngModel)]="searchTerm" (input)="onSearchInput()" (keydown)="onKeydown($event)"
+          class="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-gray-400 disabled:cursor-not-allowed disabled:opacity-50"
+          placeholder="Buscar ciudades..." type="text" autocomplete="off" #searchInput>
+      </div>
+
+      <div class="max-h-72 overflow-y-auto overflow-x-hidden">
+        <div class="overflow-hidden p-1 text-gray-900">
+          <div class="px-2 py-1.5 text-xs font-medium text-gray-600" *ngIf="cities.length > 0 || isLoading">
+            Ciudades
+          </div>
+
+          <div *ngIf="isLoading" class="px-3 py-2 text-sm text-gray-500">
+            <div class="flex items-center gap-2">
+              <div class="animate-spin h-4 w-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
+              Buscando...
+            </div>
+          </div>
+
+          <div *ngIf="!isLoading && searchTerm.length >= 2 && cities.length === 0"
+            class="px-3 py-2 text-sm text-gray-500">
+            No se encontraron ciudades
+          </div>
+
+          <div *ngFor="let city of cities" (click)="selectCity(city)"
+            class="px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 rounded-md mx-1 city-item">
+            <div class="font-medium">{{city.name}}</div>
+            <div class="text-xs text-gray-500">{{city.country}} • Lat: {{city.latitude}}, Long: {{city.longitude}}</div>
+          </div>
+
+          <div *ngIf="!isLoading && searchTerm.length < 2" class="px-3 py-2 text-sm text-gray-500">
+            Escribe al menos 2 caracteres para buscar
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
