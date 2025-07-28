@@ -8,12 +8,12 @@ import { TokenService } from '../../core/service/oauth/token.service';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink,CommonModule,FormsModule],
+  imports: [RouterLink, CommonModule, FormsModule],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
 export class Login {
-loginData: any = {
+  loginData: any = {
     email: '',
     contrasenha: ''
   };
@@ -58,14 +58,21 @@ loginData: any = {
       (response) => {
         if (response.type === 'success') {
           const jwtToken = response.data.jwtToken;
+          const nombreRol = response.data.nombreRol;
           this.tokenService.setToken(jwtToken);
           this.showAlert('success', response.listMessage[0]);
-          this.router.navigate(['/']);
+
+          // Redireccionamos según el rol
+          if (nombreRol === 'ADMINISTRADOR') {
+            this.router.navigate(['/dashboard']);
+          } else {
+            this.router.navigate(['/']);
+          }
         } else {
           this.showAlert('error', 'Credenciales incorrectas.');
           this.isLoggingIn = false;
-
         }
+
       },
       (error) => {
         console.error('Error al iniciar sesión:', error);
