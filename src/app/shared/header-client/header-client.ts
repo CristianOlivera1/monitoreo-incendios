@@ -45,6 +45,8 @@ isLoggedIn: boolean = false;
         (response) => {
           if (response.type === 'success') {
             this.userInfo = response.data;
+            console.log("es admin:", this.userInfo.nombreRol)
+
             console.log("el usuario se obtenio", this.userInfo.nombre)
           } else {
             console.error('Error al obtener el perfil:', response.listMessage);

@@ -15,7 +15,8 @@
           <use xlink:href="/assets/sprite.svg#home" />
         </svg>Inicio</a>
 
-      <a routerLink="/reportar" class="flex items-center gap-2 p-1 text-sm font-semibold text-gray-600 hover:rounded-md">
+      <a routerLink="/reportar"
+        class="flex items-center gap-2 p-1 text-sm font-semibold text-gray-600 hover:rounded-md">
         <svg class="size-6 hidden xl:block" width="24" height="24" viewBox="0 0 1024 1024">
           <use xlink:href="/assets/sprite.svg#fire" />
         </svg>Reportar</a>
@@ -64,14 +65,24 @@
             </div>
             <ul>
               <li>
-                <a [routerLink]="['/profile', userInfo.idUsuario]"
+                <a [routerLink]="['/historial']"
                   class="flex items-center gap-3 px-6 py-2 hover:bg-gray-100 text-gray-600 text-sm">
                   <svg width="24" height="24" viewBox="0 0 24 24">
                     <use xlink:href="/assets/sprite.svg#user" />
                   </svg>
-                  Perfil
+                  Historial de reportes
                 </a>
               </li>
+
+                <li *ngIf="userInfo?.nombreRol === 'ADMINISTRADOR'">
+                <a [routerLink]="['/dashboard']"
+                  class="flex items-center gap-3 px-6 py-2 hover:bg-gray-100 text-gray-600 text-sm">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                  <use xlink:href="/assets/sprite.svg#user" />
+                  </svg>
+                  Panel administrativo
+                </a>
+                </li>
 
               <li>
                 <a class="flex items-center gap-3 px-6 py-2 hover:bg-gray-100 text-red-600 text-sm border-t border-gray-200"
@@ -157,7 +168,8 @@
             <use xlink:href="/assets/sprite.svg#home" />
           </svg> Inicio</a>
 
-        <a routerLink="/reportar" class="flex gap-2 -mx-3 rounded-lg px-3 py-2 font-semibold text-gray-900 hover:bg-gray-50">
+        <a routerLink="/reportar"
+          class="flex gap-2 -mx-3 rounded-lg px-3 py-2 font-semibold text-gray-900 hover:bg-gray-50">
           <svg class="size-5" viewBox="0 0 24 24" aria-hidden="true">
             <use xlink:href="/assets/sprite.svg#fuego" />
           </svg> Reportar</a>
