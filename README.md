@@ -1,59 +1,57 @@
-# MonitoreoIncendios
+# Sistema de Monitoreo de Incendios Backend y Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.1.
+## Descripción
+Este sistema permite a los usuarios reportar incendios forestales y a los administradores gestionar y monitorear estos reportes. Incluye funcionalidades de notificaciones, exportación de datos y seguimiento del estado de los incendios.
 
-## Development server
+## Características Principales
 
-To start a local development server, run:
+### 🔥 **Gestión de Incendios**
+- Reporte de incendios con ubicación GPS automática
+- Adjuntar múltiples fotos y videos
+- Clasificación automática del nivel de urgencia
+- Estados: REPORTADO → EN_CURSO → CONTROLADO → EXTINGUIDO
 
-```bash
-ng serve
+### 👥 **Tipos de Usuario**
+- **Usuarios**: Pueden reportar incendios
+- **Administradores**: Pueden actualizar estados, agregar comentarios y gestionar reportes
+
+### 📊 **Funcionalidades de Monitoreo**
+- Filtros avanzados por fecha, ubicación, estado, etc.
+- Historial completo de incendios
+- Áreas que necesitan restauración
+- Alertas de incendios recientes
+
+### 🔔 **Sistema de Notificaciones**
+- Notificaciones automáticas a administradores sobre nuevos reportes
+- Alertas de cambio de estado
+- Notificaciones generales del sistema
+
+### 📋 **Exportación de Datos**
+- Exportar en formato JSON, CSV y Excel
+- Reportes personalizables con filtros
+
+## Endpoints de la API
+
+## Nivel de Urgencia Automático
+
+El sistema calcula automáticamente el nivel de urgencia basado en el área afectada:
+
+- **BAJA**: < 10 hectáreas
+- **MEDIA**: 10-49 hectáreas
+- **ALTA**: 50-99 hectáreas
+- **CRÍTICA**: ≥ 100 hectáreas
+
+## Seguridad
+
+- Validación de permisos por rol
+- Solo administradores pueden actualizar estados
+- Validación de propiedad de recursos
+- Sanitización de datos de entrada
+
+## Estados del Ciclo de Vida
+
 ```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+REPORTADO → EN_CURSO → CONTROLADO → EXTINGUIDO
+    ↑                                    ↓
+    └── (Puede volver a estados anteriores) ←┘
 ```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
