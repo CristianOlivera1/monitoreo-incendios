@@ -15,4 +15,5 @@ public class DtoUser {
 	private String foto;
 	private Timestamp fechaRegistro;
 	private String jwtToken;
+  private String nombreRol;
 }
