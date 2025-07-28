@@ -1,17 +1,13 @@
 <div class="min-h-screen relative overflow-hidden bg-gray-50">
 
-  <!-- Encabezado -->
-  <div class="relative z-10">
+  <div class="relative z-20">
     <app-header-client></app-header-client>
   </div>
 
-  <!-- Contenido principal -->
   <div class="relative z-10 container mx-auto px-4 py-14   grid grid-cols-1 lg:grid-cols-3 gap-6 md:px-16">
 
-    <!-- Formulario -->
     <div class="lg:col-span-2 bg-white rounded-xl p-6 shadow-lg">
 
-      <!-- Título -->
       <div class="bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-md p-4 mb-6">
         <h2 class="text-xl font-bold flex items-center gap-2 mb-2">
           🔥 Reporte de emergencia de incendio
@@ -19,64 +15,143 @@
         <p class="text-sm">Informar el incidente para una respuesta de emergencia inmediata</p>
       </div>
 
-      <!-- Campos del formulario -->
-      <form class="space-y-6 pt-3">
+      <form [formGroup]="reportForm" (ngSubmit)="onSubmit()" class="space-y-6 pt-3">
 
-        <!-- Fila 1 -->
+        <div *ngIf="showSuccess" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
+          <span class="block sm:inline">¡Reporte enviado exitosamente! Las autoridades han sido notificadas.</span>
+          <span class="absolute top-0 bottom-0 right-0 px-4 py-3" (click)="closeSuccess()">
+            <svg class="fill-current h-6 w-6 text-green-500 cursor-pointer" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+              <title>Cerrar</title>
+              <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/>
+            </svg>
+          </span>
+        </div>
+
+        <div *ngIf="showError" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+          <span class="block sm:inline">{{errorMessage}}</span>
+          <span class="absolute top-0 bottom-0 right-0 px-4 py-3" (click)="closeError()">
+            <svg class="fill-current h-6 w-6 text-red-500 cursor-pointer" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+              <title>Cerrar</title>
+              <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/>
+            </svg>
+          </span>
+        </div>
+
+        <!-- Tipo de vegetación y fuente de incendio -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Vegetación afectada</label>
-            <select class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
-              <option disabled selected>Selecciona el tipo de vegetación</option>
-              <option>Pastizal</option>
-              <option>Bosque seco</option>
-              <option>Zona agrícola</option>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de vegetación afectada *</label>
+            <select formControlName="tipoVegetacion"
+              class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+              [class.border-red-500]="isFieldInvalid('tipoVegetacion')">
+              <option value="">Selecciona el tipo de vegetación</option>
+              <option value="PASTIZAL">Pastizal</option>
+              <option value="BOSQUE">Bosque</option>
+              <option value="CULTIVO">Cultivo</option>
+              <option value="URBANO">Zona urbana</option>
+              <option value="MIXTO">Mixto</option>
             </select>
+            <div *ngIf="isFieldInvalid('tipoVegetacion')" class="text-red-500 text-xs mt-1">
+              {{getFieldError('tipoVegetacion')}}
+            </div>
           </div>
+
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Posible fuente de incendio</label>
-            <select class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
-              <option disabled selected>Selecciona la fuente posible de incendio</option>
-              <option>Quema de residuos</option>
-              <option>Corto circuito</option>
-              <option>Desconocida</option>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Posible fuente de incendio *</label>
+            <select formControlName="fuenteIncendio"
+              class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+              [class.border-red-500]="isFieldInvalid('fuenteIncendio')">
+              <option value="">Selecciona la fuente posible</option>
+              <option value="NATURAL">Natural (rayo, sequía)</option>
+              <option value="HUMANO">Negligencia humana</option>
+              <option value="DESCONOCIDO">Desconocido</option>
             </select>
+            <div *ngIf="isFieldInvalid('fuenteIncendio')" class="text-red-500 text-xs mt-1">
+              {{getFieldError('fuenteIncendio')}}
+            </div>
           </div>
         </div>
 
-        <!-- Fila 2 -->
-        <div class="grid grid-cols-1 gap-4">
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Área estimada afectada</label>
-            <input type="text" placeholder="Ej. 5 hect, 2 km"
-              class="w-full border border-gray-300 rounded px-3 py-2 text-sm" />
+        <!-- Área estimada afectada -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Área estimada afectada (hectáreas) *</label>
+          <input type="number" formControlName="areaAfectada" step="0.1" min="0.1" placeholder="Ej. 2.5"
+            class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+            [class.border-red-500]="isFieldInvalid('areaAfectada')" />
+          <div *ngIf="isFieldInvalid('areaAfectada')" class="text-red-500 text-xs mt-1">
+            {{getFieldError('areaAfectada')}}
           </div>
+          <p class="text-xs text-gray-500 mt-1">Ingresa el área en hectáreas (1 hectárea = 10,000 m²)</p>
         </div>
 
         <!-- Descripción -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
-          <textarea rows="4" placeholder="Introduce tu texto"
-            class="w-full border border-gray-300 rounded px-3 py-2 text-sm"></textarea>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Descripción del incidente *</label>
+          <textarea rows="4" formControlName="descripcion"
+            placeholder="Describe el incidente: intensidad del fuego, estructuras afectadas, personas en riesgo, viento, visibilidad, etc."
+            class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+            [class.border-red-500]="isFieldInvalid('descripcion')"></textarea>
+          <div *ngIf="isFieldInvalid('descripcion')" class="text-red-500 text-xs mt-1">
+            {{getFieldError('descripcion')}}
+          </div>
         </div>
 
+      <!-- Fotos y vídeos -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Fotos o vídeos</label>
-          <div
-            class="border-2 border-dashed border-gray-300 rounded-md py-10 flex flex-col items-center justify-center text-center text-sm text-gray-500">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Fotos o vídeos (opcional)</label>
+
+          <!-- Área de carga -->
+          <div (click)="fileInput.click()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)"
+            [class.border-blue-500]="isDragOver" [class.bg-blue-50]="isDragOver"
+            class="border-2 border-dashed border-gray-300 rounded-md py-10 flex flex-col items-center justify-center text-center text-sm text-gray-500 cursor-pointer hover:border-gray-400 transition-colors">
             <div class="text-2xl">⬆️</div>
             <p class="mt-2">Haga clic o arrastre para cargar fotos y vídeos</p>
-            <p class="text-xs text-gray-400">Soporta: JPG, PNG, JPEG, MP4</p>
+            <p class="text-xs text-gray-400">Soporta: JPG, PNG, GIF, MP4, WebM (máx. 10MB c/u, máx. 5 archivos)</p>
+          </div>
+
+          <input #fileInput type="file" multiple accept="image/*,video/*" (change)="onFileSelected($event)" class="hidden" />
+
+          <!-- Vista previa de archivos -->
+          <div *ngIf="selectedFiles.length > 0" class="mt-4 grid grid-cols-2 md:grid-cols-3 gap-2">
+            <div *ngFor="let file of selectedFiles; let i = index" class="relative border rounded-lg overflow-hidden">
+              <!-- Preview for images -->
+              <div *ngIf="isImageFile(file)" class="relative">
+                <img [src]="getFilePreview(i)" [alt]="file.name" class="w-full h-24 object-cover">
+                <button (click)="removeFile(i)" type="button" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
+                  ×
+                </button>
+              </div>
+
+              <!-- Preview for videos -->
+              <div *ngIf="isVideoFile(file)" class="relative bg-gray-100 h-24 flex items-center justify-center">
+                <div class="text-center">
+                  <div class="text-2xl">🎥</div>
+                  <div class="text-xs text-gray-600 truncate px-1">{{file.name}}</div>
+                </div>
+                <button (click)="removeFile(i)" type="button" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
+                  ×
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Botón principal -->
         <div>
-          <button type="submit"
-            class="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold py-3 rounded hover:opacity-90 transition">
-            Enviar mi reporte de incendio
+          <button type="submit" [disabled]="isSubmitting || reportForm.invalid"
+            class="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold py-3 rounded hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+            <div *ngIf="isSubmitting" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
+            <span *ngIf="!isSubmitting">🚨 Enviar reporte de emergencia</span>
+            <span *ngIf="isSubmitting && selectedFiles.length > 0">Subiendo archivos...</span>
+            <span *ngIf="isSubmitting && selectedFiles.length === 0">Enviando reporte...</span>
           </button>
+
+          <!-- Información adicional sobre archivos grandes -->
+          <div *ngIf="selectedFiles.length > 0" class="mt-2">
+            <p class="text-xs text-gray-600 text-center">
+              Los archivos grandes pueden tomar algunos minutos en subir
+            </p>
+          </div>
         </div>
       </form>
     </div>
@@ -111,12 +186,21 @@
 
         <!-- Información de ubicación -->
         <p class="text-green-600 font-medium mt-2"
-          *ngIf="selectedLocation.isAutomatic && !isGettingLocation && !locationError">
+          *ngIf="selectedLocation.isAutomatic && !isGettingLocation && !locationError && !selectedLocation.cityName">
           Ubicación GPS adquirida: Lat: {{selectedLocation.latitude}} – Long: {{selectedLocation.longitude}}
         </p>
-        <p class="text-green-600 font-medium mt-2" *ngIf="!selectedLocation.isAutomatic && !isGettingLocation">
-          {{selectedLocation.cityName}}, {{selectedLocation.country}}: Lat: {{selectedLocation.latitude}} – Long:
-          {{selectedLocation.longitude}}
+
+        <div class="text-green-600 font-medium mt-2" *ngIf="selectedLocation.cityName && !isGettingLocation">
+          <p class="font-semibold">{{selectedLocation.cityName}}</p>
+          <p class="text-sm">{{selectedLocation.country}}
+            <span *ngIf="selectedLocation.region"> • {{selectedLocation.region}}</span>
+            <span *ngIf="selectedLocation.population > 0"> • {{selectedLocation.population | number}} hab.</span>
+          </p>
+          <p class="text-xs text-gray-600">Lat: {{selectedLocation.latitude}} – Long: {{selectedLocation.longitude}}</p>
+        </div>
+
+        <p class="text-green-600 font-medium mt-2" *ngIf="!selectedLocation.isAutomatic && !selectedLocation.cityName && !isGettingLocation">
+          Ubicación manual: Lat: {{selectedLocation.latitude}} – Long: {{selectedLocation.longitude}}
         </p>
       </div>
       <button (click)="openModal()"
@@ -178,7 +262,12 @@
           <div *ngFor="let city of cities" (click)="selectCity(city)"
             class="px-3 py-2 text-sm cursor-pointer hover:bg-gray-100 rounded-md mx-1 city-item">
             <div class="font-medium">{{city.name}}</div>
-            <div class="text-xs text-gray-500">{{city.country}} • Lat: {{city.latitude}}, Long: {{city.longitude}}</div>
+            <div class="text-xs text-gray-500">
+              {{city.country}}
+              <span *ngIf="city.region"> • {{city.region}}</span>
+              <span *ngIf="city.population"> • {{city.population | number}} hab.</span>
+            </div>
+            <div class="text-xs text-gray-400">Lat: {{city.latitude}}, Long: {{city.longitude}}</div>
           </div>
 
           <div *ngIf="!isLoading && searchTerm.length < 2" class="px-3 py-2 text-sm text-gray-500">
