@@ -83,6 +83,7 @@ public class BusinessUser {
         dtoUser.setFechaRegistro(tUser.getFechaRegistro());
         dtoUser.setContrasenha(tUser.getContrasenha());
         dtoUser.setIdRol(tUser.getRol().getIdRol());
+        dtoUser.setNombreRol(tUser.getRol().getTipo().name());
         dtoUser.setJwtToken(new JwtUtil().generateToken(dtoUser.getIdUsuario(), dtoUser.getEmail()));
         return dtoUser;
     }
@@ -216,6 +217,7 @@ public class BusinessUser {
         dtoUser.setEmail(user.getEmail());
         dtoUser.setFoto(user.getFoto());
         dtoUser.setIdRol(user.getRol().getIdRol());
+        dtoUser.setNombreRol(user.getRol().getTipo().name());
         dtoUser.setContrasenha(user.getContrasenha());
         dtoUser.setFechaRegistro(user.getFechaRegistro());
 
@@ -250,22 +252,6 @@ public class BusinessUser {
             return true;
         }
 
-        return false;
-    }
-
-    public boolean esUsuarioTradicional(String email) {
-        Optional<TUser> tUserOptional = repoUser.findByEmail(email);
-        if (tUserOptional.isPresent()) {
-            return tUserOptional.get().getContrasenha() != null;
-        }
-        return false;
-    }
-
-    public boolean esUsuarioGoogle(String email) {
-        Optional<TUser> tUserOptional = repoUser.findByEmail(email);
-        if (tUserOptional.isPresent()) {
-            return tUserOptional.get().getContrasenha() == null;
-        }
         return false;
     }
 }
