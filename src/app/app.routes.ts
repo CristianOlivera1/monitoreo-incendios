@@ -3,11 +3,15 @@ import { Routes } from '@angular/router';
 import { Login } from './pages/login/login';
 import { Register } from './pages/register/register';
 import { HomeClient } from './pages/home-client/home-client';
+import { HomeAdmin } from './pages/home-admin/home-admin';
+import { Historial } from './pages/historial/historial';
 
 export const routes: Routes = [
     {path:'', component: HomeClient},
   {path:'register', component: Register},
   {path:'login', component: Login},
   {path:'reportar', component: NewReport},
+  {path:'dashboard', component: HomeAdmin},
+  {path:'historial', component: Historial},
 
 ];
