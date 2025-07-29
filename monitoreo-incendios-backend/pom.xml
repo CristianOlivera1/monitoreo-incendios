@@ -97,6 +97,13 @@
       <version>1.30.9</version>
     </dependency>
 
+      <!-- para exportar a excel -->
+  <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <version>5.4.1</version>
+  </dependency>
+
   </dependencies>
 
   <build>
