@@ -4,53 +4,57 @@
     <!-- Logo/Header -->
     <div class="flex items-center justify-center h-16 px-4 bg-gradient-to-r from-orange-500 to-red-600">
       <div class="flex items-center gap-2">
-        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-        </svg>
-        <span class="text-xl font-bold text-white">FireWatch Admin</span>
+        <img src="assets/img/logo-fire.png" alt="logo" class="size-12">
+        <span class="text-xl font-bold text-white">ApuNina Admin</span>
       </div>
     </div>
 
     <!-- Navigation Menu -->
     <nav class="mt-6 px-3">
       <div class="space-y-2">
-        <button
-          *ngFor="let item of menuItems"
-          (click)="cambiarVista(item.id)"
-          [class]="item.active
+        <button *ngFor="let item of menuItems" (click)="cambiarVista(item.id)" [class]="item.active
             ? 'bg-orange-50 border-r-2 border-orange-500 text-orange-700'
             : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'"
           class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-l-lg transition-colors duration-200">
 
           <!-- Dashboard Icon -->
-          <svg *ngIf="item.id === 'dashboard'" class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6a2 2 0 01-2 2H10a2 2 0 01-2-2V5z"/>
+          <svg *ngIf="item.id === 'dashboard'" class="w-5 h-5 mr-3" fill="none" stroke="currentColor"
+            viewBox="0 0 24 24">
+            <use xlink:href="/assets/sprite.svg#dashboard" />
+          </svg>
+
+          <!-- Mapa Icon -->
+          <svg *ngIf="item.id === 'mapa'" class="w-5 h-5 mr-3" fill="none" stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path d="M12 2L17 7H20a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h3l5-5z"/>
+            <circle cx="12" cy="13" r="3"/>
           </svg>
 
           <!-- Fire Icon -->
-          <svg *ngIf="item.id === 'incendios'" class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 1-4 4-4 5 0 8 4 2 8 0 1 0 1 1 1l1-1z"/>
+          <svg *ngIf="item.id === 'incendios'" class="w-5 h-5 mr-3" width="24" fill="none" stroke="currentColor"
+            viewBox="0 0 1024 1024">
+            <use xlink:href="/assets/sprite.svg#fire" />
           </svg>
 
           <!-- Report Icon -->
-          <svg *ngIf="item.id === 'reportes'" class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          <svg *ngIf="item.id === 'reportes'" class="w-5 h-5 mr-3" fill="none" stroke="currentColor"
+            viewBox="0 0 24 24">
+            <use xlink:href="/assets/sprite.svg#report" />
           </svg>
 
           <!-- History Icon -->
           <svg *ngIf="item.id === 'historial'" class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            <use xlink:href="/assets/sprite.svg#history" />
           </svg>
 
-          <!-- Chart Icon -->
-          <svg *ngIf="item.id === 'estadisticas'" class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          <!-- estadisticas Icon -->
+          <svg *ngIf="item.id === 'estadisticas'" class="w-5 h-5 mr-3" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                   <use xlink:href="/assets/sprite.svg#barras" />
           </svg>
 
           <!-- Users Icon -->
-          <svg *ngIf="item.id === 'usuarios'" class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+          <svg *ngIf="item.id === 'usuarios'" class="w-5 h-5 mr-3" fill="none" viewBox="0 0 256 256">
+            <use xlink:href="/assets/sprite.svg#users" />
           </svg>
 
           {{ item.label }}
@@ -77,7 +81,9 @@
               'opacity-0': !showPopover
             }">
             <svg class="w-3 h-3 text-gray-600" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+              <path fill-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clip-rule="evenodd" />
             </svg>
           </div>
         </div>
@@ -100,10 +106,12 @@
           </div>
           <ul>
             <li>
-              <button class="w-full flex items-center gap-3 px-6 py-2 hover:bg-gray-100 text-red-600 text-sm border-t border-gray-200"
+              <button
+                class="w-full flex items-center gap-3 px-6 py-2 hover:bg-gray-100 text-red-600 text-sm border-t border-gray-200"
                 (click)="logOut()">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
                 Cerrar sesión
               </button>
@@ -123,17 +131,19 @@
           <div>
             <h1 class="text-2xl font-semibold text-gray-900">
               {{ vistaActual === 'dashboard' ? 'Dashboard' :
-                 vistaActual === 'incendios' ? 'Gestión de Incendios' :
-                 vistaActual === 'reportes' ? 'Reportes Recientes' :
-                 vistaActual === 'estadisticas' ? 'Estadísticas' :
-                 vistaActual === 'usuarios' ? 'Gestión de Usuarios' : 'Panel de Administración' }}
+              vistaActual === 'mapa' ? 'Mapa de Incendios' :
+              vistaActual === 'incendios' ? 'Gestión de Incendios' :
+              vistaActual === 'reportes' ? 'Reportes Recientes' :
+              vistaActual === 'estadisticas' ? 'Estadísticas' :
+              vistaActual === 'usuarios' ? 'Gestión de Usuarios' : 'Panel de Administración' }}
             </h1>
             <p class="text-sm text-gray-600 mt-1">
               {{ vistaActual === 'dashboard' ? 'Resumen general del sistema de monitoreo' :
-                 vistaActual === 'incendios' ? 'Administra y monitorea todos los incendios reportados' :
-                 vistaActual === 'reportes' ? 'Revisa los reportes más recientes' :
-                 vistaActual === 'estadisticas' ? 'Analiza las métricas del sistema' :
-                 vistaActual === 'usuarios' ? 'Gestiona los usuarios del sistema' : '' }}
+              vistaActual === 'mapa' ? 'Visualización geográfica de incendios activos y reportes recientes' :
+              vistaActual === 'incendios' ? 'Administra y monitorea todos los incendios reportados' :
+              vistaActual === 'reportes' ? 'Revisa los reportes más recientes' :
+              vistaActual === 'estadisticas' ? 'Analiza las métricas del sistema' :
+              vistaActual === 'usuarios' ? 'Gestiona los usuarios del sistema' : '' }}
             </p>
           </div>
           <div class="flex items-center gap-4">
@@ -149,12 +159,16 @@
     <div *ngIf="error" class="mx-6 mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
       <div class="flex items-center">
         <svg class="w-5 h-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+          <path fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+            clip-rule="evenodd" />
         </svg>
         <span class="text-red-800">{{ error }}</span>
         <button (click)="error = ''" class="ml-auto text-red-400 hover:text-red-600">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+            <path fill-rule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clip-rule="evenodd" />
           </svg>
         </button>
       </div>
@@ -170,6 +184,201 @@
     <main class="p-6">
 
       <!-- Dashboard View -->
+      <!-- Vista del Mapa de Incendios -->
+      <div *ngIf="vistaActual === 'mapa' && !cargando">
+        <div class="mapa-container">
+          <!-- Controles del Mapa -->
+          <div class="mapa-controles">
+            <h3>Filtros de Visualización</h3>
+
+            <!-- Filtro por Estado -->
+            <div class="filtro-grupo">
+              <label class="filtro-label">Estados a mostrar:</label>
+              <div class="checkbox-group">
+                <label class="checkbox-item">
+                  <input type="checkbox" [(ngModel)]="filtrosMapa.estados.reportado" (change)="aplicarFiltrosMapa()">
+                  <span class="checkmark"></span>
+                  <span class="status-badge status-reportado">REPORTADO</span>
+                </label>
+                <label class="checkbox-item">
+                  <input type="checkbox" [(ngModel)]="filtrosMapa.estados.enCurso" (change)="aplicarFiltrosMapa()">
+                  <span class="checkmark"></span>
+                  <span class="status-badge status-en-curso">EN CURSO</span>
+                </label>
+                <label class="checkbox-item">
+                  <input type="checkbox" [(ngModel)]="filtrosMapa.estados.controlado" (change)="aplicarFiltrosMapa()">
+                  <span class="checkmark"></span>
+                  <span class="status-badge status-controlado">CONTROLADO</span>
+                </label>
+                <label class="checkbox-item">
+                  <input type="checkbox" [(ngModel)]="filtrosMapa.estados.extinguido" (change)="aplicarFiltrosMapa()">
+                  <span class="checkmark"></span>
+                  <span class="status-badge status-extinguido">EXTINGUIDO</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Filtro por Prioridad -->
+            <div class="filtro-grupo">
+              <label class="filtro-label">Nivel de Urgencia:</label>
+              <div class="checkbox-group">
+                <label class="checkbox-item">
+                  <input type="checkbox" [(ngModel)]="filtrosMapa.prioridades.alta" (change)="aplicarFiltrosMapa()">
+                  <span class="checkmark"></span>
+                  <span class="priority-badge priority-alta">ALTA/CRÍTICA</span>
+                </label>
+                <label class="checkbox-item">
+                  <input type="checkbox" [(ngModel)]="filtrosMapa.prioridades.media" (change)="aplicarFiltrosMapa()">
+                  <span class="checkmark"></span>
+                  <span class="priority-badge priority-media">MEDIA</span>
+                </label>
+                <label class="checkbox-item">
+                  <input type="checkbox" [(ngModel)]="filtrosMapa.prioridades.baja" (change)="aplicarFiltrosMapa()">
+                  <span class="checkmark"></span>
+                  <span class="priority-badge priority-baja">BAJA</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Filtro por Fecha -->
+            <div class="filtro-grupo">
+              <label class="filtro-label">Período de tiempo:</label>
+              <div class="date-filters">
+                <input type="date" [(ngModel)]="filtrosMapa.fechaInicio" (change)="aplicarFiltrosMapa()" class="date-input">
+                <span>hasta</span>
+                <input type="date" [(ngModel)]="filtrosMapa.fechaFin" (change)="aplicarFiltrosMapa()" class="date-input">
+              </div>
+            </div>
+
+            <!-- Botones de Control -->
+            <div class="mapa-botones">
+              <button class="btn-secondary" (click)="limpiarFiltrosMapa()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                </svg>
+                Limpiar Filtros
+              </button>
+              <button class="btn-primary" (click)="centrarMapa()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/>
+                </svg>
+                Centrar Mapa
+              </button>
+            </div>
+          </div>
+
+          <!-- Mapa Principal -->
+          <div class="mapa-principal-container">
+            <div id="mapa-incendios" class="mapa-principal"></div>
+
+            <!-- Leyenda del Mapa -->
+            <div class="mapa-leyenda">
+              <h4>Leyenda</h4>
+
+              <div class="leyenda-seccion">
+                <h5>Estados</h5>
+                <div class="leyenda-items">
+                  <div class="leyenda-item">
+                    <div class="marker-icon marker-reportado"></div>
+                    <span>Reportado</span>
+                  </div>
+                  <div class="leyenda-item">
+                    <div class="marker-icon marker-en-curso"></div>
+                    <span>En Curso</span>
+                  </div>
+                  <div class="leyenda-item">
+                    <div class="marker-icon marker-controlado"></div>
+                    <span>Controlado</span>
+                  </div>
+                  <div class="leyenda-item">
+                    <div class="marker-icon marker-extinguido"></div>
+                    <span>Extinguido</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="leyenda-seccion">
+                <h5>Nivel de Urgencia</h5>
+                <div class="leyenda-items">
+                  <div class="leyenda-item">
+                    <div class="priority-indicator priority-alta-indicator"></div>
+                    <span>Alta/Crítica</span>
+                  </div>
+                  <div class="leyenda-item">
+                    <div class="priority-indicator priority-media-indicator"></div>
+                    <span>Media</span>
+                  </div>
+                  <div class="leyenda-item">
+                    <div class="priority-indicator priority-baja-indicator"></div>
+                    <span>Baja</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Panel de Información del Incendio Seleccionado -->
+          <div class="incident-info-panel" *ngIf="incendioSeleccionado">
+            <div class="info-header">
+              <h3>Información del Incendio</h3>
+              <button class="close-btn" (click)="cerrarInfoPanel()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            <div class="info-content">
+              <div class="info-section">
+                <label>Ubicación:</label>
+                <p>{{incendioSeleccionado.nombreCiudad}}</p>
+              </div>
+
+              <div class="info-section">
+                <label>Estado:</label>
+                <span class="status-badge" [ngClass]="'status-' + incendioSeleccionado.estado.toLowerCase().replace('_', '-')">
+                  {{incendioSeleccionado.estado}}
+                </span>
+              </div>
+
+              <div class="info-section">
+                <label>Nivel de Urgencia:</label>
+                <span class="priority-badge" [ngClass]="'priority-' + incendioSeleccionado.nivelUrgencia.toLowerCase()">
+                  {{incendioSeleccionado.nivelUrgencia}}
+                </span>
+              </div>
+
+              <div class="info-section">
+                <label>Fecha de Reporte:</label>
+                <p>{{incendioSeleccionado.fechaReporte | date:'dd/MM/yyyy HH:mm'}}</p>
+              </div>
+
+              <div class="info-section" *ngIf="incendioSeleccionado.descripcion">
+                <label>Descripción:</label>
+                <p>{{incendioSeleccionado.descripcion}}</p>
+              </div>
+
+              <div class="info-section" *ngIf="incendioSeleccionado.comentarios && incendioSeleccionado.comentarios.length > 0">
+                <label>Último Comentario:</label>
+                <p>{{incendioSeleccionado.comentarios[incendioSeleccionado.comentarios.length - 1].comentario}}</p>
+              </div>
+
+              <div class="info-actions">
+                <button class="btn-primary" (click)="verDetalleIncendio(incendioSeleccionado)">
+                  Ver Detalles Completos
+                </button>
+                <button class="btn-secondary" (click)="abrirModalActualizacion(incendioSeleccionado)">
+                  Actualizar Estado
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vista de Dashboard -->
       <div *ngIf="vistaActual === 'dashboard' && !cargando">
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -181,7 +390,7 @@
               </div>
               <div class="bg-blue-100 rounded-full p-3">
                 <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                  <use xlink:href="/assets/sprite.svg#barras"/>
                 </svg>
               </div>
             </div>
@@ -194,8 +403,8 @@
                 <p class="text-2xl font-bold text-gray-900">{{ estadisticas.incendiosActivos }}</p>
               </div>
               <div class="bg-red-100 rounded-full p-3">
-                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 1-4 4-4 5 0 8 4 2 8 0 1 0 1 1 1l1-1z"/>
+                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 1024 1024">
+                  <use xlink:href="/assets/sprite.svg#fire"/>
                 </svg>
               </div>
             </div>
@@ -209,7 +418,7 @@
               </div>
               <div class="bg-yellow-100 rounded-full p-3">
                 <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      <use xlink:href="/assets/sprite.svg#history" />
                 </svg>
               </div>
             </div>
@@ -223,7 +432,7 @@
               </div>
               <div class="bg-green-100 rounded-full p-3">
                 <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      <use xlink:href="/assets/sprite.svg#world" />
                 </svg>
               </div>
             </div>
@@ -236,18 +445,22 @@
             <h3 class="text-lg font-medium text-gray-900">Incendios Recientes</h3>
           </div>
           <div class="divide-y divide-gray-200">
-            <div *ngFor="let incendio of incendios" class="px-6 py-4 hover:bg-gray-50 cursor-pointer" (click)="verDetalleIncendio(incendio)">
+            <div *ngFor="let incendio of incendios" class="px-6 py-4 hover:bg-gray-50 cursor-pointer"
+              (click)="verDetalleIncendio(incendio)">
               <div class="flex items-center justify-between">
                 <div class="flex-1">
                   <div class="flex items-center gap-3">
-                    <span [class]="obtenerClaseUrgencia(incendio.nivelUrgencia)" class="px-2 py-1 text-xs font-semibold rounded-full">
+                    <span [class]="obtenerClaseUrgencia(incendio.nivelUrgencia)"
+                      class="px-2 py-1 text-xs font-semibold rounded-full">
                       {{ incendio.nivelUrgencia }}
                     </span>
-                    <span [class]="obtenerClaseEstado(incendio.estado)" class="px-2 py-1 text-xs font-semibold rounded-full">
+                    <span [class]="obtenerClaseEstado(incendio.estado)"
+                      class="px-2 py-1 text-xs font-semibold rounded-full">
                       {{ incendio.estado.replace('_', ' ') }}
                     </span>
                   </div>
-                  <h4 class="text-sm font-medium text-gray-900 mt-2">{{ incendio.nombreCiudad }}, {{ incendio.pais }}</h4>
+                  <h4 class="text-sm font-medium text-gray-900 mt-2">{{ incendio.nombreCiudad }}, {{ incendio.pais }}
+                  </h4>
                   <p class="text-sm text-gray-600">{{ incendio.descripcion | slice:0:100 }}...</p>
                   <div class="flex items-center gap-4 mt-2 text-xs text-gray-500">
                     <span>Área: {{ incendio.areaAfectada }} ha</span>
@@ -256,7 +469,7 @@
                   </div>
                 </div>
                 <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
               </div>
             </div>
@@ -272,7 +485,8 @@
           <form [formGroup]="filtroForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
-              <select formControlName="estado" class="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
+              <select formControlName="estado"
+                class="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 p-3">
                 <option value="">Todos</option>
                 <option *ngFor="let estado of estadosDisponibles" [value]="estado">
                   {{ estado.replace('_', ' ') }}
@@ -282,7 +496,8 @@
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Urgencia</label>
-              <select formControlName="nivelUrgencia" class="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
+              <select formControlName="nivelUrgencia"
+                class="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 p-3">
                 <option value="">Todos</option>
                 <option *ngFor="let nivel of nivelesUrgencia" [value]="nivel">{{ nivel }}</option>
               </select>
@@ -290,43 +505,52 @@
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Fecha Inicio</label>
-              <input type="date" formControlName="fechaInicio" class="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
+              <input type="date" formControlName="fechaInicio"
+                class="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 p-3">
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Fecha Fin</label>
-              <input type="date" formControlName="fechaFin" class="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
+              <input type="date" formControlName="fechaFin"
+                class="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 p-3">
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Ciudad</label>
-              <input type="text" formControlName="nombreCiudad" placeholder="Nombre de la ciudad" class="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
+              <input type="text" formControlName="nombreCiudad" placeholder="Nombre de la ciudad"
+                class="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 p-3">
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">País</label>
-              <input type="text" formControlName="pais" placeholder="País" class="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
+              <input type="text" formControlName="pais" placeholder="País"
+                class="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 p-3">
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Área Mínima (ha)</label>
-              <input type="number" formControlName="areaMinima" placeholder="0" min="0" class="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
+              <input type="number" formControlName="areaMinima" placeholder="0" min="0"
+                class="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 p-3">
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">Área Máxima (ha)</label>
-              <input type="number" formControlName="areaMaxima" placeholder="1000" min="0" class="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
+              <input type="number" formControlName="areaMaxima" placeholder="1000" min="0"
+                class="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 p-3">
             </div>
           </form>
 
           <div class="flex gap-3 mt-4">
-            <button (click)="aplicarFiltros()" class="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500">
+            <button (click)="aplicarFiltros()"
+              class="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500">
               Aplicar Filtros
             </button>
-            <button (click)="limpiarFiltros()" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
+            <button (click)="limpiarFiltros()"
+              class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
               Limpiar
             </button>
-            <button (click)="abrirModalExportacion()" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+            <button (click)="abrirModalExportacion()"
+              class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
               Exportar
             </button>
           </div>
@@ -343,13 +567,16 @@
 
           <!-- Grid de incendios -->
           <div *ngIf="incendios.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-            <div *ngFor="let incendio of incendios" class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+            <div *ngFor="let incendio of incendios"
+              class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
               <div class="flex items-start justify-between mb-3">
                 <div class="flex gap-2">
-                  <span [class]="obtenerClaseUrgencia(incendio.nivelUrgencia)" class="px-2 py-1 text-xs font-semibold rounded-full">
+                  <span [class]="obtenerClaseUrgencia(incendio.nivelUrgencia)"
+                    class="px-2 py-1 text-xs font-semibold rounded-full">
                     {{ incendio.nivelUrgencia }}
                   </span>
-                  <span [class]="obtenerClaseEstado(incendio.estado)" class="px-2 py-1 text-xs font-semibold rounded-full">
+                  <span [class]="obtenerClaseEstado(incendio.estado)"
+                    class="px-2 py-1 text-xs font-semibold rounded-full">
                     {{ incendio.estado.replace('_', ' ') }}
                   </span>
                 </div>
@@ -380,12 +607,12 @@
               <!-- Botones de acción -->
               <div class="flex gap-2 pt-3 border-t border-gray-100">
                 <button (click)="verDetalleIncendio(incendio)"
-                        class="flex-1 px-3 py-2 text-xs font-medium text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100 transition-colors">
+                  class="flex-1 px-3 py-2 text-xs font-medium text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100 transition-colors">
                   Ver Detalle
                 </button>
                 <button *ngIf="incendio.estado !== 'EXTINGUIDO'"
-                        (click)="abrirModalActualizacion(incendio); $event.stopPropagation()"
-                        class="flex-1 px-3 py-2 text-xs font-medium text-orange-600 bg-orange-50 rounded-md hover:bg-orange-100 transition-colors">
+                  (click)="abrirModalActualizacion(incendio); $event.stopPropagation()"
+                  class="flex-1 px-3 py-2 text-xs font-medium text-orange-600 bg-orange-50 rounded-md hover:bg-orange-100 transition-colors">
                   Actualizar
                 </button>
               </div>
@@ -395,7 +622,8 @@
           <!-- No results -->
           <div *ngIf="incendios.length === 0" class="text-center py-12">
             <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             <h3 class="mt-2 text-sm font-medium text-gray-900">No se encontraron incendios</h3>
             <p class="mt-1 text-sm text-gray-500">No hay incendios que coincidan con los filtros aplicados.</p>
@@ -433,14 +661,17 @@
           </div>
 
           <div *ngIf="incendios.length > 0" class="divide-y divide-gray-200">
-            <div *ngFor="let incendio of incendios" class="px-6 py-4 hover:bg-gray-50 cursor-pointer" (click)="verDetalleIncendio(incendio)">
+            <div *ngFor="let incendio of incendios" class="px-6 py-4 hover:bg-gray-50 cursor-pointer"
+              (click)="verDetalleIncendio(incendio)">
               <div class="flex items-center justify-between">
                 <div class="flex-1">
                   <div class="flex items-center gap-3 mb-2">
-                    <span [class]="obtenerClaseUrgencia(incendio.nivelUrgencia)" class="px-2 py-1 text-xs font-semibold rounded-full">
+                    <span [class]="obtenerClaseUrgencia(incendio.nivelUrgencia)"
+                      class="px-2 py-1 text-xs font-semibold rounded-full">
                       {{ incendio.nivelUrgencia }}
                     </span>
-                    <span [class]="obtenerClaseEstado(incendio.estado)" class="px-2 py-1 text-xs font-semibold rounded-full">
+                    <span [class]="obtenerClaseEstado(incendio.estado)"
+                      class="px-2 py-1 text-xs font-semibold rounded-full">
                       {{ incendio.estado.replace('_', ' ') }}
                     </span>
                     <span class="text-xs text-gray-500">
@@ -456,7 +687,7 @@
                   </div>
                 </div>
                 <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
               </div>
             </div>
@@ -464,7 +695,8 @@
 
           <div *ngIf="incendios.length === 0" class="text-center py-12">
             <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <h3 class="mt-2 text-sm font-medium text-gray-900">No hay reportes recientes</h3>
             <p class="mt-1 text-sm text-gray-500">No se han registrado incendios en las últimas 24 horas.</p>
@@ -479,7 +711,8 @@
             <div class="flex items-center justify-between">
               <h3 class="text-lg font-medium text-gray-900">Historial de Incendios Extinguidos</h3>
               <div class="flex gap-2">
-                <button (click)="abrirModalExportacion()" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm">
+                <button (click)="abrirModalExportacion()"
+                  class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm">
                   Exportar Historial
                 </button>
               </div>
@@ -487,14 +720,16 @@
           </div>
 
           <div *ngIf="incendios.length > 0" class="divide-y divide-gray-200">
-            <div *ngFor="let incendio of incendios" class="px-6 py-4 hover:bg-gray-50 cursor-pointer" (click)="verDetalleIncendio(incendio)">
+            <div *ngFor="let incendio of incendios" class="px-6 py-4 hover:bg-gray-50 cursor-pointer"
+              (click)="verDetalleIncendio(incendio)">
               <div class="flex items-center justify-between">
                 <div class="flex-1">
                   <div class="flex items-center gap-3 mb-2">
                     <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">
                       EXTINGUIDO
                     </span>
-                    <span [class]="obtenerClaseUrgencia(incendio.nivelUrgencia)" class="px-2 py-1 text-xs font-semibold rounded-full">
+                    <span [class]="obtenerClaseUrgencia(incendio.nivelUrgencia)"
+                      class="px-2 py-1 text-xs font-semibold rounded-full">
                       {{ incendio.nivelUrgencia }}
                     </span>
                     <span class="text-xs text-gray-500">
@@ -511,10 +746,11 @@
                 </div>
                 <div class="flex items-center gap-2">
                   <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                   </svg>
                 </div>
               </div>
@@ -523,7 +759,8 @@
 
           <div *ngIf="incendios.length === 0" class="text-center py-12">
             <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <h3 class="mt-2 text-sm font-medium text-gray-900">No hay incendios extinguidos</h3>
             <p class="mt-1 text-sm text-gray-500">No se han registrado incendios extinguidos aún.</p>
@@ -533,10 +770,12 @@
           <div *ngIf="totalPaginas > 1" class="px-6 py-4 border-t border-gray-200">
             <div class="flex items-center justify-between">
               <div class="flex-1 flex justify-between sm:hidden">
-                <button (click)="paginaAnterior()" [disabled]="paginaActual === 0" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">
+                <button (click)="paginaAnterior()" [disabled]="paginaActual === 0"
+                  class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">
                   Anterior
                 </button>
-                <button (click)="paginaSiguiente()" [disabled]="paginaActual >= totalPaginas - 1" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">
+                <button (click)="paginaSiguiente()" [disabled]="paginaActual >= totalPaginas - 1"
+                  class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">
                   Siguiente
                 </button>
               </div>
@@ -544,26 +783,33 @@
                 <div>
                   <p class="text-sm text-gray-700">
                     Mostrando <span class="font-medium">{{ paginaActual * tamanoPagina + 1 }}</span> a
-                    <span class="font-medium">{{ Math.min((paginaActual + 1) * tamanoPagina, totalElementos) }}</span> de
+                    <span class="font-medium">{{ Math.min((paginaActual + 1) * tamanoPagina, totalElementos) }}</span>
+                    de
                     <span class="font-medium">{{ totalElementos }}</span> resultados
                   </p>
                 </div>
                 <div>
                   <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-                    <button (click)="paginaAnterior()" [disabled]="paginaActual === 0" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50">
+                    <button (click)="paginaAnterior()" [disabled]="paginaActual === 0"
+                      class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50">
                       <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        <path fill-rule="evenodd"
+                          d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                          clip-rule="evenodd" />
                       </svg>
                     </button>
                     <button *ngFor="let pagina of [].constructor(Math.min(5, totalPaginas)); let i = index"
-                            (click)="irAPagina(i)"
-                            [class]="i === paginaActual ? 'bg-orange-50 border-orange-500 text-orange-600' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'"
-                            class="relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                      (click)="irAPagina(i)"
+                      [class]="i === paginaActual ? 'bg-orange-50 border-orange-500 text-orange-600' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'"
+                      class="relative inline-flex items-center px-4 py-2 border text-sm font-medium">
                       {{ i + 1 }}
                     </button>
-                    <button (click)="paginaSiguiente()" [disabled]="paginaActual >= totalPaginas - 1" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50">
+                    <button (click)="paginaSiguiente()" [disabled]="paginaActual >= totalPaginas - 1"
+                      class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50">
                       <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                        <path fill-rule="evenodd"
+                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                          clip-rule="evenodd" />
                       </svg>
                     </button>
                   </nav>
@@ -599,7 +845,8 @@
               </div>
               <div class="flex justify-between items-center border-t pt-4">
                 <span class="text-sm text-gray-600">Área Total Afectada</span>
-                <span class="text-lg font-semibold text-orange-600">{{ estadisticas.areaTotalAfectada | number:'1.1-1' }} ha</span>
+                <span class="text-lg font-semibold text-orange-600">{{ estadisticas.areaTotalAfectada | number:'1.1-1'
+                  }} ha</span>
               </div>
             </div>
           </div>
@@ -613,7 +860,8 @@
                   <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
                   <span class="text-sm text-gray-600">Reportados</span>
                 </div>
-                <span class="text-sm font-medium">{{ (estadisticas.totalIncendios - estadisticas.incendiosControlados - estadisticas.incendiosExtinguidos - estadisticas.incendiosActivos) || 0 }}</span>
+                <span class="text-sm font-medium">{{ (estadisticas.totalIncendios - estadisticas.incendiosControlados -
+                  estadisticas.incendiosExtinguidos - estadisticas.incendiosActivos) || 0 }}</span>
               </div>
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
@@ -654,12 +902,12 @@
 
   <!-- Modal de Detalle de Incendio -->
   <div *ngIf="incendioSeleccionado" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-    <div class="relative top-20 mx-auto p-5 border w-96 max-w-4xl shadow-lg rounded-md bg-white">
+    <div class="relative top-20 mx-auto p-5 border w-3xl max-w-4xl shadow-lg rounded-md bg-white">
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-lg font-medium text-gray-900">Detalle del Incendio</h3>
         <button (click)="cerrarDetalle()" class="text-gray-400 hover:text-gray-600">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
@@ -667,10 +915,12 @@
       <div class="max-h-96 overflow-y-auto">
         <div class="space-y-4">
           <div class="flex gap-2 mb-4">
-            <span [class]="obtenerClaseUrgencia(incendioSeleccionado.nivelUrgencia)" class="px-2 py-1 text-xs font-semibold rounded-full">
+            <span [class]="obtenerClaseUrgencia(incendioSeleccionado.nivelUrgencia)"
+              class="px-2 py-1 text-xs font-semibold rounded-full">
               {{ incendioSeleccionado.nivelUrgencia }}
             </span>
-            <span [class]="obtenerClaseEstado(incendioSeleccionado.estado)" class="px-2 py-1 text-xs font-semibold rounded-full">
+            <span [class]="obtenerClaseEstado(incendioSeleccionado.estado)"
+              class="px-2 py-1 text-xs font-semibold rounded-full">
               {{ incendioSeleccionado.estado.replace('_', ' ') }}
             </span>
           </div>
@@ -711,6 +961,104 @@
             <label class="block text-gray-500 mb-1">Coordenadas:</label>
             <p class="text-sm">{{ incendioSeleccionado.latitud }}, {{ incendioSeleccionado.longitud }}</p>
           </div>
+
+          <!-- Archivos subidos -->
+          <div *ngIf="incendioSeleccionado.archivosSubidos && incendioSeleccionado.archivosSubidos.length > 0">
+            <label class="block text-gray-500 mb-2">Archivos Adjuntos ({{ incendioSeleccionado.archivosSubidos.length
+              }}):</label>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+              <div *ngFor="let archivo of incendioSeleccionado.archivosSubidos"
+                class="border border-gray-200 rounded-lg p-2 hover:shadow-md transition-shadow">
+
+                <!-- Vista previa de imagen -->
+                <div *ngIf="esImagen(archivo.tipoArchivo)" class="mb-2">
+                  <img [src]="archivo.urlArchivo" [alt]="archivo.nombreArchivo"
+                    class="w-full h-20 object-cover rounded cursor-pointer" (click)="abrirArchivoEnModal(archivo)"
+                    (error)="onImageError($event)">
+                </div>
+
+                <!-- Vista previa de video -->
+                <div *ngIf="esVideo(archivo.tipoArchivo)" class="mb-2 relative">
+                  <video class="w-full h-20 object-cover rounded cursor-pointer"
+                    [poster]="obtenerThumbnailVideo(archivo)" (click)="abrirArchivoEnModal(archivo)">
+                    <source [src]="archivo.urlArchivo" [type]="archivo.tipoArchivo">
+                  </video>
+                  <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 rounded">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- Icono para otros tipos de archivo -->
+                <div *ngIf="!esImagen(archivo.tipoArchivo) && !esVideo(archivo.tipoArchivo)" class="mb-2">
+                  <div class="w-full h-20 bg-gray-100 rounded flex items-center justify-center cursor-pointer"
+                    (click)="abrirArchivoEnModal(archivo)">
+                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- Información del archivo -->
+                <div class="text-xs">
+                  <p class="font-medium text-gray-900 truncate" [title]="archivo.nombreArchivo">
+                    {{ archivo.nombreArchivo }}
+                  </p>
+                  <p class="text-gray-500 mt-1">
+                    {{ formatearTamanoArchivo(archivo.tamanoArchivo) }}
+                  </p>
+                  <p class="text-gray-500">
+                    {{ archivo.tipoArchivo }}
+                  </p>
+                  <div class="flex gap-1 mt-2">
+                    <button (click)="abrirArchivoEnModal(archivo)"
+                      class="flex-1 px-2 py-1 text-xs bg-blue-50 text-blue-600 rounded hover:bg-blue-100">
+                      Ver
+                    </button>
+                    <button (click)="descargarArchivoIndividual(archivo)"
+                      class="flex-1 px-2 py-1 text-xs bg-green-50 text-green-600 rounded hover:bg-green-100">
+                      Descargar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mensaje si no hay archivos -->
+          <div *ngIf="!incendioSeleccionado.archivosSubidos || incendioSeleccionado.archivosSubidos.length === 0">
+            <label class="block text-gray-500 mb-2">Archivos Adjuntos:</label>
+            <div class="text-center py-4 bg-gray-50 rounded-md">
+              <svg class="mx-auto h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+              <p class="text-sm text-gray-500 mt-2">No hay archivos adjuntos</p>
+            </div>
+          </div>
+
+          <!-- Comentarios/Historial de cambios -->
+          <div *ngIf="incendioSeleccionado.comentarios && incendioSeleccionado.comentarios.length > 0">
+            <label class="block text-gray-500 mb-2">Historial de Comentarios ({{ incendioSeleccionado.comentarios.length
+              }}):</label>
+            <div class="space-y-3 max-h-32 overflow-y-auto">
+              <div *ngFor="let comentario of incendioSeleccionado.comentarios"
+                class="bg-gray-50 rounded-md p-3 border-l-4 border-blue-200">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-xs font-medium text-gray-900">{{ comentario.nombreUsuario || 'Administrador'
+                    }}</span>
+                  <span class="text-xs text-gray-500">{{ formatearFecha(comentario.fechaComentario) }}</span>
+                </div>
+                <p class="text-sm text-gray-700">{{ comentario.comentario }}</p>
+                <div *ngIf="comentario.accionTomada" class="mt-2 pt-2 border-t border-gray-200">
+                  <span class="text-xs font-medium text-green-700">Acción tomada:</span>
+                  <p class="text-xs text-green-600">{{ comentario.accionTomada }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -719,8 +1067,8 @@
           Cerrar
         </button>
         <button *ngIf="incendioSeleccionado.estado !== 'EXTINGUIDO'"
-                (click)="abrirModalActualizacion(incendioSeleccionado)"
-                class="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700">
+          (click)="abrirModalActualizacion(incendioSeleccionado)"
+          class="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700">
           Actualizar Estado
         </button>
       </div>
@@ -728,13 +1076,14 @@
   </div>
 
   <!-- Modal de Actualización de Estado -->
-  <div *ngIf="mostrarModalActualizacion" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-    <div class="relative top-20 mx-auto p-5 border w-96 max-w-lg shadow-lg rounded-md bg-white">
+  <div *ngIf="mostrarModalActualizacion"
+    class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-3xl max-w-lg shadow-lg rounded-md bg-white">
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-lg font-medium text-gray-900">Actualizar Estado del Incendio</h3>
         <button (click)="cerrarModalActualizacion()" class="text-gray-400 hover:text-gray-600">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
@@ -743,7 +1092,8 @@
         <div class="space-y-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Nuevo Estado *</label>
-            <select formControlName="nuevoEstado" class="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
+            <select formControlName="nuevoEstado"
+              class="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 p-3">
               <option value="">Seleccione un estado</option>
               <option *ngFor="let estado of estadosDisponibles" [value]="estado">
                 {{ estado.replace('_', ' ') }}
@@ -753,34 +1103,30 @@
 
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Comentario</label>
-            <textarea formControlName="comentario"
-                      rows="3"
-                      placeholder="Agregar comentario sobre la actualización..."
-                      class="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"></textarea>
+            <textarea formControlName="comentario" rows="3" placeholder="Agregar comentario sobre la actualización..."
+              class="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 p-3"></textarea>
           </div>
 
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Acción Tomada</label>
-            <textarea formControlName="accionTomada"
-                      rows="2"
-                      placeholder="Describir las acciones realizadas..."
-                      class="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"></textarea>
+            <textarea formControlName="accionTomada" rows="2" placeholder="Describir las acciones realizadas..."
+              class="w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 p-3"></textarea>
           </div>
         </div>
 
         <div class="flex justify-end gap-3 mt-6">
-          <button type="button"
-                  (click)="cerrarModalActualizacion()"
-                  class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">
+          <button type="button" (click)="cerrarModalActualizacion()"
+            class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">
             Cancelar
           </button>
-          <button type="submit"
-                  [disabled]="!actualizacionForm.valid || procesandoActualizacion"
-                  class="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed">
+          <button type="submit" [disabled]="!actualizacionForm.valid || procesandoActualizacion"
+            class="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed">
             <span *ngIf="procesandoActualizacion" class="inline-flex items-center">
               <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <path class="opacity-75" fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                </path>
               </svg>
               Actualizando...
             </span>
@@ -792,13 +1138,14 @@
   </div>
 
   <!-- Modal de Exportación -->
-  <div *ngIf="mostrarModalExportacion" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+  <div *ngIf="mostrarModalExportacion"
+    class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
     <div class="relative top-20 mx-auto p-5 border w-96 max-w-md shadow-lg rounded-md bg-white">
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-lg font-medium text-gray-900">Exportar Datos</h3>
         <button (click)="cerrarModalExportacion()" class="text-gray-400 hover:text-gray-600">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
@@ -809,12 +1156,12 @@
         </p>
 
         <div class="space-y-3">
-          <button (click)="exportarDatos('json')"
-                  [disabled]="cargando"
-                  class="w-full flex items-center justify-between p-3 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50">
+          <button (click)="exportarDatos('json')" [disabled]="cargando"
+            class="w-full flex items-center justify-between p-3 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50">
             <div class="flex items-center gap-3">
               <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
               </svg>
               <div>
                 <p class="font-medium">JSON</p>
@@ -822,16 +1169,17 @@
               </div>
             </div>
             <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </button>
 
-          <button (click)="exportarDatos('csv')"
-                  [disabled]="cargando"
-                  class="w-full flex items-center justify-between p-3 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50">
+          <button (click)="exportarDatos('csv')" [disabled]="cargando"
+            class="w-full flex items-center justify-between p-3 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50">
             <div class="flex items-center gap-3">
               <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               <div>
                 <p class="font-medium">CSV</p>
@@ -839,16 +1187,17 @@
               </div>
             </div>
             <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </button>
 
-          <button (click)="exportarDatos('excel')"
-                  [disabled]="cargando"
-                  class="w-full flex items-center justify-between p-3 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50">
+          <button (click)="exportarDatos('excel')" [disabled]="cargando"
+            class="w-full flex items-center justify-between p-3 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50">
             <div class="flex items-center gap-3">
               <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
               <div>
                 <p class="font-medium">Excel</p>
@@ -856,9 +1205,11 @@
               </div>
             </div>
             <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </button>
+
         </div>
 
         <div *ngIf="cargando" class="flex items-center justify-center py-4">
@@ -868,11 +1219,63 @@
       </div>
 
       <div class="flex justify-end mt-6">
-        <button (click)="cerrarModalExportacion()"
-                [disabled]="cargando"
-                class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 disabled:opacity-50">
+        <button (click)="cerrarModalExportacion()" [disabled]="cargando"
+          class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 disabled:opacity-50">
           Cerrar
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para ver archivos en pantalla completa -->
+  <div *ngIf="mostrarModalArchivo && archivoSeleccionado"
+    class="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
+    <div class="relative max-w-4xl max-h-full w-full h-full flex items-center justify-center">
+      <!-- Botón cerrar -->
+      <button (click)="cerrarModalArchivo()"
+        class="absolute top-4 right-4 z-10 text-white bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-75">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <!-- Información del archivo -->
+      <div class="absolute top-4 left-4 z-10 bg-black bg-opacity-50 text-white p-3 rounded-lg">
+        <h4 class="font-medium">{{ archivoSeleccionado.nombreArchivo }}</h4>
+        <p class="text-sm opacity-75">{{ formatearTamanoArchivo(archivoSeleccionado.tamanoArchivo) }}</p>
+        <button (click)="descargarArchivoIndividual(archivoSeleccionado)"
+          class="mt-2 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700">
+          Descargar
+        </button>
+      </div>
+
+      <!-- Contenido del archivo -->
+      <div class="w-full h-full flex items-center justify-center">
+        <!-- Imagen -->
+        <img *ngIf="esImagen(archivoSeleccionado.tipoArchivo)" [src]="archivoSeleccionado.urlArchivo"
+          [alt]="archivoSeleccionado.nombreArchivo" class="max-w-full max-h-full object-contain"
+          (error)="onImageError($event)">
+
+        <!-- Video -->
+        <video *ngIf="esVideo(archivoSeleccionado.tipoArchivo)" [src]="archivoSeleccionado.urlArchivo"
+          class="max-w-full max-h-full" controls preload="metadata">
+          Tu navegador no soporta la reproducción de video.
+        </video>
+
+        <!-- Otros archivos -->
+        <div *ngIf="!esImagen(archivoSeleccionado.tipoArchivo) && !esVideo(archivoSeleccionado.tipoArchivo)"
+          class="text-center text-white">
+          <svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <h3 class="text-lg font-medium mb-2">{{ archivoSeleccionado.nombreArchivo }}</h3>
+          <p class="text-gray-300 mb-4">Este tipo de archivo no se puede previsualizar</p>
+          <button (click)="descargarArchivoIndividual(archivoSeleccionado)"
+            class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+            Descargar para ver
+          </button>
+        </div>
       </div>
     </div>
   </div>

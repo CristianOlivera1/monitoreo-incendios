@@ -286,9 +286,9 @@ public class BusinessIncendio {
   }
 
   public List<DtoReporteIncendio> obtenerIncendiosRecientes() {
-    // Obtener incendios de las últimas 24 horas
-    Timestamp hace24Horas = new Timestamp(System.currentTimeMillis() - (24 * 60 * 60 * 1000));
-    List<TIncendio> incendiosRecientes = repoIncendio.findIncendiosRecientes(hace24Horas);
+    // Obtener incendios de las últimas 48 horas
+     Timestamp hace48Horas = new Timestamp(System.currentTimeMillis() - (48L * 60 * 60 * 1000));
+    List<TIncendio> incendiosRecientes = repoIncendio.findIncendiosRecientes(hace48Horas);
 
     return incendiosRecientes.stream()
         .map(this::convertirADto)

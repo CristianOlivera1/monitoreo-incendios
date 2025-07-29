@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ViewChild, ElementRef, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IncendioService, ResponseReporte, ActualizarEstadoIncendio } from '../../core/service/incendio/incendio.service';
@@ -24,8 +24,25 @@ interface IncendioAdmin {
   fechaActualizacion?: Date;
   nombreUsuario: string;
   emailUsuario: string;
-  archivosSubidos?: any[];
-  comentarios?: any[];
+  archivosSubidos?: DtoArchivoIncendio[];
+  comentarios?: DtoComentarioIncendio[];
+}
+
+interface DtoArchivoIncendio {
+  idArchivo: string;
+  nombreArchivo: string;
+  tipoArchivo: string;
+  tamanoArchivo: number;
+  urlArchivo: string;
+  fechaSubida: Date;
+}
+
+interface DtoComentarioIncendio {
+  idComentario: string;
+  comentario: string;
+  fechaComentario: Date;
+  nombreUsuario?: string;
+  accionTomada?: string;
 }
 
 interface EstadisticasIncendios {
@@ -52,7 +69,7 @@ export class HomeAdmin implements OnInit {
   @ViewChild('popoverMenu') popoverMenu!: ElementRef;
 
   // Estados de la aplicación
-  vistaActual: 'dashboard' | 'incendios' | 'reportes' | 'historial' | 'estadisticas' | 'usuarios' = 'dashboard';
+  vistaActual: 'dashboard' | 'mapa' | 'incendios' | 'reportes' | 'historial' | 'estadisticas' | 'usuarios' = 'dashboard';
   cargando: boolean = false;
   error: string = '';
   fechaActual: Date = new Date();
@@ -67,6 +84,29 @@ export class HomeAdmin implements OnInit {
     incendiosControlados: 0,
     incendiosExtinguidos: 0,
     areaTotalAfectada: 0
+  };
+
+  // Propiedades del mapa
+  mapa: any = null; // Instancia de Leaflet (any para SSR)
+  marcadores: any[] = [];
+  grupoMarcadores: any = null;
+  L: any = null; // Referencia a Leaflet cargada dinámicamente
+
+  // Filtros del mapa
+  filtrosMapa = {
+    estados: {
+      reportado: true,
+      enCurso: true,
+      controlado: true,
+      extinguido: false
+    },
+    prioridades: {
+      alta: true,      // Incluye ALTA y CRITICA
+      media: true,     // Incluye MEDIA
+      baja: true       // Incluye BAJA
+    },
+    fechaInicio: '',
+    fechaFin: ''
   };
 
   // Filtros y formularios
@@ -86,6 +126,7 @@ export class HomeAdmin implements OnInit {
   // Navegación del sidebar
   menuItems = [
     { id: 'dashboard' as const, label: 'Dashboard', icon: 'dashboard', active: true },
+    { id: 'mapa' as const, label: 'Mapa de Incendios', icon: 'map', active: false },
     { id: 'incendios' as const, label: 'Gestión de Incendios', icon: 'fire', active: false },
     { id: 'reportes' as const, label: 'Reportes Recientes', icon: 'report', active: false },
     { id: 'historial' as const, label: 'Historial Extinguidos', icon: 'history', active: false },
@@ -96,14 +137,16 @@ export class HomeAdmin implements OnInit {
   // Estados de modales
   mostrarModalActualizacion: boolean = false;
   mostrarModalExportacion: boolean = false;
+  mostrarModalArchivo: boolean = false;
   procesandoActualizacion: boolean = false;
+  archivoSeleccionado: any = null;
 
   constructor(
     private incendioService: IncendioService,
     private tokenService: TokenService,
     private userService: UserService,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,@Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.filtroForm = this.fb.group({
       estado: [''],
@@ -126,16 +169,15 @@ export class HomeAdmin implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+ngOnInit(): void {
+  if (isPlatformBrowser(this.platformId)) {
     this.loadUser();
     this.cargarDashboard();
-
-    // Actualizar fecha cada minuto
     setInterval(() => {
       this.fechaActual = new Date();
     }, 60000);
   }
-
+}
   // ========== GESTIÓN DE USUARIO ==========
   loadUser(): void {
     const userId = this.tokenService.getUserId();
@@ -173,7 +215,8 @@ export class HomeAdmin implements OnInit {
   }
 
   // ========== NAVEGACIÓN DEL SIDEBAR ==========
-  cambiarVista(vista: 'dashboard' | 'incendios' | 'reportes' | 'historial' | 'estadisticas' | 'usuarios'): void {
+  cambiarVista(vista: 'dashboard' | 'mapa' | 'incendios' | 'reportes' | 'historial' | 'estadisticas' | 'usuarios'): void {
+    const vistaAnterior = this.vistaActual;
     this.vistaActual = vista;
     this.error = '';
 
@@ -182,10 +225,21 @@ export class HomeAdmin implements OnInit {
       item.active = item.id === vista;
     });
 
+    // Si cambiamos a la vista de mapa, inicializarlo
+    if (vista === 'mapa' && vistaAnterior !== 'mapa') {
+      setTimeout(() => {
+        this.inicializarMapa();
+      }, 100);
+    }
+
     // Cargar datos según la vista
     switch (vista) {
       case 'dashboard':
         this.cargarDashboard();
+        break;
+      case 'mapa':
+        // El mapa se inicializa en el setTimeout de arriba
+        this.cargarIncendios(); // Cargar datos para el mapa
         break;
       case 'incendios':
         this.cargarIncendios();
@@ -633,7 +687,478 @@ export class HomeAdmin implements OnInit {
     return Math;
   }
 
+  // ========== GESTIÓN DE ARCHIVOS ==========
+  esImagen(tipoArchivo: string): boolean {
+  return tipoArchivo.toUpperCase() === 'IMAGEN';
+
+  }
+
+  esVideo(tipoArchivo: string): boolean {
+   return tipoArchivo.toUpperCase() === 'VIDEO';
+  }
+
+  formatearTamanoArchivo(tamanoBytes: number): string {
+    if (!tamanoBytes) return '0 B';
+
+    const unidades = ['B', 'KB', 'MB', 'GB'];
+    let tamano = tamanoBytes;
+    let unidadIndex = 0;
+
+    while (tamano >= 1024 && unidadIndex < unidades.length - 1) {
+      tamano /= 1024;
+      unidadIndex++;
+    }
+
+    return `${tamano.toFixed(1)} ${unidades[unidadIndex]}`;
+  }
+
+  obtenerThumbnailVideo(archivo: any): string {
+    // Para videos, podríamos usar una imagen por defecto o generar un thumbnail
+    // Por ahora retornamos una imagen por defecto
+    return 'assets/img/video-thumbnail-default.svg';
+  }
+
+  abrirArchivoEnModal(archivo: any): void {
+    this.archivoSeleccionado = archivo;
+    this.mostrarModalArchivo = true;
+  }
+
+  cerrarModalArchivo(): void {
+    this.mostrarModalArchivo = false;
+    this.archivoSeleccionado = null;
+  }
+
+  descargarArchivoIndividual(archivo: any): void {
+    // Crear un enlace temporal para descargar el archivo
+    const link = document.createElement('a');
+    link.href = archivo.urlArchivo;
+    link.download = archivo.nombreArchivo;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  onImageError(event: any): void {
+    // Si la imagen no se puede cargar, mostrar una imagen por defecto
+    event.target.src = 'assets/img/imagen-no-disponible.svg';
+  }
+
   cerrarDetalle(): void {
     this.incendioSeleccionado = null;
   }
+
+  // ============================================
+  // MÉTODOS DEL MAPA
+  // ============================================
+
+  /**
+   * Inicializa el mapa cuando se cambia a la vista de mapa
+   */
+  inicializarMapa(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      console.log('SSR detectado, evitando inicialización del mapa');
+      return;
+    }
+
+    if (this.vistaActual === 'mapa') {
+      // Solo inicializar si no existe ya
+      if (!this.mapa) {
+        setTimeout(async () => {
+          await this.cargarLeaflet();
+          this.crearMapa();
+          this.cargarIncendiosEnMapa();
+        }, 100);
+      } else {
+        this.actualizarMarcadores();
+      }
+    }
+  }
+
+  /**
+   * Carga Leaflet dinámicamente solo en el navegador
+   */
+  private async cargarLeaflet(): Promise<void> {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    try {
+      this.L = await import('leaflet');
+      console.log('Leaflet cargado dinámicamente');
+    } catch (error) {
+      console.error('Error al cargar Leaflet:', error);
+      this.error = 'Error al cargar el mapa';
+    }
+  }
+
+  /**
+   * Crea la instancia del mapa usando Leaflet
+   */
+  crearMapa(): void {
+    if (!isPlatformBrowser(this.platformId) || !this.L) {
+      console.log('No se puede crear el mapa: SSR o Leaflet no cargado');
+      return;
+    }
+
+    // Verificar si el contenedor del mapa existe
+    const contenedorMapa = document.getElementById('mapa-incendios');
+    if (!contenedorMapa) {
+      console.error('Contenedor del mapa no encontrado');
+      return;
+    }
+
+    // Limpiar el contenedor
+    contenedorMapa.innerHTML = '';
+
+    // Coordenadas centrales de Perú (Lima)
+    const centroLatitud = -12.0464;
+    const centroLongitud = -77.0428;
+
+    // Crear el mapa con Leaflet
+    this.mapa = this.L.map('mapa-incendios').setView([centroLatitud, centroLongitud], 6);
+
+    // Agregar tile layer (OpenStreetMap)
+    this.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors',
+      maxZoom: 18,
+      minZoom: 3
+    }).addTo(this.mapa);
+
+    // Crear grupo de marcadores
+    this.grupoMarcadores = this.L.layerGroup().addTo(this.mapa);
+
+    // Configurar iconos personalizados para Leaflet
+    this.configurarIconosLeaflet();
+
+    // Setup funciones globales
+    this.setupGlobalFunctions();
+
+    console.log('Mapa inicializado con Leaflet');
+  }
+
+  /**
+   * Configura los iconos personalizados para Leaflet
+   */
+  configurarIconosLeaflet(): void {
+    if (!this.L) return;
+
+    // Fix para iconos por defecto de Leaflet
+    delete (this.L.Icon.Default.prototype as any)._getIconUrl;
+    this.L.Icon.Default.mergeOptions({
+      iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+      iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+    });
+  }
+
+  /**
+   * Función global para seleccionar incendio desde popup
+   */
+  private setupGlobalFunctions(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    (window as any).seleccionarIncendioDesdePopup = (idIncendio: string) => {
+      const incendio = this.incendios.find(i => i.idIncendio === idIncendio);
+      if (incendio) {
+        this.incendioSeleccionado = incendio;
+      }
+    };
+  }
+
+  /**
+   * Crea un icono personalizado según el estado y prioridad
+   */
+  crearIconoPersonalizado(estado: string, nivelUrgencia: string): any {
+    if (!this.L) return null;
+
+    const colorEstado = this.obtenerColorEstado(estado);
+    const size = this.obtenerTamanoSegunUrgencia(nivelUrgencia);
+
+    // SVG personalizado para el marcador
+    const svgIcon = `
+      <svg width="${size}" height="${size}" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="10" fill="${colorEstado}" stroke="#ffffff" stroke-width="2"/>
+        <path d="M12 6v6l4 2" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    `;
+
+    return this.L.divIcon({
+      html: svgIcon,
+      className: 'custom-fire-marker',
+      iconSize: [size, size],
+      iconAnchor: [size/2, size/2],
+      popupAnchor: [0, -size/2]
+    });
+  }
+
+  /**
+   * Obtiene el tamaño del marcador según el nivel de urgencia
+   */
+  obtenerTamanoSegunUrgencia(nivelUrgencia: string): number {
+    switch (nivelUrgencia?.toUpperCase()) {
+      case 'CRITICA': return 32;
+      case 'ALTA': return 28;
+      case 'MEDIA': return 24;
+      case 'BAJA': return 20;
+      default: return 24;
+    }
+  }  /**
+   * Carga los incendios como marcadores en el mapa
+   */
+  cargarIncendiosEnMapa(): void {
+    if (!this.mapa || !this.grupoMarcadores || !this.L) return;
+
+    // Limpiar marcadores existentes
+    this.grupoMarcadores.clearLayers();
+    this.marcadores = [];
+
+    // Filtrar incendios según los filtros del mapa
+    const incendiosFiltrados = this.filtrarIncendiosParaMapa();
+
+    // Crear marcadores para cada incendio filtrado
+    incendiosFiltrados.forEach(incendio => {
+      if (incendio.latitud && incendio.longitud) {
+        const marcador = this.crearMarcador(incendio);
+        if (marcador) {
+          this.marcadores.push(marcador);
+          this.grupoMarcadores!.addLayer(marcador);
+        }
+      }
+    });
+
+    // Ajustar la vista del mapa si hay marcadores
+    if (this.marcadores.length > 0) {
+      const grupo = new this.L.FeatureGroup(this.marcadores);
+      this.mapa.fitBounds(grupo.getBounds().pad(0.1));
+    }
+
+    console.log(`Cargados ${this.marcadores.length} marcadores en el mapa`);
+  }
+
+  /**
+   * Crea un marcador para un incendio específico
+   */
+  crearMarcador(incendio: IncendioAdmin): any {
+    if (!this.L) return null;
+
+    const icono = this.crearIconoPersonalizado(incendio.estado, incendio.nivelUrgencia);
+    if (!icono) return null;
+
+    const marcador = this.L.marker([incendio.latitud, incendio.longitud], {
+      icon: icono
+    });
+
+    // Agregar datos personalizados al marcador
+    (marcador as any).incendioData = incendio;
+
+    // Crear popup con información del incendio
+    const popupContent = `
+      <div style="min-width: 200px;">
+        <h4 style="margin: 0 0 10px 0; color: #333;">Incendio en ${incendio.nombreCiudad}</h4>
+        <p style="margin: 5px 0;"><strong>Estado:</strong>
+          <span style="
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 11px;
+            background: ${this.obtenerColorEstado(incendio.estado)}30;
+            color: ${this.obtenerColorEstado(incendio.estado)};
+          ">${incendio.estado}</span>
+        </p>
+        <p style="margin: 5px 0;"><strong>Urgencia:</strong>
+          <span style="
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 11px;
+            background: ${this.obtenerColorPrioridad(incendio.nivelUrgencia)}30;
+            color: ${this.obtenerColorPrioridad(incendio.nivelUrgencia)};
+          ">${incendio.nivelUrgencia}</span>
+        </p>
+        <p style="margin: 5px 0;"><strong>Área:</strong> ${incendio.areaAfectada} hectáreas</p>
+        <p style="margin: 5px 0;"><strong>Fecha:</strong> ${this.formatearFecha(incendio.fechaReporte)}</p>
+        ${incendio.descripcion ? `<p style="margin: 5px 0;"><strong>Descripción:</strong> ${incendio.descripcion.substring(0, 100)}...</p>` : ''}
+        <div style="margin-top: 10px; text-align: center;">
+          <button onclick="window.seleccionarIncendioDesdePopup('${incendio.idIncendio}')"
+                  style="
+                    background: #ff6b35;
+                    color: white;
+                    border: none;
+                    padding: 6px 12px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-size: 12px;
+                  ">
+            Ver Detalles
+          </button>
+        </div>
+      </div>
+    `;
+
+    marcador.bindPopup(popupContent);
+
+    // Event listener para seleccionar el incendio
+    marcador.on('click', () => {
+      this.incendioSeleccionado = incendio;
+    });
+
+    return marcador;
+  }
+
+  /**
+   * Filtra incendios según los criterios del mapa
+   */
+  filtrarIncendiosParaMapa(): IncendioAdmin[] {
+    return this.incendios.filter(incendio => {
+      // Filtro por estado
+      const estadoFiltro = this.filtrosMapa.estados;
+      let estadoValido = false;
+
+      switch (incendio.estado) {
+        case 'REPORTADO':
+          estadoValido = estadoFiltro.reportado;
+          break;
+        case 'EN_CURSO':
+          estadoValido = estadoFiltro.enCurso;
+          break;
+        case 'CONTROLADO':
+          estadoValido = estadoFiltro.controlado;
+          break;
+        case 'EXTINGUIDO':
+          estadoValido = estadoFiltro.extinguido;
+          break;
+      }
+
+      if (!estadoValido) return false;
+
+      // Filtro por prioridad (si existe) - usar nivelUrgencia
+      if (incendio.nivelUrgencia) {
+        const prioridadFiltro = this.filtrosMapa.prioridades;
+        let prioridadValida = false;
+
+        switch (incendio.nivelUrgencia.toUpperCase()) {
+          case 'ALTA':
+          case 'CRITICA':
+            prioridadValida = prioridadFiltro.alta;
+            break;
+          case 'MEDIA':
+            prioridadValida = prioridadFiltro.media;
+            break;
+          case 'BAJA':
+            prioridadValida = prioridadFiltro.baja;
+            break;
+        }
+
+        if (!prioridadValida) return false;
+      }
+
+      // Filtro por fecha
+      if (this.filtrosMapa.fechaInicio) {
+        const fechaInicio = new Date(this.filtrosMapa.fechaInicio);
+        const fechaIncendio = new Date(incendio.fechaReporte);
+        if (fechaIncendio < fechaInicio) return false;
+      }
+
+      if (this.filtrosMapa.fechaFin) {
+        const fechaFin = new Date(this.filtrosMapa.fechaFin);
+        fechaFin.setHours(23, 59, 59, 999); // Incluir todo el día
+        const fechaIncendio = new Date(incendio.fechaReporte);
+        if (fechaIncendio > fechaFin) return false;
+      }
+
+      return true;
+    });
+  }
+
+  /**
+   * Actualiza la visualización del mapa aplicando los filtros actuales
+   */
+  actualizarVisualizacionMapa(): void {
+    if (!this.mapa) return;
+
+    // Simplemente recargar los marcadores con los filtros actuales
+    this.cargarIncendiosEnMapa();
+
+    console.log(`Mapa actualizado con ${this.marcadores.length} marcadores`);
+  }
+
+  /**
+   * Obtiene el color según el estado del incendio
+   */
+  obtenerColorEstado(estado: string): string {
+    switch (estado) {
+      case 'REPORTADO': return '#ff9800'; // Naranja
+      case 'EN_CURSO': return '#f44336'; // Rojo
+      case 'CONTROLADO': return '#2196f3'; // Azul
+      case 'EXTINGUIDO': return '#4caf50'; // Verde
+      default: return '#757575'; // Gris
+    }
+  }
+
+  obtenerColorPrioridad(prioridad: string): string {
+    switch (prioridad.toUpperCase()) {
+      case 'CRITICA': return '#b71c1c'; // Rojo muy oscuro
+      case 'ALTA': return '#d32f2f'; // Rojo oscuro
+      case 'MEDIA': return '#f57c00'; // Naranja oscuro
+      case 'BAJA': return '#388e3c'; // Verde oscuro
+      default: return '#616161'; // Gris oscuro
+    }
+  }
+
+  aplicarFiltrosMapa(): void {
+    if (isPlatformBrowser(this.platformId) && this.mapa && this.L) {
+      this.cargarIncendiosEnMapa();
+    }
+  }
+
+  limpiarFiltrosMapa(): void {
+    // Resetear filtros de estado
+    this.filtrosMapa.estados = {
+      reportado: true,
+      enCurso: true,
+      controlado: true,
+      extinguido: false
+    };
+
+    // Resetear filtros de nivel de urgencia (prioridad)
+    this.filtrosMapa.prioridades = {
+      alta: true,      // Incluye ALTA y CRITICA
+      media: true,
+      baja: true
+    };
+
+    // Resetear filtros de fecha
+    this.filtrosMapa.fechaInicio = '';
+    this.filtrosMapa.fechaFin = '';
+
+    // Aplicar filtros actualizados
+    this.aplicarFiltrosMapa();
+  }
+  centrarMapa(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    if (this.mapa && this.marcadores.length > 0 && this.L) {
+      // Crear un grupo con todos los marcadores
+      const grupo = new this.L.FeatureGroup(this.marcadores);
+      // Ajustar la vista para mostrar todos los marcadores
+      this.mapa.fitBounds(grupo.getBounds().pad(0.1));
+      console.log('Mapa centrado en todos los marcadores');
+    } else if (this.mapa) {
+      // Si no hay marcadores, centrar en Perú
+      this.mapa.setView([-12.0464, -77.0428], 6);
+      console.log('Mapa centrado en coordenadas por defecto');
+    }
+  }
+
+  /**
+   * Actualiza los marcadores del mapa recargando los incendios
+   */
+  actualizarMarcadores(): void {
+    if (isPlatformBrowser(this.platformId) && this.mapa && this.L) {
+      this.cargarIncendiosEnMapa();
+      console.log('Marcadores del mapa actualizados');
+    }
+  }
+
+  cerrarInfoPanel(): void {
+    this.incendioSeleccionado = null;
+  }
+
 }
