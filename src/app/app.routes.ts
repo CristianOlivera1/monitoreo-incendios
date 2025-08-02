@@ -5,6 +5,7 @@ import { Register } from './pages/register/register';
 import { HomeClient } from './pages/home-client/home-client';
 import { HomeAdmin } from './pages/home-admin/home-admin';
 import { Historial } from './pages/historial/historial';
+import { UserNotifications } from './pages/user-notifications/user-notifications';
 
 export const routes: Routes = [
     {path:'', component: HomeClient},
@@ -13,5 +14,5 @@ export const routes: Routes = [
   {path:'reportar', component: NewReport},
   {path:'dashboard', component: HomeAdmin},
   {path:'historial', component: Historial},
-
+  {path:'mis-notificaciones', component: UserNotifications},
 ];

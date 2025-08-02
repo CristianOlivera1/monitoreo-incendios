@@ -1,52 +1,61 @@
-import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { NotificacionService, DtoNotificacion, ResponseNotificacion } from '../../core/service/notificacion/notificacion.service';
 import { TokenService } from '../../core/service/oauth/token.service';
 import { UserService } from '../../core/service/user/user.service';
-import { NotificacionService, DtoNotificacion, ResponseNotificacion } from '../../core/service/notificacion/notificacion.service';
+import { HeaderClient } from '../../shared/header-client/header-client';
 
 @Component({
-  selector: 'app-header-client',
-  imports: [CommonModule, RouterLink],
-  templateUrl: './header-client.html',
-  styleUrl: './header-client.css'
+  selector: 'app-user-notifications',
+  imports: [CommonModule, FormsModule, HeaderClient],
+  templateUrl: './user-notifications.html',
+  styleUrl: './user-notifications.css'
 })
-export class HeaderClient implements OnInit {
-isLoggedIn: boolean = false;
-  userInfo: any = null;
-  languages: any[] = [];
+export class UserNotifications implements OnInit {
 
-  // Propiedades de notificaciones
+  // Exponer Math para usar en el template
+  Math = Math;
+
+  // Estado del usuario
+  userInfo: any = null;
+  isLoggedIn: boolean = false;
+
+  // Estados de la aplicación
+  cargando: boolean = false;
+  error: string = '';
+
+  // Datos de notificaciones
   notificaciones: DtoNotificacion[] = [];
   notificacionesNoLeidas: number = 0;
-  mostrarPanelNotificaciones: boolean = false;
   cargandoNotificaciones: boolean = false;
 
+  // Filtros
+  filtroTipo: string = '';
+  filtroLeidas: string = 'todas'; // 'todas', 'leidas', 'no_leidas'
+
+  // Paginación
+  paginaActual: number = 0;
+  tamanoPagina: number = 10;
+  totalElementos: number = 0;
+  totalPaginas: number = 0;
+
   constructor(
+    private notificacionService: NotificacionService,
     private tokenService: TokenService,
     private userService: UserService,
-    private notificacionService: NotificacionService,
-    private router: Router
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
   ngOnInit(): void {
-    if (typeof window !== 'undefined') {
-      this.isLoggedIn = !!this.tokenService.getToken();
-      if (this.isLoggedIn) {
-        this.loadUser();
-      }
-
-      window.addEventListener('storage', () => {
-        this.isLoggedIn = !!this.tokenService.getToken();
-        if (this.isLoggedIn) {
-          this.loadUser();
-        } else {
-          this.userInfo = null;
-        }
-      });
+    if (isPlatformBrowser(this.platformId)) {
+      this.loadUser();
     }
   }
 
+  // ========== GESTIÓN DE USUARIO ==========
   loadUser(): void {
     const userId = this.tokenService.getUserId();
     if (userId) {
@@ -54,94 +63,90 @@ isLoggedIn: boolean = false;
         (response) => {
           if (response.type === 'success') {
             this.userInfo = response.data;
-            console.log("es admin:", this.userInfo.nombreRol)
-            console.log("el usuario se obtenio", this.userInfo.nombre)
+            this.isLoggedIn = true;
+            console.log("Usuario cargado:", this.userInfo.nombre);
 
             // Cargar notificaciones después de cargar el usuario
             this.cargarNotificaciones();
-            this.iniciarIntervaloNotificaciones();
+            this.actualizarContadorNotificaciones();
           } else {
             console.error('Error al obtener el perfil:', response.listMessage);
+            this.router.navigate(['/login']);
           }
         },
         (error) => {
           console.error('Error en la solicitud del perfil:', error);
+          this.router.navigate(['/login']);
         }
       );
+    } else {
+      this.router.navigate(['/login']);
     }
   }
 
-  logOut(): void {
-    this.tokenService.logOut();
-    this.isLoggedIn = false;
-    this.userInfo = null;
-    this.router.navigate(['/']);
-  }
-
-  showPopover = false;
-  @ViewChild('popoverMenu') popoverMenu!: ElementRef;
-  togglePopover(): void {
-    this.showPopover = !this.showPopover;
-  }
-
-  menuAbierto = false;
-  @ViewChild('menuMovil') menuMovil!: ElementRef;
-  toggleMenu() {
-    this.menuAbierto = !this.menuAbierto;
-  }
-
-    @HostListener('document:click', ['$event'])
-  onClickOutside(event: MouseEvent): void {
-    const target = event.target as HTMLElement;
-
-    if (this.showPopover && this.popoverMenu && !this.popoverMenu.nativeElement.contains(target)) {
-      this.showPopover = false;
-    }
-
-    if (this.menuAbierto && this.menuMovil && !this.menuMovil.nativeElement.contains(target)) {
-      this.menuAbierto = false;
-    }
-
-    // Cerrar panel de notificaciones si se hace clic fuera
-    if (this.mostrarPanelNotificaciones) {
-      const notificationPanel = document.querySelector('.notification-panel');
-      const notificationButton = document.querySelector('.notification-button');
-
-      if (notificationPanel &&
-          !notificationPanel.contains(target) &&
-          notificationButton &&
-          !notificationButton.contains(target)) {
-        this.mostrarPanelNotificaciones = false;
-      }
-    }
-  }
-
-  // ========== MÉTODOS DE NOTIFICACIONES ==========
+  // ========== GESTIÓN DE NOTIFICACIONES ==========
 
   /**
-   * Carga las notificaciones del usuario
+   * Carga las notificaciones del usuario con filtros
    */
   cargarNotificaciones(): void {
     if (!this.userInfo?.idUsuario) return;
 
     this.cargandoNotificaciones = true;
+    this.error = '';
 
     this.notificacionService.obtenerNotificacionesUsuario(this.userInfo.idUsuario)
       .subscribe({
         next: (response: ResponseNotificacion) => {
           this.cargandoNotificaciones = false;
           if (response.type === 'success') {
-            this.notificaciones = response.data || [];
-            this.actualizarContadorNotificaciones();
+            let notificaciones = response.data || [];
+
+            // Aplicar filtros localmente
+            notificaciones = this.aplicarFiltros(notificaciones);
+
+            // Simular paginación local
+            this.totalElementos = notificaciones.length;
+            this.totalPaginas = Math.ceil(this.totalElementos / this.tamanoPagina);
+
+            const inicio = this.paginaActual * this.tamanoPagina;
+            const fin = inicio + this.tamanoPagina;
+            this.notificaciones = notificaciones.slice(inicio, fin);
+
           } else {
-            console.error('Error al cargar notificaciones:', response.listMessage);
+            this.error = 'Error al cargar las notificaciones';
           }
         },
         error: (error) => {
           this.cargandoNotificaciones = false;
-          console.error('Error al cargar notificaciones:', error);
+          this.error = 'Error al cargar las notificaciones';
+          console.error('Error:', error);
         }
       });
+  }
+
+  /**
+   * Aplica filtros a las notificaciones
+   */
+  aplicarFiltros(notificaciones: DtoNotificacion[]): DtoNotificacion[] {
+    let filtradas = [...notificaciones];
+
+    // Filtrar por tipo
+    if (this.filtroTipo && this.filtroTipo !== '') {
+      filtradas = filtradas.filter(n => n.tipoNotificacion === this.filtroTipo);
+    }
+
+    // Filtrar por estado de lectura
+    if (this.filtroLeidas === 'leidas') {
+      filtradas = filtradas.filter(n => n.leida);
+    } else if (this.filtroLeidas === 'no_leidas') {
+      filtradas = filtradas.filter(n => !n.leida);
+    }
+
+    // Ordenar por fecha de creación (más recientes primero)
+    filtradas.sort((a, b) => new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime());
+
+    return filtradas;
   }
 
   /**
@@ -161,32 +166,6 @@ isLoggedIn: boolean = false;
           console.error('Error al contar notificaciones:', error);
         }
       });
-  }
-
-  /**
-   * Inicia el intervalo para actualizar notificaciones automáticamente
-   */
-  iniciarIntervaloNotificaciones(): void {
-    // Actualizar notificaciones cada 30 segundos
-    setInterval(() => {
-      if (this.userInfo?.idUsuario && this.isLoggedIn) {
-        this.actualizarContadorNotificaciones();
-        // Solo recargar todas las notificaciones si el panel está abierto
-        if (this.mostrarPanelNotificaciones) {
-          this.cargarNotificaciones();
-        }
-      }
-    }, 30000);
-  }
-
-  /**
-   * Alterna la visibilidad del panel de notificaciones
-   */
-  togglePanelNotificaciones(): void {
-    this.mostrarPanelNotificaciones = !this.mostrarPanelNotificaciones;
-    if (this.mostrarPanelNotificaciones && this.notificaciones.length === 0) {
-      this.cargarNotificaciones();
-    }
   }
 
   /**
@@ -224,25 +203,73 @@ isLoggedIn: boolean = false;
         next: (response: ResponseNotificacion) => {
           this.cargandoNotificaciones = false;
           if (response.type === 'success') {
-            // Actualizar todas las notificaciones localmente
-            this.notificaciones.forEach(notif => {
-              if (!notif.leida) {
-                notif.leida = true;
-                notif.fechaLectura = new Date();
-              }
-            });
-            this.notificacionesNoLeidas = 0;
+            // Recargar notificaciones para reflejar los cambios
+            this.cargarNotificaciones();
+            this.actualizarContadorNotificaciones();
             console.log('Todas las notificaciones marcadas como leídas');
           } else {
-            console.error('Error al marcar las notificaciones como leídas');
+            this.error = 'Error al marcar las notificaciones como leídas';
           }
         },
         error: (error) => {
           this.cargandoNotificaciones = false;
-          console.error('Error al marcar las notificaciones como leídas:', error);
+          this.error = 'Error al marcar las notificaciones como leídas';
+          console.error('Error:', error);
         }
       });
   }
+
+  // ========== FILTROS Y PAGINACIÓN ==========
+
+  /**
+   * Aplica los filtros seleccionados
+   */
+  aplicarFiltroSeleccionado(): void {
+    this.paginaActual = 0;
+    this.cargarNotificaciones();
+  }
+
+  /**
+   * Limpia todos los filtros
+   */
+  limpiarFiltros(): void {
+    this.filtroTipo = '';
+    this.filtroLeidas = 'todas';
+    this.paginaActual = 0;
+    this.cargarNotificaciones();
+  }
+
+  /**
+   * Cambia de página
+   */
+  irAPagina(pagina: number): void {
+    if (pagina >= 0 && pagina < this.totalPaginas) {
+      this.paginaActual = pagina;
+      this.cargarNotificaciones();
+    }
+  }
+
+  /**
+   * Página anterior
+   */
+  paginaAnterior(): void {
+    if (this.paginaActual > 0) {
+      this.paginaActual--;
+      this.cargarNotificaciones();
+    }
+  }
+
+  /**
+   * Página siguiente
+   */
+  paginaSiguiente(): void {
+    if (this.paginaActual < this.totalPaginas - 1) {
+      this.paginaActual++;
+      this.cargarNotificaciones();
+    }
+  }
+
+  // ========== MÉTODOS DE UTILIDAD ==========
 
   /**
    * Obtiene la clase CSS según el tipo de notificación
@@ -288,5 +315,15 @@ isLoggedIn: boolean = false;
    */
   trackByNotificacion(index: number, notificacion: DtoNotificacion): string {
     return notificacion.idNotificacion;
+  }
+
+  /**
+   * Navega al detalle del incendio si existe
+   */
+  verIncendioRelacionado(idIncendio: string): void {
+    if (idIncendio) {
+      // Navegar al detalle del incendio
+      this.router.navigate(['/incendio', idIncendio]);
+    }
   }
 }

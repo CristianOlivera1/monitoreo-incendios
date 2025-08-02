@@ -44,6 +44,117 @@
   font-size: 14px;
 }
 
+/* ============================================ */
+/* ESTILOS PARA NOTIFICACIONES */
+/* ============================================ */
+
+/* Panel desplegable de notificaciones */
+.notification-panel {
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scroll personalizado para lista de notificaciones */
+.notification-list {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e0 #f7fafc;
+}
+
+.notification-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notification-list::-webkit-scrollbar-track {
+  background: #f7fafc;
+  border-radius: 3px;
+}
+
+.notification-list::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 3px;
+}
+
+.notification-list::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}
+
+/* Estados de notificaciones */
+.notification-item {
+  transition: all 0.2s ease;
+}
+
+.notification-item:hover {
+  transform: translateX(2px);
+}
+
+.notification-item.unread {
+  background: linear-gradient(to right, #ebf8ff 0%, #f7fafc 100%);
+  border-left: 3px solid #3182ce;
+}
+
+.notification-item.read {
+  opacity: 0.8;
+}
+
+/* Badge de contador de notificaciones */
+.notification-badge {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Iconos de tipo de notificación */
+.notification-icon {
+  transition: all 0.2s ease;
+}
+
+.notification-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Modal de alerta general */
+.alert-modal {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Textarea contador de caracteres */
+.char-counter {
+  font-size: 11px;
+  color: #a0aec0;
+  font-family: monospace;
+}
+
 /* Checkboxes personalizados */
 .checkbox-group {
   display: flex;

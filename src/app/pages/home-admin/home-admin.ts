@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { IncendioService, ResponseReporte, ActualizarEstadoIncendio } from '../../core/service/incendio/incendio.service';
 import { TokenService } from '../../core/service/oauth/token.service';
 import { UserService } from '../../core/service/user/user.service';
+import { NotificacionService, DtoNotificacion, ResponseNotificacion, CrearAlertaGeneral } from '../../core/service/notificacion/notificacion.service';
 
 interface IncendioAdmin {
   idIncendio: string;
@@ -69,10 +70,16 @@ export class HomeAdmin implements OnInit, OnDestroy {
   @ViewChild('popoverMenu') popoverMenu!: ElementRef;
 
   // Estados de la aplicación
-  vistaActual: 'dashboard' | 'mapa' | 'incendios' | 'reportes' | 'historial' | 'estadisticas' = 'dashboard';
+  vistaActual: 'dashboard' | 'mapa' | 'incendios' | 'reportes' | 'historial' | 'estadisticas' | 'notificaciones' = 'dashboard';
   cargando: boolean = false;
   error: string = '';
   fechaActual: Date = new Date();
+
+  // Datos de notificaciones
+  notificaciones: DtoNotificacion[] = [];
+  notificacionesNoLeidas: number = 0;
+  mostrarPanelNotificaciones: boolean = false;
+  cargandoNotificaciones: boolean = false;
 
   // Datos de incendios
   incendios: IncendioAdmin[] = [];
@@ -112,6 +119,7 @@ export class HomeAdmin implements OnInit, OnDestroy {
   // Filtros y formularios
   filtroForm: FormGroup;
   actualizacionForm: FormGroup;
+  alertaGeneralForm: FormGroup;
 
   // Paginación
   paginaActual: number = 0;
@@ -130,20 +138,24 @@ export class HomeAdmin implements OnInit, OnDestroy {
     { id: 'incendios' as const, label: 'Gestión de Incendios', icon: 'fire', active: false },
     { id: 'reportes' as const, label: 'Reportes Recientes', icon: 'report', active: false },
     { id: 'historial' as const, label: 'Historial Extinguidos', icon: 'history', active: false },
-    { id: 'estadisticas' as const, label: 'Estadísticas', icon: 'chart', active: false }
+    { id: 'estadisticas' as const, label: 'Estadísticas', icon: 'chart', active: false },
+    { id: 'notificaciones' as const, label: 'Notificaciones', icon: 'notifications', active: false }
   ];
 
   // Estados de modales
   mostrarModalActualizacion: boolean = false;
   mostrarModalExportacion: boolean = false;
   mostrarModalArchivo: boolean = false;
+  mostrarModalAlertaGeneral: boolean = false;
   procesandoActualizacion: boolean = false;
+  procesandoAlerta: boolean = false;
   archivoSeleccionado: any = null;
 
   constructor(
     private incendioService: IncendioService,
     private tokenService: TokenService,
     private userService: UserService,
+    private notificacionService: NotificacionService,
     private router: Router,
     private fb: FormBuilder,@Inject(PLATFORM_ID) private platformId: Object
   ) {
@@ -166,6 +178,11 @@ export class HomeAdmin implements OnInit, OnDestroy {
       comentario: [''],
       accionTomada: ['']
     });
+
+    this.alertaGeneralForm = this.fb.group({
+      titulo: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
+      mensaje: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]]
+    });
   }
 
 ngOnInit(): void {
@@ -175,6 +192,21 @@ ngOnInit(): void {
     setInterval(() => {
       this.fechaActual = new Date();
     }, 60000);
+
+    // Listener para cerrar panel de notificaciones al hacer clic fuera
+    document.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      const notificationPanel = document.querySelector('.notification-panel');
+      const notificationButton = document.querySelector('.notification-button');
+
+      if (this.mostrarPanelNotificaciones &&
+          notificationPanel &&
+          !notificationPanel.contains(target) &&
+          notificationButton &&
+          !notificationButton.contains(target)) {
+        this.mostrarPanelNotificaciones = false;
+      }
+    });
   }
 }
 
@@ -208,6 +240,10 @@ limpiarMapa(): void {
             this.userInfo = response.data;
             this.isLoggedIn = true;
             console.log("Usuario administrador cargado:", this.userInfo.nombre);
+
+            // Cargar notificaciones después de cargar el usuario
+            this.cargarNotificaciones();
+            this.iniciarIntervaloNotificaciones();
           } else {
             console.error('Error al obtener el perfil:', response.listMessage);
             this.router.navigate(['/login']);
@@ -235,7 +271,7 @@ limpiarMapa(): void {
   }
 
   // ========== NAVEGACIÓN DEL SIDEBAR ==========
-  cambiarVista(vista: 'dashboard' | 'mapa' | 'incendios' | 'reportes' | 'historial' | 'estadisticas'): void {
+  cambiarVista(vista: 'dashboard' | 'mapa' | 'incendios' | 'reportes' | 'historial' | 'estadisticas' | 'notificaciones'): void {
     const vistaAnterior = this.vistaActual;
     this.vistaActual = vista;
     this.error = '';
@@ -277,6 +313,9 @@ limpiarMapa(): void {
         break;
       case 'estadisticas':
         this.cargarEstadisticas();
+        break;
+      case 'notificaciones':
+        this.cargarNotificaciones();
         break;
     }
   }
@@ -794,6 +833,267 @@ limpiarMapa(): void {
         }
       }, 100);
     }
+  }
+
+  // ========== GESTIÓN DE NOTIFICACIONES ==========
+
+  /**
+   * Carga las notificaciones del usuario administrador
+   */
+  cargarNotificaciones(): void {
+    if (!this.userInfo?.idUsuario) return;
+
+    this.cargandoNotificaciones = true;
+    this.error = '';
+
+    this.notificacionService.obtenerNotificacionesUsuario(this.userInfo.idUsuario)
+      .subscribe({
+        next: (response: ResponseNotificacion) => {
+          this.cargandoNotificaciones = false;
+          if (response.type === 'success') {
+            this.notificaciones = response.data || [];
+            this.actualizarContadorNotificaciones();
+          } else {
+            this.error = 'Error al cargar las notificaciones';
+          }
+        },
+        error: (error) => {
+          this.cargandoNotificaciones = false;
+          this.error = 'Error al cargar las notificaciones';
+          console.error('Error:', error);
+        }
+      });
+  }
+
+  /**
+   * Actualiza el contador de notificaciones no leídas
+   */
+  actualizarContadorNotificaciones(): void {
+    if (!this.userInfo?.idUsuario) return;
+
+    this.notificacionService.contarNotificacionesNoLeidas(this.userInfo.idUsuario)
+      .subscribe({
+        next: (response: ResponseNotificacion) => {
+          if (response.type === 'success') {
+            this.notificacionesNoLeidas = response.data || 0;
+          }
+        },
+        error: (error) => {
+          console.error('Error al contar notificaciones:', error);
+        }
+      });
+  }
+
+  /**
+   * Inicia el intervalo para actualizar notificaciones automáticamente
+   */
+  iniciarIntervaloNotificaciones(): void {
+    // Actualizar notificaciones cada 30 segundos
+    setInterval(() => {
+      if (this.userInfo?.idUsuario) {
+        this.actualizarContadorNotificaciones();
+        // Solo recargar todas las notificaciones si estamos en la vista de notificaciones
+        if (this.vistaActual === 'notificaciones') {
+          this.cargarNotificaciones();
+        }
+      }
+    }, 30000);
+  }
+
+  /**
+   * Marca una notificación como leída
+   */
+  marcarNotificacionComoLeida(notificacion: DtoNotificacion): void {
+    if (!this.userInfo?.idUsuario || notificacion.leida) return;
+
+    this.notificacionService.marcarComoLeida(notificacion.idNotificacion, this.userInfo.idUsuario)
+      .subscribe({
+        next: (response: ResponseNotificacion) => {
+          if (response.type === 'success') {
+            // Actualizar la notificación localmente
+            notificacion.leida = true;
+            notificacion.fechaLectura = new Date();
+            this.actualizarContadorNotificaciones();
+          }
+        },
+        error: (error) => {
+          console.error('Error al marcar notificación como leída:', error);
+        }
+      });
+  }
+
+  /**
+   * Marca todas las notificaciones como leídas
+   */
+  marcarTodasNotificacionesComoLeidas(): void {
+    if (!this.userInfo?.idUsuario) return;
+
+    this.cargandoNotificaciones = true;
+
+    this.notificacionService.marcarTodasComoLeidas(this.userInfo.idUsuario)
+      .subscribe({
+        next: (response: ResponseNotificacion) => {
+          this.cargandoNotificaciones = false;
+          if (response.type === 'success') {
+            // Actualizar todas las notificaciones localmente
+            this.notificaciones.forEach(notif => {
+              if (!notif.leida) {
+                notif.leida = true;
+                notif.fechaLectura = new Date();
+              }
+            });
+            this.notificacionesNoLeidas = 0;
+            console.log('Todas las notificaciones marcadas como leídas');
+          } else {
+            this.error = 'Error al marcar las notificaciones como leídas';
+          }
+        },
+        error: (error) => {
+          this.cargandoNotificaciones = false;
+          this.error = 'Error al marcar las notificaciones como leídas';
+          console.error('Error:', error);
+        }
+      });
+  }
+
+  /**
+   * Alterna la visibilidad del panel de notificaciones
+   */
+  togglePanelNotificaciones(): void {
+    this.mostrarPanelNotificaciones = !this.mostrarPanelNotificaciones;
+    if (this.mostrarPanelNotificaciones && this.notificaciones.length === 0) {
+      this.cargarNotificaciones();
+    }
+  }
+
+  /**
+   * Abre el modal para crear una alerta general
+   */
+  abrirModalAlertaGeneral(): void {
+    this.alertaGeneralForm.reset();
+    this.mostrarModalAlertaGeneral = true;
+    this.error = '';
+  }
+
+  /**
+   * Cierra el modal de alerta general
+   */
+  cerrarModalAlertaGeneral(): void {
+    this.mostrarModalAlertaGeneral = false;
+    this.alertaGeneralForm.reset();
+    this.error = '';
+    this.procesandoAlerta = false;
+  }
+
+  /**
+   * Crea una alerta general para todos los usuarios
+   */
+  crearAlertaGeneral(): void {
+    if (!this.alertaGeneralForm.valid) {
+      this.error = 'Por favor complete todos los campos correctamente';
+      return;
+    }
+
+    this.procesandoAlerta = true;
+    this.error = '';
+
+    const alertaData: CrearAlertaGeneral = {
+      titulo: this.alertaGeneralForm.get('titulo')?.value,
+      mensaje: this.alertaGeneralForm.get('mensaje')?.value
+    };
+
+    this.notificacionService.crearAlertaGeneral(alertaData)
+      .subscribe({
+        next: (response: ResponseNotificacion) => {
+          this.procesandoAlerta = false;
+          if (response.type === 'success') {
+            this.cerrarModalAlertaGeneral();
+            console.log('Alerta general creada exitosamente');
+            // Mostrar mensaje de éxito
+            this.error = '';
+          } else {
+            this.error = response.listMessage?.join(', ') || 'Error al crear la alerta general';
+          }
+        },
+        error: (error) => {
+          this.procesandoAlerta = false;
+          this.error = 'Error al crear la alerta general';
+          console.error('Error:', error);
+        }
+      });
+  }
+
+  /**
+   * Obtiene la clase CSS según el tipo de notificación
+   */
+  obtenerClaseNotificacion(tipo: string): string {
+    switch (tipo.toUpperCase()) {
+      case 'NUEVO_REPORTE': return 'bg-orange-100 text-orange-800 border-orange-200';
+      case 'CAMBIO_ESTADO': return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'ALERTA_GENERAL': return 'bg-red-100 text-red-800 border-red-200';
+      case 'SISTEMA': return 'bg-gray-100 text-gray-800 border-gray-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  }
+
+  /**
+   * Obtiene el icono según el tipo de notificación
+   */
+  obtenerIconoNotificacion(tipo: string): string {
+    switch (tipo.toUpperCase()) {
+      case 'NUEVO_REPORTE': return 'fire';
+      case 'CAMBIO_ESTADO': return 'refresh';
+      case 'ALERTA_GENERAL': return 'warning';
+      case 'SISTEMA': return 'info';
+      default: return 'bell';
+    }
+  }
+
+  /**
+   * Obtiene la clase CSS según la prioridad de la notificación
+   * Como no hay campo prioridad en la BD, usamos el tipo para determinar la importancia
+   */
+  obtenerClasePrioridad(tipo: string): string {
+    switch (tipo.toUpperCase()) {
+      case 'ALERTA_GENERAL': return 'border-l-4 border-red-500'; // Alta prioridad
+      case 'NUEVO_REPORTE': return 'border-l-4 border-orange-500'; // Media prioridad
+      case 'CAMBIO_ESTADO': return 'border-l-4 border-blue-500'; // Media prioridad
+      case 'SISTEMA': return 'border-l-4 border-gray-500'; // Baja prioridad
+      default: return 'border-l-4 border-gray-500';
+    }
+  }
+
+  /**
+   * Obtiene la etiqueta legible del tipo de notificación
+   */
+  getTipoNotificacionLabel(tipo: string): string {
+    switch (tipo.toUpperCase()) {
+      case 'NUEVO_REPORTE': return 'Nuevo Reporte';
+      case 'CAMBIO_ESTADO': return 'Cambio de Estado';
+      case 'ALERTA_GENERAL': return 'Alerta General';
+      case 'SISTEMA': return 'Sistema';
+      default: return 'General';
+    }
+  }
+
+  /**
+   * Obtiene la "prioridad" basada en el tipo (para mostrar en la UI)
+   */
+  obtenerPrioridadPorTipo(tipo: string): string {
+    switch (tipo.toUpperCase()) {
+      case 'ALERTA_GENERAL': return 'ALTA';
+      case 'NUEVO_REPORTE': return 'MEDIA';
+      case 'CAMBIO_ESTADO': return 'MEDIA';
+      case 'SISTEMA': return 'BAJA';
+      default: return 'BAJA';
+    }
+  }
+
+  /**
+   * Función trackBy para optimizar el renderizado de la lista de notificaciones
+   */
+  trackByNotificacion(index: number, notificacion: DtoNotificacion): string {
+    return notificacion.idNotificacion;
   }
 
   // ============================================
