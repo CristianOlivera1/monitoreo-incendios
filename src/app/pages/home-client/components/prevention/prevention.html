@@ -4,66 +4,83 @@
     class="absolute bottom-0 right-0 w-48 md:w-58 pointer-events-none select-none z-0">
 
   <!-- Encabezado del póster -->
-  <div class="text-center mb-12 relative z-10">
+  <div class="text-center relative z-10 mb-6">
     <h2 class="text-5xl font-extrabold text-yellow-400 drop-shadow-lg uppercase">¡Evita Incendios Forestales!</h2>
     <p class="text-lg mt-4 text-orange-200 font-medium">Infografía preventiva para zonas forestales y rurales del Perú
     </p>
   </div>
+  <div class="text-center mb-12 relative z-10">
+    <a href="https://spda.org.pe/wp-content/uploads/2024/10/INCENDIOS_181024-4-1_compressed.pdf" target="_blank"
+      class="inline-flex items-center gap-2 bg-white/90 text-black font-bold px-6 py-3 rounded-full shadow-lg hover:bg-yellow-300 transition duration-300 text">
+      <svg class="size-8" viewBox="0 0 32 32">
+        <use xlink:href="/assets/sprite.svg#pdf" />
+      </svg>
+      Descargar PDF
+    </a>
+  </div>
 
   <!-- Círculos con recomendaciones -->
   <div class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-10">
-
     <div
-      class="bg-white text-black p-6 rounded-4xl shadow-xl border-4 border-red-600 text-center hover:scale-105 transition duration-300">
-      <img src="/assets/img/fogata.jpg" alt="fogata" class="size-45 mx-auto mb-2">
+      class="bg-white text-black p-6 rounded-4xl shadow-xl border-2 border-dashed border-red-600 text-center hover:scale-105 transition duration-300">
+      <img src="/assets/img/fogata.jpg" alt="fogata" class="size-45 mx-auto mb-4 w-full rounded-2xl object-cover">
       <h3 class="font-bold text-lg">No hagas fogatas</h3>
       <p class="text-sm">Evita fogatas en áreas forestales o protegidas, especialmente en temporada seca.</p>
     </div>
 
     <div
-      class="bg-white text-black p-6 rounded-4xl shadow-xl border-4 border-orange-600 text-center hover:scale-105 transition duration-300">
-      <img src="/assets/img/humo.jpg" alt="reporte" class="size-45 mx-auto mb-2">
+      class="bg-white text-black p-6 rounded-4xl shadow-xl border-2 border-dashed border-orange-600 text-center hover:scale-105 transition duration-300">
+      <img src="/assets/img/humo.jpg" alt="reporte" class="size-45 mx-auto mb-4 w-full rounded-2xl object-cover">
       <h3 class="font-bold text-lg">Reporta columnas de humo</h3>
       <p class="text-sm">Llama al 911 o al COEN (113) si ves señales de humo en zonas forestales.</p>
     </div>
 
     <div
-      class="bg-white text-black p-6 rounded-4xl shadow-xl border-4 border-yellow-600 text-center hover:scale-105 transition duration-300">
-      <img src="/assets/img/basura.jpg" alt="vidrio" class="size-45 mx-auto mb-2">
+      class="bg-white text-black p-6 rounded-4xl shadow-xl border-2 border-dashed border-yellow-600 text-center hover:scale-105 transition duration-300">
+      <img src="/assets/img/basura.jpg" alt="vidrio" class="size-45 mx-auto mb-4 w-full rounded-2xl object-cover">
       <h3 class="font-bold text-lg">No dejes basura o vidrios</h3>
       <p class="text-sm">Los vidrios pueden provocar incendios al concentrar la luz solar.</p>
     </div>
 
     <div
-      class="bg-white text-black p-6 rounded-4xl shadow-xl border-4 border-green-600 text-center hover:scale-105 transition duration-300">
-      <img src="/assets/img/educa.jpg" alt="niños" class="size-45 mx-auto mb-2">
+      class="bg-white text-black p-6 rounded-4xl shadow-xl border-2 border-dashed border-green-600 text-center hover:scale-105 transition duration-300">
+      <img src="/assets/img/educa.jpg" alt="niños" class="size-45 mx-auto mb-4 w-full rounded-2xl object-cover">
       <h3 class="font-bold text-lg">Educa a los niños</h3>
       <p class="text-sm">Explícales la importancia de no jugar con fuego o encendedores.</p>
     </div>
 
     <div
-      class="bg-white text-black p-6 rounded-4xl shadow-xl border-4 border-blue-600 text-center hover:scale-105 transition duration-300">
-      <img src="/assets/img/cables.jpg" alt="cables" class="size-45 mx-auto mb-2">
+      class="bg-white text-black p-6 rounded-4xl shadow-xl border-2 border-dashed border-blue-600 text-center hover:scale-105 transition duration-300">
+      <img src="/assets/img/cables.jpg" alt="cables" class="size-45 mx-auto mb-4 w-full rounded-2xl object-cover">
       <h3 class="font-bold text-lg">Revisa cables y conexiones</h3>
       <p class="text-sm">Evita sobrecargar enchufes. Las fallas eléctricas pueden iniciar incendios.</p>
     </div>
 
     <div
-      class="bg-white text-black p-6 rounded-4xl shadow-xl border-4 border-purple-600 text-center hover:scale-105 transition duration-300">
-      <img src="/assets/img/no-quemes.jpg" alt="basura" class="size-45 mx-auto mb-2">
+      class="bg-white text-black p-6 rounded-4xl shadow-xl border-2 border-dashed border-purple-600 text-center hover:scale-105 transition duration-300">
+      <img src="/assets/img/no-quemes.jpg" alt="basura" class="size-45 mx-auto mb-4 w-full rounded-2xl object-cover">
       <h3 class="font-bold text-lg">No quemes residuos</h3>
       <p class="text-sm">En zonas rurales, evita la quema de residuos agrícolas sin autorización.</p>
     </div>
-
-
   </div>
 
   <!-- Mensaje de conciencia final -->
   <div class="mt-16 text-center relative z-10">
-    <p class="text-orange-200 text-lg font-semibold">El 90% de los incendios forestales son causados por el ser humano.
+    <p class="text-orange-200 text-lg font-semibold">
+      El <span class="text-red-500 font-extrabold">90%</span> de los incendios forestales son causados por el ser
+      humano.
     </p>
-    <p class="text-yellow-400 text-xl font-bold mt-2">¡Tu prevención es clave para salvar vidas y naturaleza!</p>
+    <p class="text-yellow-400 text-2xl font-extrabold mt-2 drop-shadow-md">
+      ¡Tu prevención es clave para salvar vidas y naturaleza!
+    </p>
   </div>
+
+  <div class="mt-10 flex justify-center relative z-10">
+    <img src="/assets/img/emergencias.avif" alt="Emergencia"
+      class="rounded-2xl shadow-lg max-w-md w-full hover:scale-105 transition duration-300">
+  </div>
+
+
 </section>
 
 <section class="relative py-10 px-4 md:px-12 pb-30 " id="prevencion">
