@@ -24,10 +24,8 @@
           </svg>
 
           <!-- Mapa Icon -->
-          <svg *ngIf="item.id === 'mapa'" class="w-5 h-5 mr-3" fill="none" stroke="currentColor"
-            viewBox="0 0 24 24">
-            <path d="M12 2L17 7H20a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h3l5-5z"/>
-            <circle cx="12" cy="13" r="3"/>
+          <svg *ngIf="item.id === 'mapa'" class="w-5 h-5 mr-3" viewBox="0 0 24 24">
+            <use xlink:href="/assets/sprite.svg#mapa" />
           </svg>
 
           <!-- Fire Icon -->
@@ -50,11 +48,6 @@
           <!-- estadisticas Icon -->
           <svg *ngIf="item.id === 'estadisticas'" class="w-5 h-5 mr-3" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                    <use xlink:href="/assets/sprite.svg#barras" />
-          </svg>
-
-          <!-- Users Icon -->
-          <svg *ngIf="item.id === 'usuarios'" class="w-5 h-5 mr-3" fill="none" viewBox="0 0 256 256">
-            <use xlink:href="/assets/sprite.svg#users" />
           </svg>
 
           {{ item.label }}
@@ -135,7 +128,7 @@
               vistaActual === 'incendios' ? 'Gestión de Incendios' :
               vistaActual === 'reportes' ? 'Reportes Recientes' :
               vistaActual === 'estadisticas' ? 'Estadísticas' :
-              vistaActual === 'usuarios' ? 'Gestión de Usuarios' : 'Panel de Administración' }}
+                'Panel de Administración' }}
             </h1>
             <p class="text-sm text-gray-600 mt-1">
               {{ vistaActual === 'dashboard' ? 'Resumen general del sistema de monitoreo' :
@@ -143,7 +136,7 @@
               vistaActual === 'incendios' ? 'Administra y monitorea todos los incendios reportados' :
               vistaActual === 'reportes' ? 'Revisa los reportes más recientes' :
               vistaActual === 'estadisticas' ? 'Analiza las métricas del sistema' :
-              vistaActual === 'usuarios' ? 'Gestiona los usuarios del sistema' : '' }}
+                '' }}
             </p>
           </div>
           <div class="flex items-center gap-4">
@@ -318,63 +311,6 @@
             </div>
           </div>
 
-          <!-- Panel de Información del Incendio Seleccionado -->
-          <div class="incident-info-panel" *ngIf="incendioSeleccionado">
-            <div class="info-header">
-              <h3>Información del Incendio</h3>
-              <button class="close-btn" (click)="cerrarInfoPanel()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-              </button>
-            </div>
-
-            <div class="info-content">
-              <div class="info-section">
-                <label>Ubicación:</label>
-                <p>{{incendioSeleccionado.nombreCiudad}}</p>
-              </div>
-
-              <div class="info-section">
-                <label>Estado:</label>
-                <span class="status-badge" [ngClass]="'status-' + incendioSeleccionado.estado.toLowerCase().replace('_', '-')">
-                  {{incendioSeleccionado.estado}}
-                </span>
-              </div>
-
-              <div class="info-section">
-                <label>Nivel de Urgencia:</label>
-                <span class="priority-badge" [ngClass]="'priority-' + incendioSeleccionado.nivelUrgencia.toLowerCase()">
-                  {{incendioSeleccionado.nivelUrgencia}}
-                </span>
-              </div>
-
-              <div class="info-section">
-                <label>Fecha de Reporte:</label>
-                <p>{{incendioSeleccionado.fechaReporte | date:'dd/MM/yyyy HH:mm'}}</p>
-              </div>
-
-              <div class="info-section" *ngIf="incendioSeleccionado.descripcion">
-                <label>Descripción:</label>
-                <p>{{incendioSeleccionado.descripcion}}</p>
-              </div>
-
-              <div class="info-section" *ngIf="incendioSeleccionado.comentarios && incendioSeleccionado.comentarios.length > 0">
-                <label>Último Comentario:</label>
-                <p>{{incendioSeleccionado.comentarios[incendioSeleccionado.comentarios.length - 1].comentario}}</p>
-              </div>
-
-              <div class="info-actions">
-                <button class="btn-primary" (click)="verDetalleIncendio(incendioSeleccionado)">
-                  Ver Detalles Completos
-                </button>
-                <button class="btn-secondary" (click)="abrirModalActualizacion(incendioSeleccionado)">
-                  Actualizar Estado
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -657,7 +593,7 @@
       <div *ngIf="vistaActual === 'reportes' && !cargando">
         <div class="bg-white rounded-lg shadow">
           <div class="px-6 py-4 border-b border-gray-200">
-            <h3 class="text-lg font-medium text-gray-900">Reportes de las Últimas 24 Horas</h3>
+            <h3 class="text-lg font-medium text-gray-900">Reportes de las Últimas 48 Horas</h3>
           </div>
 
           <div *ngIf="incendios.length > 0" class="divide-y divide-gray-200">
@@ -699,7 +635,7 @@
                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <h3 class="mt-2 text-sm font-medium text-gray-900">No hay reportes recientes</h3>
-            <p class="mt-1 text-sm text-gray-500">No se han registrado incendios en las últimas 24 horas.</p>
+            <p class="mt-1 text-sm text-gray-500">No se han registrado incendios en las últimas 48 horas.</p>
           </div>
         </div>
       </div>
@@ -889,14 +825,6 @@
         </div>
       </div>
 
-      <!-- Usuarios View -->
-      <div *ngIf="vistaActual === 'usuarios' && !cargando">
-        <div class="bg-white rounded-lg shadow p-6">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">Gestión de Usuarios</h3>
-          <p class="text-gray-600">Esta funcionalidad estará disponible próximamente.</p>
-        </div>
-      </div>
-
     </main>
   </div>
 
@@ -904,7 +832,7 @@
   <div *ngIf="incendioSeleccionado" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
     <div class="relative top-20 mx-auto p-5 border w-3xl max-w-4xl shadow-lg rounded-md bg-white">
       <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-medium text-gray-900">Detalle del Incendio</h3>
+        <h3 class="text-lg font-bold text-gray-900 ">Detalle del Incendio</h3>
         <button (click)="cerrarDetalle()" class="text-gray-400 hover:text-gray-600">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -1040,8 +968,8 @@
           </div>
 
           <!-- Comentarios/Historial de cambios -->
-          <div *ngIf="incendioSeleccionado.comentarios && incendioSeleccionado.comentarios.length > 0">
-            <label class="block text-gray-500 mb-2">Historial de Comentarios ({{ incendioSeleccionado.comentarios.length
+          <div *ngIf="incendioSeleccionado.comentarios && incendioSeleccionado.comentarios.length > 0" class="bg-green-100 p-4 rounded-md mt-4">
+            <label class="block text-gray-600 mb-2">Historial de Comentarios ({{ incendioSeleccionado.comentarios.length
               }}):</label>
             <div class="space-y-3 max-h-32 overflow-y-auto">
               <div *ngFor="let comentario of incendioSeleccionado.comentarios"

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -60,7 +60,7 @@ interface EstadisticasIncendios {
   templateUrl: './home-admin.html',
   styleUrl: './home-admin.css'
 })
-export class HomeAdmin implements OnInit {
+export class HomeAdmin implements OnInit, OnDestroy {
 
   // Estado del usuario
   userInfo: any = null;
@@ -69,7 +69,7 @@ export class HomeAdmin implements OnInit {
   @ViewChild('popoverMenu') popoverMenu!: ElementRef;
 
   // Estados de la aplicación
-  vistaActual: 'dashboard' | 'mapa' | 'incendios' | 'reportes' | 'historial' | 'estadisticas' | 'usuarios' = 'dashboard';
+  vistaActual: 'dashboard' | 'mapa' | 'incendios' | 'reportes' | 'historial' | 'estadisticas' = 'dashboard';
   cargando: boolean = false;
   error: string = '';
   fechaActual: Date = new Date();
@@ -130,8 +130,7 @@ export class HomeAdmin implements OnInit {
     { id: 'incendios' as const, label: 'Gestión de Incendios', icon: 'fire', active: false },
     { id: 'reportes' as const, label: 'Reportes Recientes', icon: 'report', active: false },
     { id: 'historial' as const, label: 'Historial Extinguidos', icon: 'history', active: false },
-    { id: 'estadisticas' as const, label: 'Estadísticas', icon: 'chart', active: false },
-    { id: 'usuarios' as const, label: 'Usuarios', icon: 'users', active: false }
+    { id: 'estadisticas' as const, label: 'Estadísticas', icon: 'chart', active: false }
   ];
 
   // Estados de modales
@@ -178,6 +177,27 @@ ngOnInit(): void {
     }, 60000);
   }
 }
+
+ngOnDestroy(): void {
+  this.limpiarMapa();
+}
+
+/**
+ * Limpia el mapa y libera los recursos
+ */
+limpiarMapa(): void {
+  if (this.mapa && isPlatformBrowser(this.platformId)) {
+    try {
+      this.mapa.remove();
+      console.log('Mapa limpiado correctamente');
+    } catch (error) {
+      console.log('Error al limpiar el mapa:', error);
+    }
+  }
+  this.mapa = null;
+  this.grupoMarcadores = null;
+  this.marcadores = [];
+}
   // ========== GESTIÓN DE USUARIO ==========
   loadUser(): void {
     const userId = this.tokenService.getUserId();
@@ -215,10 +235,15 @@ ngOnInit(): void {
   }
 
   // ========== NAVEGACIÓN DEL SIDEBAR ==========
-  cambiarVista(vista: 'dashboard' | 'mapa' | 'incendios' | 'reportes' | 'historial' | 'estadisticas' | 'usuarios'): void {
+  cambiarVista(vista: 'dashboard' | 'mapa' | 'incendios' | 'reportes' | 'historial' | 'estadisticas'): void {
     const vistaAnterior = this.vistaActual;
     this.vistaActual = vista;
     this.error = '';
+
+    // Limpiar el mapa si cambiamos desde la vista de mapa a otra vista
+    if (vistaAnterior === 'mapa' && vista !== 'mapa') {
+      this.limpiarMapa();
+    }
 
     // Actualizar estado activo del menú
     this.menuItems.forEach(item => {
@@ -226,7 +251,7 @@ ngOnInit(): void {
     });
 
     // Si cambiamos a la vista de mapa, inicializarlo
-    if (vista === 'mapa' && vistaAnterior !== 'mapa') {
+    if (vista === 'mapa') {
       setTimeout(() => {
         this.inicializarMapa();
       }, 100);
@@ -252,9 +277,6 @@ ngOnInit(): void {
         break;
       case 'estadisticas':
         this.cargarEstadisticas();
-        break;
-      case 'usuarios':
-        // Implementar carga de usuarios
         break;
     }
   }
@@ -282,6 +304,10 @@ ngOnInit(): void {
         const data = todos.data;
         this.estadisticas.totalIncendios = data?.totalElements || 0;
         this.incendios = data?.content?.slice(0, 5) || [];
+        // Calcular área total afectada usando los incendios obtenidos
+        this.estadisticas.areaTotalAfectada = (data?.content || []).reduce(
+          (total: number, i: IncendioAdmin) => total + (i.areaAfectada || 0), 0
+        );
       }
     }).catch(error => {
       this.cargando = false;
@@ -426,6 +452,15 @@ ngOnInit(): void {
           this.cargando = false;
           if (response.type === 'success') {
             this.incendioSeleccionado = response.data;
+
+            // Si estamos en la vista de mapa, asegurar que el mapa permanezca funcional
+            if (this.vistaActual === 'mapa' && isPlatformBrowser(this.platformId)) {
+              setTimeout(() => {
+                if (this.mapa) {
+                  this.mapa.invalidateSize();
+                }
+              }, 200);
+            }
           } else {
             this.error = 'Error al cargar el detalle del incendio';
           }
@@ -746,6 +781,19 @@ ngOnInit(): void {
 
   cerrarDetalle(): void {
     this.incendioSeleccionado = null;
+
+    // Si estamos en la vista de mapa, necesitamos reinicializar el mapa
+    // para asegurar que se muestre correctamente después de cerrar el modal
+    if (this.vistaActual === 'mapa' && isPlatformBrowser(this.platformId)) {
+      setTimeout(() => {
+        if (this.mapa) {
+          this.mapa.invalidateSize();
+          console.log('Mapa redimensionado después de cerrar modal');
+        } else {
+          this.inicializarMapa();
+        }
+      }, 100);
+    }
   }
 
   // ============================================
@@ -762,20 +810,45 @@ ngOnInit(): void {
     }
 
     if (this.vistaActual === 'mapa') {
-      // Solo inicializar si no existe ya
-      if (!this.mapa) {
+      // Verificar si el contenedor del mapa existe
+      const contenedorMapa = document.getElementById('mapa-incendios');
+
+      // Si el contenedor no existe o está vacío, necesitamos recrear el mapa
+      if (!contenedorMapa || contenedorMapa.innerHTML === '' || !this.mapa) {
+        // Limpiar referencias previas del mapa si existen
+        if (this.mapa) {
+          try {
+            this.mapa.remove();
+            this.mapa = null;
+            this.grupoMarcadores = null;
+            this.marcadores = [];
+            console.log('Mapa anterior limpiado');
+          } catch (error) {
+            console.log('Error al limpiar mapa anterior:', error);
+          }
+        }
+
         setTimeout(async () => {
           await this.cargarLeaflet();
           this.crearMapa();
           this.cargarIncendiosEnMapa();
         }, 100);
       } else {
-        this.actualizarMarcadores();
+        // Si el mapa ya existe y el contenedor está presente, verificar si es funcional
+        try {
+          if (this.mapa) {
+            this.mapa.invalidateSize();
+            this.actualizarMarcadores();
+          }
+        } catch (error) {
+          console.log('Error al redimensionar mapa, recreando:', error);
+          // Si hay error, recrear el mapa
+          this.mapa = null;
+          this.inicializarMapa();
+        }
       }
     }
-  }
-
-  /**
+  }  /**
    * Carga Leaflet dinámicamente solo en el navegador
    */
   private async cargarLeaflet(): Promise<void> {
@@ -803,36 +876,54 @@ ngOnInit(): void {
     const contenedorMapa = document.getElementById('mapa-incendios');
     if (!contenedorMapa) {
       console.error('Contenedor del mapa no encontrado');
+      setTimeout(() => this.crearMapa(), 200); // Reintentar en 200ms
       return;
     }
 
-    // Limpiar el contenedor
+    // Limpiar el contenedor completamente
     contenedorMapa.innerHTML = '';
 
-    // Coordenadas centrales de Perú (Lima)
-    const centroLatitud = -12.0464;
-    const centroLongitud = -77.0428;
+    // Asegurar que el contenedor tenga dimensiones
+    if (contenedorMapa.offsetHeight === 0) {
+      contenedorMapa.style.height = '600px';
+    }
 
-    // Crear el mapa con Leaflet
-    this.mapa = this.L.map('mapa-incendios').setView([centroLatitud, centroLongitud], 6);
+    try {
+      // Coordenadas centrales de Perú (Lima)
+      const centroLatitud = -12.0464;
+      const centroLongitud = -77.0428;
 
-    // Agregar tile layer (OpenStreetMap)
-    this.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors',
-      maxZoom: 18,
-      minZoom: 3
-    }).addTo(this.mapa);
+      // Crear el mapa con Leaflet
+      this.mapa = this.L.map('mapa-incendios').setView([centroLatitud, centroLongitud], 6);
 
-    // Crear grupo de marcadores
-    this.grupoMarcadores = this.L.layerGroup().addTo(this.mapa);
+      // Agregar tile layer (OpenStreetMap)
+      this.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 18,
+        minZoom: 3
+      }).addTo(this.mapa);
 
-    // Configurar iconos personalizados para Leaflet
-    this.configurarIconosLeaflet();
+      // Crear grupo de marcadores
+      this.grupoMarcadores = this.L.layerGroup().addTo(this.mapa);
 
-    // Setup funciones globales
-    this.setupGlobalFunctions();
+      // Configurar iconos personalizados para Leaflet
+      this.configurarIconosLeaflet();
 
-    console.log('Mapa inicializado con Leaflet');
+      // Setup funciones globales
+      this.setupGlobalFunctions();
+
+      // Forzar redimensionamiento del mapa
+      setTimeout(() => {
+        if (this.mapa) {
+          this.mapa.invalidateSize();
+        }
+      }, 100);
+
+      console.log('Mapa inicializado con Leaflet exitosamente');
+    } catch (error) {
+      console.error('Error al crear el mapa:', error);
+      this.error = 'Error al inicializar el mapa';
+    }
   }
 
   /**
@@ -859,7 +950,8 @@ ngOnInit(): void {
     (window as any).seleccionarIncendioDesdePopup = (idIncendio: string) => {
       const incendio = this.incendios.find(i => i.idIncendio === idIncendio);
       if (incendio) {
-        this.incendioSeleccionado = incendio;
+        // Llamar al método completo que carga los detalles desde el servidor
+        this.verDetalleIncendio(incendio);
       }
     };
   }
@@ -992,11 +1084,48 @@ ngOnInit(): void {
       </div>
     `;
 
-    marcador.bindPopup(popupContent);
+    // Configurar popup con opciones personalizadas
+    marcador.bindPopup(popupContent, {
+      closeButton: true,
+      autoClose: true,
+      closeOnClick: false
+    });
 
-    // Event listener para seleccionar el incendio
+    // Event listeners para mostrar popup en hover
+    marcador.on('mouseover', () => {
+      marcador.openPopup();
+    });
+
+    marcador.on('mouseout', () => {
+      // Cerrar popup después de un pequeño delay para permitir interacción
+      setTimeout(() => {
+        marcador.closePopup();
+      }, 1000);
+    });
+
+    // Event listener para seleccionar el incendio al hacer click
     marcador.on('click', () => {
       this.incendioSeleccionado = incendio;
+    });
+
+    // Mantener el popup abierto cuando se hace hover sobre él
+    marcador.on('popupopen', () => {
+      const popup = marcador.getPopup();
+      const popupElement = popup?.getElement();
+
+      if (popupElement) {
+        // Cancelar el cierre cuando se hace hover sobre el popup
+        popupElement.addEventListener('mouseenter', () => {
+          clearTimeout((marcador as any).closeTimer);
+        });
+
+        // Programar el cierre cuando se sale del popup
+        popupElement.addEventListener('mouseleave', () => {
+          (marcador as any).closeTimer = setTimeout(() => {
+            marcador.closePopup();
+          }, 1000);
+        });
+      }
     });
 
     return marcador;
