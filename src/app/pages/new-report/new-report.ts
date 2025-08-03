@@ -44,7 +44,9 @@ export class NewReport implements OnDestroy {
   isModalOpen = false;
   searchTerm = '';
   cities: City[] = [];
+  nearbyCities: City[] = [];
   isLoading = false;
+  isLoadingNearby = false;
   searchSubject = new Subject<string>();
 
   // Location
@@ -108,6 +110,9 @@ export class NewReport implements OnDestroy {
         this.isLoading = false;
       }
     });
+
+    // Cargar ciudades cercanas al inicializar
+    this.loadNearbyCities();
   }
 
   private searchCities(term: string) {
@@ -124,6 +129,59 @@ export class NewReport implements OnDestroy {
         return of([]);
       })
     );
+  }
+
+  // Cargar ciudades cercanas a la ubicación actual
+  private loadNearbyCities() {
+    if (!this.selectedLocation.latitude || !this.selectedLocation.longitude) {
+      return;
+    }
+
+    this.isLoadingNearby = true;
+    const apiKey = environment.ninjasApiKey;
+    const lat = this.selectedLocation.latitude;
+    const lng = this.selectedLocation.longitude;
+    const radius = 1.0; // Radio de 1 grado (~111 km aproximadamente)
+
+    const url = `https://api.api-ninjas.com/v1/city?min_lat=${lat - radius}&max_lat=${lat + radius}&min_lon=${lng - radius}&max_lon=${lng + radius}`;
+
+    this.http.get<City[]>(url, {
+      headers: {
+        'X-Api-Key': apiKey
+      }
+    }).pipe(
+      catchError(error => {
+        console.error('Error loading nearby cities:', error);
+        return of([]);
+      })
+    ).subscribe(cities => {
+      if (cities && cities.length > 0) {
+        // Calcular distancias y ordenar por proximidad
+        const citiesWithDistance = cities.map(city => ({
+          ...city,
+          distance: this.calculateDistance(lat, lng, city.latitude, city.longitude)
+        }));
+
+        // Ordenar por distancia y tomar las 8 más cercanas
+        this.nearbyCities = citiesWithDistance
+          .sort((a, b) => a.distance - b.distance)
+          .slice(0, 8)
+          .map(({ distance, ...city }) => city); // Remover la propiedad distance
+      }
+      this.isLoadingNearby = false;
+    });
+  }
+
+  // Calcular distancia entre dos puntos geográficos (fórmula de Haversine simplificada)
+  private calculateDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
+    const R = 6371; // Radio de la Tierra en km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
   }
 
   // Get city information by coordinates
@@ -190,6 +248,11 @@ export class NewReport implements OnDestroy {
     this.isModalOpen = true;
     this.searchTerm = '';
     this.cities = [];
+
+    // Cargar ciudades cercanas si no las tenemos
+    if (this.nearbyCities.length === 0 && !this.isLoadingNearby) {
+      this.loadNearbyCities();
+    }
 
     // Focus the input after the modal is rendered
     setTimeout(() => {
@@ -258,6 +321,9 @@ export class NewReport implements OnDestroy {
 
         // Get city information by coordinates
         this.getCityInfoByCoordinates(position.coords.latitude, position.coords.longitude);
+
+        // Recargar ciudades cercanas con la nueva ubicación
+        this.loadNearbyCities();
       },
       (error) => {
         this.isGettingLocation = false;
@@ -567,7 +633,6 @@ export class NewReport implements OnDestroy {
   }
 
   ngOnDestroy() {
-    // Clean up file preview URLs to prevent memory leaks
     this.filePreviewUrls.forEach(url => {
       if (url) URL.revokeObjectURL(url);
     });

@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -287,13 +288,23 @@ public class BusinessIncendio {
 
   public List<DtoReporteIncendio> obtenerIncendiosRecientes() {
     // Obtener incendios de las últimas 48 horas
-     Timestamp hace48Horas = new Timestamp(System.currentTimeMillis() - (48L * 60 * 60 * 1000));
+    Timestamp hace48Horas = new Timestamp(System.currentTimeMillis() - (48L * 60 * 60 * 1000));
     List<TIncendio> incendiosRecientes = repoIncendio.findIncendiosRecientes(hace48Horas);
 
     return incendiosRecientes.stream()
         .map(this::convertirADto)
         .toList();
   }
+
+ public List<DtoReporteIncendio> obtenerIncendiosRecientesMes() {
+    // Obtener incendios del último mes
+    Timestamp haceUnMes = Timestamp.valueOf(LocalDateTime.now().minusMonths(1));
+    List<TIncendio> incendiosRecientes = repoIncendio.findIncendiosRecientes(haceUnMes);
+
+    return incendiosRecientes.stream()
+        .map(this::convertirADtoCompleto)
+        .toList();
+}
 
   public List<DtoReporteIncendio> obtenerIncendiosActivos() {
     List<TIncendio> incendiosActivos = repoIncendio.findIncendiosActivos();

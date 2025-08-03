@@ -1,10 +1,10 @@
-<header (click)="onClickOutside($event)">
-  <nav class="flex items-center justify-between p-5 md:px-16 z-10 fade-in backdrop-blur-xs shadow-md bg-white"
+<header (click)="onClickOutside($event)" class="mb-20">
+  <nav class="flex items-center justify-between p-5 md:px-16 z-10 fade-in backdrop-blur-xs shadow-md bg-white fixed top-0 left-0 w-full "
     aria-label="Global">
     <div class="flex md:flex-1">
       <a routerLink="/" class="relative -m-1.5 p-1.5 flex gap-2">
         <img class="size-11" src="/assets/img/logo-fire.png" alt="logo">
-        <h1 class="font-black text-3xl hidden md:flex my-1">
+        <h1 class="font-black text-2xl xl:text-3xl flex my-1">
           ApuNina
         </h1>
       </a>
@@ -50,7 +50,7 @@
 
             <!-- Panel desplegable de notificaciones -->
             <div *ngIf="mostrarPanelNotificaciones"
-                 class="notification-panel absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl ring-1 ring-black ring-opacity-5 z-50 max-h-96 overflow-hidden">
+                 class="notification-panel absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-300 z-50 max-h-[32rem] overflow-hidden">
               <div class="p-4 border-b border-gray-200">
                 <div class="flex items-center justify-between">
                   <h3 class="text-lg font-medium text-gray-900">Notificaciones</h3>
@@ -70,7 +70,7 @@
                 </div>
 
                 <!-- Lista de notificaciones -->
-                <div *ngIf="!cargandoNotificaciones && notificaciones.length > 0" class="divide-y divide-gray-200">
+                <div *ngIf="!cargandoNotificaciones && notificaciones.length > 0" class="divide-y divide-gray-200 max-h-96 overflow-y-auto overflow-x-hidden">
                   <div *ngFor="let notificacion of notificaciones.slice(0, 5); trackBy: trackByNotificacion"
                        (click)="marcarNotificacionComoLeida(notificacion)"
                        class="p-4 hover:bg-gray-50 cursor-pointer transition-colors "
@@ -261,7 +261,7 @@
       <button type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5"
         (click)="toggleMenu()">
         <span class="sr-only">Abrir menú</span>
-        <svg *ngIf="!menuAbierto" class="size-8" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white">
+        <svg *ngIf="!menuAbierto" class="size-8" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
         </svg>
 
@@ -280,10 +280,10 @@
 <div *ngIf="menuAbierto"
   class="md:hidden fixed inset-y-0 right-0 z-50 w-full max-w-sm bg-white px-6 py-6 overflow-y-auto" #menuMovil>
   <div class="flex items-center justify-between">
-    <a href="#" class="-m-1.5 p-1.5 flex">
-      <img class="size-11" src="/assets/img/logo.svg" alt="logo">
+    <a href="/" class="-m-1.5 p-1.5 flex">
+        <img class="size-11" src="/assets/img/logo-fire.png" alt="logo">
       <h1 class="font-fifties text-[1.70rem] font-black italic my-1 text-primary-green">
-        CODE PUZZLE
+   ApuNina
       </h1>
     </a>
     <button type="button" class="-m-2.5 rounded-md p-2.5 text-gray-700" (click)="toggleMenu()">
@@ -315,8 +315,8 @@
 
         <a routerLink="/reportar"
           class="flex gap-2 -mx-3 rounded-lg px-3 py-2 font-semibold text-gray-900 hover:bg-gray-50">
-          <svg class="size-5" viewBox="0 0 24 24" aria-hidden="true">
-            <use xlink:href="/assets/sprite.svg#fuego" />
+          <svg class="size-5" viewBox="0 0 1024 1024" aria-hidden="true">
+            <use xlink:href="/assets/sprite.svg#fire" />
           </svg> Reportar</a>
 
         <a *ngIf="isLoggedIn" routerLink="/mis-notificaciones"
@@ -333,8 +333,8 @@
         </a>
 
         <a href="/" class="flex gap-2 -mx-3 rounded-lg px-3 py-2 font-semibold text-gray-900 hover:bg-gray-50">
-          <svg class="size-5" viewBox="0 0 24 24" aria-hidden="true">
-            <use xlink:href="/assets/sprite.svg#seguridad" />
+          <svg class="size-5" viewBox="0 0 32 32" aria-hidden="true">
+            <use xlink:href="/assets/sprite.svg#security" />
           </svg> Prevención</a>
       </div>
 

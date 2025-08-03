@@ -764,7 +764,6 @@ limpiarMapa(): void {
   // ========== GESTIÓN DE ARCHIVOS ==========
   esImagen(tipoArchivo: string): boolean {
   return tipoArchivo.toUpperCase() === 'IMAGEN';
-
   }
 
   esVideo(tipoArchivo: string): boolean {

@@ -162,4 +162,5 @@ public class NotificacionController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }

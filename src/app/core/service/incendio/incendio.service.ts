@@ -143,6 +143,11 @@ export class IncendioService {
       { headers: this.getHeaders() });
   }
 
+    obtenerIncendiosRecientesMes(): Observable<ResponseReporte> {
+    return this.httpClient.get<ResponseReporte>(`${this.apiIncendio}/recientesmes`,
+      { headers: this.getHeaders() });
+  }
+
   obtenerIncendiosActivos(): Observable<ResponseReporte> {
     return this.httpClient.get<ResponseReporte>(`${this.apiIncendio}/activos`,
       { headers: this.getHeaders() });

@@ -168,7 +168,25 @@ public class IncendioController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+@GetMapping("/recientesmes")
+    public ResponseEntity<ResponseGeneric<List<DtoReporteIncendio>>> obtenerIncendiosRecientesMes() {
+        ResponseGeneric<List<DtoReporteIncendio>> response = new ResponseGeneric<>();
+        try {
+            List<DtoReporteIncendio> incendiosRecientes = businessIncendio.obtenerIncendiosRecientesMes();
 
+            response.setType("success");
+            response.setListMessage(List.of("Incendios recientes obtenidos exitosamente"));
+            response.setData(incendiosRecientes);
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setType("exception");
+            response.setListMessage(List.of("Error al obtener los incendios recientes: " + e.getMessage()));
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @GetMapping("/activos")
     public ResponseEntity<ResponseGeneric<List<DtoReporteIncendio>>> obtenerIncendiosActivos() {
         ResponseGeneric<List<DtoReporteIncendio>> response = new ResponseGeneric<>();
