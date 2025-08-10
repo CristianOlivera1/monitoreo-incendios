@@ -7,10 +7,10 @@ import { Router } from '@angular/router';
 import { HeaderClient } from '../../shared/header-client/header-client';
 import { IncendioService, ReporteIncendio } from '../../core/service/incendio/incendio.service';
 import { TokenService } from '../../core/service/oauth/token.service';
-import { UserService } from '../../core/service/user/user.service';
 import { debounceTime, distinctUntilChanged, switchMap, of, catchError } from 'rxjs';
 import { Subject } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { FooterClient } from '../../shared/footer-client/footer-client';
 
 interface City {
   name: string;
@@ -23,7 +23,7 @@ interface City {
 
 @Component({
   selector: 'app-new-report',
-  imports: [HeaderClient, CommonModule, ReactiveFormsModule,FormsModule],
+  imports: [HeaderClient, CommonModule, ReactiveFormsModule,FormsModule,FooterClient],
   templateUrl: './new-report.html',
   styleUrl: './new-report.css'
 })

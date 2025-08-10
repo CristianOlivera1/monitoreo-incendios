@@ -1,0 +1,39 @@
+{
+  "header": {
+    "inicio": "Inicio",
+    "reportar": "Reportar",
+    "prevencion": "Prevención",
+    "iniciarSesion": "Iniciar sesión",
+    "registrarse": "Registrarse",
+    "misNotificaciones": "Mis notificaciones",
+    "idioma": "Idioma",
+    "español": "Español",
+    "quechua": "Quechua"
+  },
+  "hero": {
+    "titulo": "Reporta los incendios en",
+    "lugar": "Apurímac",
+    "descripcion": "Reporta incendios forestales de manera rápida y ayuda a proteger nuestros bosques y comunidades.",
+    "reportarAhora": "Reportar Ahora"
+  },
+  "information": {
+    "titulo": "Incendios Recientes",
+    "subtitulo": "Reportes del último mes",
+    "actualizar": "Actualizar",
+    "cargando": "Cargando incendios recientes...",
+    "errorTitulo": "Error al cargar datos",
+    "intentarNuevamente": "Intentar nuevamente",
+    "areaAfectada": "área afectada",
+    "habitantes": "habitantes",
+    "archivoMultimedia": "archivo multimedia",
+    "archivosMultimedia": "archivos multimedia",
+    "comentario": "comentario",
+    "comentarios": "comentarios",
+    "accion": "Acción:",
+    "excelentesNoticias": "¡Excelentes noticias!",
+    "sinIncendios": "No hay incendios reportados en las últimas 48 horas.",
+    "tipo": "Tipo:",
+    "tamano": "Tamaño:",
+    "cerrar": "Cerrar"
+  }
+}

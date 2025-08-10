@@ -1,13 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { TokenService } from '../../core/service/oauth/token.service';
 import { UserService } from '../../core/service/user/user.service';
 import { NotificacionService, DtoNotificacion, ResponseNotificacion } from '../../core/service/notificacion/notificacion.service';
+import { TranslationService } from '../../core/service/translation/translation.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-header-client',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslateModule],
   templateUrl: './header-client.html',
   styleUrl: './header-client.css'
 })
@@ -22,14 +25,44 @@ isLoggedIn: boolean = false;
   mostrarPanelNotificaciones: boolean = false;
   cargandoNotificaciones: boolean = false;
 
+  // Propiedades para selector de idioma
+  currentLanguage: string = 'es';
+availableLanguages = [
+  {
+    code: 'es',
+    name: 'Español',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 64 64">
+	<path fill="#ffce31" d="M2 32c0 5.9 1.7 11.4 4.6 16h50.7c2.9-4.6 4.6-10.1 4.6-16s-1.7-11.4-4.6-16H6.6C3.7 20.6 2 26.1 2 32" />
+	<path fill="#ed4c5c" d="M57.4 16C52.1 7.6 42.7 2 32 2S11.9 7.6 6.6 16zM6.6 48c5.3 8.4 14.7 14 25.4 14s20.1-5.6 25.4-14z" />
+</svg>`
+  },
+  {
+    code: 'que',
+    name: 'Runasimi',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 64 64">
+	<path fill="#ed4c5c" d="M62 32c0-13.1-8.3-24.2-20-28.3v56.6C53.7 56.2 62 45.1 62 32M2 32c0 13.1 8.4 24.2 20 28.3V3.7C10.4 7.8 2 18.9 2 32" />
+	<path fill="#f9f9f9" d="M42 3.7C38.9 2.6 35.5 2 32 2s-6.9.6-10 1.7v56.6c3.1 1.1 6.5 1.7 10 1.7s6.9-.6 10-1.7z" />
+</svg>`
+  }
+];
+
+  mostrarSelectorIdioma: boolean = false;
+
   constructor(
     private tokenService: TokenService,
     private userService: UserService,
     private notificacionService: NotificacionService,
+    private translationService: TranslationService,
+    private sanitizer: DomSanitizer,
     private router: Router
   ) { }
 
   ngOnInit(): void {
+    // Inicializar idioma
+    this.translationService.currentLanguage$.subscribe(language => {
+      this.currentLanguage = language;
+    });
+
     if (typeof window !== 'undefined') {
       this.isLoggedIn = !!this.tokenService.getToken();
       if (this.isLoggedIn) {
@@ -288,5 +321,44 @@ isLoggedIn: boolean = false;
    */
   trackByNotificacion(index: number, notificacion: DtoNotificacion): string {
     return notificacion.idNotificacion;
+  }
+
+  // Métodos para manejo de idiomas
+  toggleSelectorIdioma(): void {
+    this.mostrarSelectorIdioma = !this.mostrarSelectorIdioma;
+  }
+
+  cambiarIdioma(language: string): void {
+    this.translationService.setLanguage(language);
+    this.mostrarSelectorIdioma = false;
+  }
+
+  obtenerNombreIdioma(code: string): string {
+    const language = this.availableLanguages.find(lang => lang.code === code);
+    return language ? language.name : code;
+  }
+
+  obtenerIconoIdioma(code: string): SafeHtml {
+    const language = this.availableLanguages.find(lang => lang.code === code);
+    if (language && language.icon) {
+      return this.sanitizer.bypassSecurityTrustHtml(language.icon);
+    }
+    return '';
+  }
+
+  // Método auxiliar para obtener HTML seguro de iconos
+  obtenerIconoSeguro(icon: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(icon);
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClickOutsideLanguage(event: Event): void {
+    const target = event.target as HTMLElement;
+    const languageSelector = target.closest('.language-selector');
+    const languageButton = target.closest('.language-button');
+
+    if (!languageSelector && !languageButton) {
+      this.mostrarSelectorIdioma = false;
+    }
   }
 }

@@ -4,27 +4,25 @@
     <div class="absolute inset-0 z-0 bg-[url('/assets/img/adornos-hero.svg')] bg-cover bg-center bg-no-repeat h-full w-full pointer-events-none xl:size-[90vh] xl:ml-14"></div>
 
     <div class="space-y-6">
-      <h1 class="text-4xl sm:text-5xl font-extrabold text-primary-ambient leading-tight">
-        Reporta los incendios<br />
-        en <span class="text-primary-ambient font-black">Apurímac</span>
+      <h1 class="text-4xl sm:text-5xl font-extrabold text-primary-ambient leading-tight max-w-xl">
+        {{ 'hero.titulo' | translate }}
+        <span class="text-primary-ambient font-black">{{ 'hero.lugar' | translate }}</span>
       </h1>
 
-      <p class="text-xl font-extralight text-red-600">
-        Tu <span class="font-bold">notificación</span> es importante
+      <p class="text-xl font-extralight text-gray-500 max-w-lg">
+        {{ 'hero.descripcion' | translate }}
       </p>
 
-      <p class="text-gray-600 max-w-md">
-        Una herramienta de información, incidentes y comunicaciones basada en la web, diseñada a medida para los
-        servicios de bomberos y rescate.
-      </p>
-
-      <button [routerLink]="['/reportar']"
-        class="mt-4 inline-flex items-center gap-2 px-5 py-3 rounded border border-blue-500 text-blue-600 hover:bg-blue-50 transition text-shadow-xs text-shadow-blue-200 shadow-md shadow-blue-200">
-        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
-          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+      <div class="flex flex-col sm:flex-row gap-4">
+        <button [routerLink]="['/reportar']"
+          class="inline-flex items-center gap-2 px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors shadow-lg">
+          <svg class="size-6" width="24" height="24" viewBox="0 0 1024 1024">
+          <use xlink:href="/assets/sprite.svg#fire" />
         </svg>
-        Enviar mi reporte de incendio
-      </button>
+          {{ 'hero.reportarAhora' | translate }}
+        </button>
+
+      </div>
     </div>
 
     <!-- Imagen -->

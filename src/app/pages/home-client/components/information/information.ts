@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { IncendioService, ResponseReporte } from '../../../../core/service/incendio/incendio.service';
 
 interface IncendioReciente {
@@ -45,7 +46,7 @@ interface ComentarioIncendio {
 
 @Component({
   selector: 'app-information',
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './information.html',
   styleUrl: './information.css'
 })

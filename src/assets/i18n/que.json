@@ -1,0 +1,39 @@
+{
+  "header": {
+    "inicio": "Qallariy",
+    "reportar": "Willakuy",
+    "prevencion": "Hark'ay",
+    "iniciarSesion": "Yaykuy",
+    "registrarse": "Qillqakuy",
+    "misNotificaciones": "Ñuqa willaykunay",
+    "idioma": "Simi",
+    "español": "Kastilla simi",
+    "quechua": "Runasimi"
+  },
+  "hero": {
+    "titulo": "Nina kañaykunata willakuy",
+    "lugar": "Apurímac",
+    "descripcion": "Nina kañaykunata usqhaylla willakuy, yunkakuna aylluyku llaqtakunata waqaychaspa.",
+    "reportarAhora": "Kunan Willakuy"
+  },
+  "information": {
+    "titulo": "Ñaqha Nina Kañaykuna",
+    "subtitulo": "Qhipa killapi willasqakuna",
+    "actualizar": "Musuqyachiy",
+    "cargando": "Ñaqha nina kañaykunata apamuchkani...",
+    "errorTitulo": "Mana atikunchu willaykunata apamuy",
+    "intentarNuevamente": "Wakmanta ruwana",
+    "areaAfectada": "llaqta ruwasqa",
+    "habitantes": "kawsaqkuna",
+    "archivoMultimedia": "imayna willakuy",
+    "archivosMultimedia": "imayna willakuykuna",
+    "comentario": "rimana",
+    "comentarios": "rimanakuna",
+    "accion": "Ruway:",
+    "excelentesNoticias": "¡Allin willaykunam!",
+    "sinIncendios": "Mana kanchu nina kañaykuna iskay p'unchaypi.",
+    "tipo": "Laya:",
+    "tamano": "Saya:",
+    "cerrar": "Wichqay"
+  }
+}
