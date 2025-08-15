@@ -25,7 +25,6 @@ isLoggedIn: boolean = false;
   mostrarPanelNotificaciones: boolean = false;
   cargandoNotificaciones: boolean = false;
 
-  // Propiedades para selector de idioma
   currentLanguage: string = 'es';
 availableLanguages = [
   {
@@ -58,7 +57,6 @@ availableLanguages = [
   ) { }
 
   ngOnInit(): void {
-    // Inicializar idioma
     this.translationService.currentLanguage$.subscribe(language => {
       this.currentLanguage = language;
     });

@@ -53,7 +53,8 @@
           </svg>
 
           <!-- Notificaciones Icon -->
-          <svg *ngIf="item.id === 'notificaciones'" class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg *ngIf="item.id === 'notificaciones'" class="w-5 h-5 mr-3" fill="none" stroke="currentColor"
+            viewBox="0 0 24 24">
             <use xlink:href="/assets/sprite.svg#notification" />
           </svg>
 
@@ -76,7 +77,7 @@
               class="w-11 h-11 rounded-full object-cover border border-gray-300" />
             <div class="flex-1 min-w-0">
               <span class="text-sm font-medium text-gray-900 block truncate">{{ userInfo?.nombre }}</span>
-              <span class="text-xs text-gray-500 block truncate">Administrador</span>
+              <span class="text-xs text-gray-500 block truncate">{{ userInfo?.nombreRol }}</span>
             </div>
           </div>
           <div
@@ -157,7 +158,8 @@
             <!-- Botón de Notificaciones -->
             <div class="relative">
               <button (click)="togglePanelNotificaciones()"
-                class="notification-button relative p-2 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 rounded-full" title="Ver notificaciones">
+                class="notification-button relative p-2 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 rounded-full"
+                title="Ver notificaciones">
                 <span class="sr-only">Ver notificaciones</span>
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <use xlink:href="/assets/sprite.svg#notification" />
@@ -1092,7 +1094,7 @@
   </div>
 
   <!-- Modal de Detalle de Incendio -->
-  <div *ngIf="incendioSeleccionado" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+  <div *ngIf="incendioSeleccionado" class="fixed inset-0 bg-black/50 overflow-y-auto h-full w-full z-50">
     <div class="relative top-20 mx-auto p-5 border w-3xl max-w-4xl shadow-lg rounded-md bg-white">
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-lg font-bold text-gray-900 ">Detalle del Incendio</h3>
@@ -1198,7 +1200,7 @@
                     {{ archivo.nombreArchivo }}
                   </p>
                   <p class="text-gray-500 mt-1">
-                    {{ formatearTamanoArchivo(archivo.tamanoArchivo) }}
+                    {{ formatearTamanoArchivo(archivo.tamanhoArchivo) }}
                   </p>
                   <p class="text-gray-500">
                     {{ archivo.tipoArchivo }}
@@ -1258,18 +1260,18 @@
         <button (click)="cerrarDetalle()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">
           Cerrar
         </button>
-        <button *ngIf="incendioSeleccionado.estado !== 'EXTINGUIDO'"
-          (click)="abrirModalActualizacion(incendioSeleccionado)"
-          class="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700">
+        @if (incendioSeleccionado.estado !== 'EXTINGUIDO') {
+        <button [disabled]="userInfo?.nombreRol === 'ONG'" (click)="abrirModalActualizacion(incendioSeleccionado)"
+          class="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed">
           Actualizar Estado
         </button>
+        }
       </div>
     </div>
   </div>
 
   <!-- Modal de Actualización de Estado -->
-  <div *ngIf="mostrarModalActualizacion"
-    class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+  <div *ngIf="mostrarModalActualizacion" class="fixed inset-0 bg-black/50 overflow-y-auto h-full w-full z-50">
     <div class="relative top-20 mx-auto p-5 border w-3xl max-w-lg shadow-lg rounded-md bg-white">
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-lg font-medium text-gray-900">Actualizar Estado del Incendio</h3>
@@ -1311,7 +1313,7 @@
             class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">
             Cancelar
           </button>
-          <button type="submit" [disabled]="!actualizacionForm.valid || procesandoActualizacion"
+          <button type="submit" [disabled]="!actualizacionForm.valid || procesandoActualizacion||userInfo?.nombreRol === 'ONG'"
             class="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed">
             <span *ngIf="procesandoActualizacion" class="inline-flex items-center">
               <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
@@ -1322,7 +1324,8 @@
               </svg>
               Actualizando...
             </span>
-            <span *ngIf="!procesandoActualizacion">Actualizar Estado</span>
+           @if(!procesandoActualizacion){ <span>Actualizar Estado</span>
+            }
           </button>
         </div>
       </form>
@@ -1330,8 +1333,7 @@
   </div>
 
   <!-- Modal de Exportación -->
-  <div *ngIf="mostrarModalExportacion"
-    class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+  <div *ngIf="mostrarModalExportacion" class="fixed inset-0 bg-black/50 overflow-y-auto h-full w-full z-50">
     <div class="relative top-20 mx-auto p-5 border w-96 max-w-md shadow-lg rounded-md bg-white">
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-lg font-medium text-gray-900">Exportar Datos</h3>
@@ -1434,7 +1436,7 @@
       <!-- Información del archivo -->
       <div class="absolute top-4 left-4 z-10 bg-black bg-opacity-50 text-white p-3 rounded-lg">
         <h4 class="font-medium">{{ archivoSeleccionado.nombreArchivo }}</h4>
-        <p class="text-sm opacity-75">{{ formatearTamanoArchivo(archivoSeleccionado.tamanoArchivo) }}</p>
+        <p class="text-sm opacity-75">{{ formatearTamanoArchivo(archivoSeleccionado.tamanhoArchivo) }}</p>
         <button (click)="descargarArchivoIndividual(archivoSeleccionado)"
           class="mt-2 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700">
           Descargar
@@ -1474,7 +1476,7 @@
 
   <!-- Modal de Alerta General -->
   <div *ngIf="mostrarModalAlertaGeneral"
-    class="alert-modal fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-[9999]">
+    class="alert-modal fixed inset-0 bg-black-50 overflow-y-auto h-full w-full z-[9999]">
     <div class="relative top-20 mx-auto p-5 border w-full max-w-lg shadow-lg rounded-md bg-white">
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-lg font-medium text-gray-900">Crear Alerta General</h3>

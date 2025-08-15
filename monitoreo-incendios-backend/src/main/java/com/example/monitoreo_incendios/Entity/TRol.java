@@ -25,6 +25,6 @@ public class TRol implements Serializable {
     private TipoRol tipo;
 
     public enum TipoRol {
-        ADMINISTRADOR, USUARIO
+        ADMINISTRADOR, USUARIO,BOMBERO,ONG
     }
 }

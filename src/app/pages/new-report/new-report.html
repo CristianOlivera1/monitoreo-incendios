@@ -13,9 +13,9 @@
           <svg class="w-6 h-6" viewBox="0 0 128 128">
             <use xlink:href="assets/sprite.svg#firecolor"></use>
           </svg>
-           Reporte de emergencia de incendio
+           {{ 'newReport.title' | translate }}
         </h2>
-        <p class="text-sm">Informar el incidente para una respuesta de emergencia inmediata</p>
+        <p class="text-sm">{{ 'newReport.subtitle' | translate }}</p>
       </div>
 
       <form [formGroup]="reportForm" (ngSubmit)="onSubmit()" class="space-y-6 pt-3">
@@ -43,11 +43,11 @@
         <!-- Tipo de vegetación y fuente de incendio -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de vegetación afectada *</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ 'newReport.form.labels.vegetationType' | translate }} *</label>
             <select formControlName="tipoVegetacion"
               class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               [class.border-red-500]="isFieldInvalid('tipoVegetacion')">
-              <option value="">Selecciona el tipo de vegetación</option>
+              <option value="">{{ 'newReport.form.labels.vegetationSelect' | translate }}</option>
               <option value="PASTIZAL">Pastizal</option>
               <option value="BOSQUE">Bosque</option>
               <option value="CULTIVO">Cultivo</option>
@@ -60,11 +60,11 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Posible fuente de incendio *</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ 'newReport.form.labels.fireSource' | translate }} *</label>
             <select formControlName="fuenteIncendio"
               class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               [class.border-red-500]="isFieldInvalid('fuenteIncendio')">
-              <option value="">Selecciona la fuente posible</option>
+              <option value="">{{ 'newReport.form.labels.fireSourceSelect' | translate }}</option>
               <option value="NATURAL">Natural (rayo, sequía)</option>
               <option value="HUMANO">Negligencia humana</option>
               <option value="DESCONOCIDO">Desconocido</option>
@@ -77,21 +77,21 @@
 
         <!-- Área estimada afectada -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Área estimada afectada (hectáreas) *</label>
-          <input type="number" formControlName="areaAfectada" step="0.1" min="0.1" placeholder="Ej. 2.5"
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{ 'newReport.form.labels.affectedArea' | translate }} *</label>
+          <input type="number" formControlName="areaAfectada" step="0.1" min="0.1" [placeholder]="'newReport.form.labels.areaPlaceholder' | translate"
             class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
             [class.border-red-500]="isFieldInvalid('areaAfectada')" />
           <div *ngIf="isFieldInvalid('areaAfectada')" class="text-red-500 text-xs mt-1">
             {{getFieldError('areaAfectada')}}
           </div>
-          <p class="text-xs text-gray-500 mt-1">Ingresa el área en hectáreas (1 hectárea = 10,000 m²)</p>
+          <p class="text-xs text-gray-500 mt-1">{{ 'newReport.form.labels.areaInfo' | translate }}</p>
         </div>
 
         <!-- Descripción -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Descripción del incidente *</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{ 'newReport.form.labels.description' | translate }}</label>
           <textarea rows="4" formControlName="descripcion"
-            placeholder="Describe el incidente: intensidad del fuego, estructuras afectadas, personas en riesgo, viento, visibilidad, etc."
+            [placeholder]="'newReport.form.labels.descriptionPlaceholder' | translate"
             class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
             [class.border-red-500]="isFieldInvalid('descripcion')"></textarea>
           <div *ngIf="isFieldInvalid('descripcion')" class="text-red-500 text-xs mt-1">
@@ -101,15 +101,15 @@
 
       <!-- Fotos y vídeos -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Fotos o vídeos (opcional)</label>
+          <label class="block text-sm font-medium text-gray-700 mb-2">{{ 'newReport.form.labels.mediaFiles' | translate }}</label>
 
           <!-- Área de carga -->
           <div (click)="fileInput.click()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)"
             [class.border-blue-500]="isDragOver" [class.bg-blue-50]="isDragOver"
             class="border-2 border-dashed border-gray-300 rounded-md py-10 flex flex-col items-center justify-center text-center text-sm text-gray-500 cursor-pointer hover:border-gray-400 transition-colors">
             <div class="text-2xl">⬆️</div>
-            <p class="mt-2">Haga clic o arrastre para cargar fotos y vídeos</p>
-            <p class="text-xs text-gray-400">Soporta: JPG, PNG, GIF, MP4, WebM (máx. 10MB c/u, máx. 5 archivos)</p>
+            <p class="mt-2">{{ 'newReport.form.labels.uploadText' | translate }}</p>
+            <p class="text-xs text-gray-400">{{ 'newReport.form.labels.uploadInfo' | translate }}</p>
           </div>
 
           <input #fileInput type="file" multiple accept="image/*,video/*" (change)="onFileSelected($event)" class="hidden" />
@@ -144,15 +144,15 @@
           <button type="submit" [disabled]="isSubmitting || reportForm.invalid"
             class="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold py-3 rounded hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
             <div *ngIf="isSubmitting" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
-            <span *ngIf="!isSubmitting">Enviar reporte de emergencia</span>
-            <span *ngIf="isSubmitting && selectedFiles.length > 0">Subiendo archivos...</span>
-            <span *ngIf="isSubmitting && selectedFiles.length === 0">Enviando reporte...</span>
+            <span *ngIf="!isSubmitting">{{ 'newReport.form.labels.submitButton' | translate }}</span>
+            <span *ngIf="isSubmitting && selectedFiles.length > 0">{{ 'newReport.form.labels.submittingFiles' | translate }}</span>
+            <span *ngIf="isSubmitting && selectedFiles.length === 0">{{ 'newReport.form.labels.submittingReport' | translate }}</span>
           </button>
 
           <!-- Información adicional sobre archivos grandes -->
           <div *ngIf="selectedFiles.length > 0" class="mt-2">
             <p class="text-xs text-gray-600 text-center">
-              Los archivos grandes pueden tomar algunos minutos en subir
+              {{ 'newReport.form.labels.uploadTime' | translate }}
             </p>
           </div>
         </div>
@@ -161,33 +161,33 @@
 
     <div class="bg-white rounded-xl p-6 shadow-lg flex flex-col gap-6">
       <div>
-        <h3 class="text-xl font-bold flex items-center gap-2"><svg class="w-6 h-6" viewBox="0 0 24 24"><use xlink:href="/assets/sprite.svg#gps" /></svg> Ubicación GPS</h3>
+        <h3 class="text-xl font-bold flex items-center gap-2"><svg class="w-6 h-6" viewBox="0 0 24 24"><use xlink:href="/assets/sprite.svg#gps" /></svg> {{ 'newReport.location.title' | translate }}</h3>
         <!-- Estado de carga de ubicación -->
         <div *ngIf="isGettingLocation" class="text-sm text-blue-600 flex items-center gap-2 mt-2">
           <div class="animate-spin h-4 w-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
-          Obteniendo ubicación...
+          {{ 'newReport.location.status.gettingLocation' | translate }}
         </div>
 
         <!-- Error de ubicación -->
         <div *ngIf="locationError && !isGettingLocation" class="text-sm text-red-600 mt-2">
           <p>{{locationError}}</p>
           <button (click)="retryLocation()" class="text-blue-600 underline hover:no-underline text-xs mt-1">
-            Intentar de nuevo
+            {{ 'newReport.location.buttons.retry' | translate }}
           </button>
         </div>
 
         <!-- Estados normales -->
         <p class="text-sm text-gray-500" *ngIf="selectedLocation.isAutomatic && !isGettingLocation && !locationError">
-          Ubicación GPS automática
+          {{ 'newReport.location.status.automatic' | translate }}
         </p>
         <p class="text-sm text-gray-500" *ngIf="!selectedLocation.isAutomatic && !isGettingLocation">
-          Ubicación seleccionada manualmente
+          {{ 'newReport.location.status.manual' | translate }}
         </p>
 
         <!-- Información de ubicación -->
         <p class="text-green-600 font-medium mt-2"
           *ngIf="selectedLocation.isAutomatic && !isGettingLocation && !locationError && !selectedLocation.cityName">
-          Ubicación GPS adquirida: Lat: {{selectedLocation.latitude}} – Long: {{selectedLocation.longitude}}
+          {{ 'newReport.location.status.acquired' | translate }}: Lat: {{selectedLocation.latitude}} – Long: {{selectedLocation.longitude}}
         </p>
 
         <div class="text-green-600 font-medium mt-2" *ngIf="selectedLocation.cityName && !isGettingLocation">
@@ -200,7 +200,7 @@
         </div>
 
         <p class="text-green-600 font-medium mt-2" *ngIf="!selectedLocation.isAutomatic && !selectedLocation.cityName && !isGettingLocation">
-          Ubicación manual: Lat: {{selectedLocation.latitude}} – Long: {{selectedLocation.longitude}}
+          {{ 'newReport.location.status.manualCoords' | translate }}: Lat: {{selectedLocation.latitude}} – Long: {{selectedLocation.longitude}}
         </p>
       </div>
       <button (click)="openModal()"
@@ -208,14 +208,14 @@
           <svg width="24" height="24" viewBox="0 0 24 24">
           <use xlink:href="/assets/sprite.svg#search" />
         </svg>
-        Buscar ciudad
+        {{ 'newReport.location.buttons.searchCity' | translate }}
       </button>
       <button (click)="retryLocation()"
         class="w-full border border-green-500 text-green-600 font-medium rounded py-2 hover:bg-green-50 transition flex items-center justify-center gap-2">
       <svg class="size-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
           <use xlink:href="/assets/sprite.svg#reload" />
         </svg>
-        Obtener mi ubicación GPS
+        {{ 'newReport.location.buttons.getLocation' | translate }}
       </button>
 
       <!-- Mapa dinámico que se actualiza con la ubicación -->
@@ -238,7 +238,7 @@
         </svg>
         <input [(ngModel)]="searchTerm" (input)="onSearchInput()" (keydown)="onKeydown($event)"
           class="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-gray-400 disabled:cursor-not-allowed disabled:opacity-50"
-          placeholder="Buscar ciudades..." type="text" autocomplete="off" #searchInput>
+          [placeholder]="'newReport.citySearch.placeholder' | translate" type="text" autocomplete="off" #searchInput>
       </div>
 
       <div class="max-h-72 overflow-y-auto overflow-x-hidden">
@@ -247,19 +247,19 @@
           <!-- Resultados de búsqueda -->
           <ng-container *ngIf="searchTerm.length >= 2">
             <div class="px-2 py-1.5 text-xs font-medium text-gray-600" *ngIf="cities.length > 0 || isLoading">
-              Resultados de búsqueda
+              {{ 'newReport.citySearch.searchResults' | translate }}
             </div>
 
             <div *ngIf="isLoading" class="px-3 py-2 text-sm text-gray-500">
               <div class="flex items-center gap-2">
                 <div class="animate-spin h-4 w-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
-                Buscando...
+                {{ 'newReport.citySearch.searching' | translate }}
               </div>
             </div>
 
             <div *ngIf="!isLoading && cities.length === 0"
               class="px-3 py-2 text-sm text-gray-500">
-              No se encontraron ciudades
+              {{ 'newReport.citySearch.noResults' | translate }}
             </div>
 
             <div *ngFor="let city of cities" (click)="selectCity(city)"
@@ -284,14 +284,14 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                 </svg>
-                Ciudades cercanas a tu ubicación
+                {{ 'newReport.citySearch.nearbyTitle' | translate }}
               </div>
             </div>
 
             <div *ngIf="isLoadingNearby" class="px-3 py-2 text-sm text-gray-500">
               <div class="flex items-center gap-2">
                 <div class="animate-spin h-4 w-4 border-2 border-green-500 border-t-transparent rounded-full"></div>
-                Buscando ciudades cercanas...
+                {{ 'newReport.citySearch.searchingNearby' | translate }}
               </div>
             </div>
 
@@ -304,7 +304,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                 </svg>
-                No se encontraron ciudades cercanas
+                {{ 'newReport.citySearch.noNearbyResults' | translate }}
               </div>
             </div>
 
@@ -336,8 +336,8 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                 </svg>
-                <p class="text-sm">Permitir ubicación para ver ciudades cercanas</p>
-                <p class="text-xs mt-1">O escribe al menos 2 caracteres para buscar</p>
+                <p class="text-sm">{{ 'newReport.citySearch.allowLocation' | translate }}</p>
+                <p class="text-xs mt-1">{{ 'newReport.citySearch.searchInstruction' | translate }}</p>
               </div>
             </div>
           </ng-container>

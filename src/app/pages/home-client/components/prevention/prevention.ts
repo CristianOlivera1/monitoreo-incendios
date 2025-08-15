@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ViewportScroller } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-prevention',
-  imports: [],
+  imports: [TranslateModule],
   templateUrl: './prevention.html',
   styleUrl: './prevention.css'
 })

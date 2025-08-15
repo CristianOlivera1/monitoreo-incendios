@@ -35,5 +35,84 @@
     "tipo": "Tipo:",
     "tamano": "Tamaño:",
     "cerrar": "Cerrar"
+  },
+  "summary": {
+    "soporteDescripcion": "Soporte",
+    "incidentesDescripcion": "Tipos de incidentes y eventos",
+    "lugaresDescripcion": "Lugares observados"
+  },
+  "prevention": {
+    "titulo": "¡Evita Incendios Forestales!",
+    "subtitulo": "Infografía preventiva para zonas forestales y rurales del Perú",
+    "descargarPdf": "Descargar PDF",
+    "noHagasFogatas": "No hagas fogatas",
+    "noHagasFogatasDesc": "Evita fogatas en áreas forestales o protegidas, especialmente en temporada seca.",
+    "reportaHumo": "Reporta columnas de humo",
+    "reportaHumoDesc": "Llama al 911 o al COEN (113) si ves señales de humo en zonas forestales.",
+    "noDejesBasura": "No dejes basura o vidrios",
+    "noDejesBasuraDesc": "Los vidrios pueden provocar incendios al concentrar la luz solar.",
+    "educaNinos": "Educa a los niños",
+    "educaNinosDesc": "Explícales la importancia de no jugar con fuego o encendedores.",
+    "revisaCables": "Revisa cables y conexiones",
+    "revisaCablesDesc": "Evita sobrecargar enchufes. Las fallas eléctricas pueden iniciar incendios.",
+    "noQuemes": "No quemes residuos",
+    "noQuemesDesc": "En zonas rurales, evita la quema de residuos agrícolas sin autorización.",
+    "porcentaje": "90%",
+    "mensajeConciencia": "de los incendios forestales son causados por el ser humano.",
+    "tuPrevencion": "¡Tu prevención es clave para salvar vidas y naturaleza!",
+    "ubicacionTitulo": "Ubicación — Mapa de la región de",
+    "apurimac": "Apurímac"
+  },
+  "newReport": {
+    "title": "Reporte de Emergencia por Incendio",
+    "subtitle": "Completa la información para reportar un incendio forestal",
+    "form": {
+      "labels": {
+        "description": "Descripción del incendio",
+        "descriptionPlaceholder": "Describe lo que observas: tamaño del fuego, humo, dirección del viento, etc.",
+        "mediaFiles": "Fotos o vídeos (opcional)",
+        "uploadText": "Haga clic o arrastre para cargar fotos y vídeos",
+        "uploadInfo": "Soporta: JPG, PNG, GIF, MP4, WebM (máx. 10MB c/u, máx. 5 archivos)",
+        "submitButton": "Enviar reporte de emergencia",
+        "submittingFiles": "Subiendo archivos...",
+        "submittingReport": "Enviando reporte...",
+        "uploadTime": "Los archivos grandes pueden tomar algunos minutos en subir",
+        "vegetationType": "Tipo de vegetación afectada",
+        "vegetationSelect": "Selecciona el tipo de vegetación",
+        "fireSource": "Posible fuente de incendio",
+        "fireSourceSelect": "Selecciona la fuente posible",
+        "affectedArea": "Área estimada afectada (hectáreas)",
+        "areaPlaceholder": "Ej. 2.5",
+        "areaInfo": "Ingresa el área en hectáreas (1 hectárea = 10,000 m²)"
+      }
+    },
+    "location": {
+      "title": "Ubicación GPS",
+      "status": {
+        "gettingLocation": "Obteniendo ubicación...",
+        "automatic": "Ubicación GPS automática",
+        "manual": "Ubicación seleccionada manualmente",
+        "acquired": "Ubicación GPS adquirida",
+        "manualCoords": "Ubicación manual"
+      },
+      "buttons": {
+        "searchCity": "Buscar ciudad",
+        "getLocation": "Obtener mi ubicación GPS",
+        "retry": "Intentar de nuevo"
+      }
+    },
+    "citySearch": {
+      "placeholder": "Buscar ciudades...",
+      "searching": "Buscando...",
+      "noResults": "No se encontraron ciudades",
+      "nearbyTitle": "Ciudades cercanas a tu ubicación",
+      "searchingNearby": "Buscando ciudades cercanas...",
+      "noNearbyResults": "No se encontraron ciudades cercanas",
+      "allowLocation": "Permitir ubicación para ver ciudades cercanas",
+      "searchInstruction": "O escribe al menos 2 caracteres para buscar",
+      "searchResults": "Resultados de búsqueda"
+    }
   }
+
+
 }

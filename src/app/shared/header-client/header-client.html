@@ -33,7 +33,7 @@
       <div class="relative">
         <button (click)="toggleSelectorIdioma()"
           class="language-button flex items-center gap-2 p-1 text-sm font-semibold text-gray-600 hover:text-gray-800 focus:outline-none">
-          <span [innerHTML]="obtenerIconoIdioma(currentLanguage)" class="w-5 h-5 flex-shrink-0"></span>
+          <span [innerHTML]="obtenerIconoIdioma(currentLanguage)" class="w-5 h-5 mb-1 flex-shrink-0"></span>
           {{ obtenerNombreIdioma(currentLanguage) }}
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -48,11 +48,9 @@
                     (click)="cambiarIdioma(lang.code)"
                     [class]="'w-full text-left px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-100 ' +
                              (currentLanguage === lang.code ? 'bg-orange-50 text-orange-600' : 'text-gray-700')">
-                  <span [innerHTML]="obtenerIconoSeguro(lang.icon)" class="w-5 h-5 flex-shrink-0"></span>
+                  <span [innerHTML]="obtenerIconoSeguro(lang.icon)" class="w-5 h-5 mb-1 flex-shrink-0"></span>
               {{ lang.name }}
             </button>
-
-
           </div>
         </div>
       </div>
@@ -252,7 +250,7 @@
                 </a>
               </li>
 
-              <li *ngIf="userInfo?.nombreRol === 'ADMINISTRADOR'">
+              <li *ngIf="userInfo?.nombreRol === 'ADMINISTRADOR' || userInfo?.nombreRol === 'ONG' || userInfo?.nombreRol === 'BOMBERO'">
                 <a [routerLink]="['/dashboard']"
                   class="flex items-center gap-3 px-6 py-2 hover:bg-gray-100 text-gray-600 text-sm">
                   <svg width="24" height="24" viewBox="0 0 24 24">

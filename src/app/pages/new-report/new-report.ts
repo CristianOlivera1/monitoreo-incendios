@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } 
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { HeaderClient } from '../../shared/header-client/header-client';
 import { IncendioService, ReporteIncendio } from '../../core/service/incendio/incendio.service';
 import { TokenService } from '../../core/service/oauth/token.service';
@@ -23,7 +24,7 @@ interface City {
 
 @Component({
   selector: 'app-new-report',
-  imports: [HeaderClient, CommonModule, ReactiveFormsModule,FormsModule,FooterClient],
+  imports: [HeaderClient, CommonModule, ReactiveFormsModule, FormsModule, FooterClient, TranslateModule],
   templateUrl: './new-report.html',
   styleUrl: './new-report.css'
 })
@@ -405,8 +406,8 @@ export class NewReport implements OnDestroy {
 
   private addFiles(files: File[]) {
     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/webm', 'image/jpg','image/webp'];
-    const maxSize = 1 * 1024 * 1024; // Reducido a 1MB por archivo
-    const maxTotalSize = 3 * 1024 * 1024; // 3MB total máximo
+    const maxSize = 5 * 1024 * 1024; // Reducido a 5MB por archivo
+    const maxTotalSize = 15 * 1024 * 1024; // 15MB total máximo
 
     for (const file of files) {
       if (!allowedTypes.includes(file.type)) {
@@ -415,7 +416,7 @@ export class NewReport implements OnDestroy {
       }
 
       if (file.size > maxSize) {
-        this.showErrorMessage(`El archivo ${file.name} es demasiado grande. El tamaño máximo es 1MB por archivo.`);
+        this.showErrorMessage(`El archivo ${file.name} es demasiado grande. El tamaño máximo es 5MB por archivo.`);
         continue;
       }
 

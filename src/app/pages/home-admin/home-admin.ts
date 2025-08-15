@@ -33,7 +33,7 @@ interface DtoArchivoIncendio {
   idArchivo: string;
   nombreArchivo: string;
   tipoArchivo: string;
-  tamanoArchivo: number;
+  tamanhoArchivo: number;
   urlArchivo: string;
   fechaSubida: Date;
 }
@@ -157,7 +157,7 @@ export class HomeAdmin implements OnInit, OnDestroy {
     private userService: UserService,
     private notificacionService: NotificacionService,
     private router: Router,
-    private fb: FormBuilder,@Inject(PLATFORM_ID) private platformId: Object
+    private fb: FormBuilder, @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.filtroForm = this.fb.group({
       estado: [''],
@@ -185,51 +185,51 @@ export class HomeAdmin implements OnInit, OnDestroy {
     });
   }
 
-ngOnInit(): void {
-  if (isPlatformBrowser(this.platformId)) {
-    this.loadUser();
-    this.cargarDashboard();
-    setInterval(() => {
-      this.fechaActual = new Date();
-    }, 60000);
+  ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.loadUser();
+      this.cargarDashboard();
+      setInterval(() => {
+        this.fechaActual = new Date();
+      }, 60000);
 
-    // Listener para cerrar panel de notificaciones al hacer clic fuera
-    document.addEventListener('click', (event) => {
-      const target = event.target as HTMLElement;
-      const notificationPanel = document.querySelector('.notification-panel');
-      const notificationButton = document.querySelector('.notification-button');
+      // Listener para cerrar panel de notificaciones al hacer clic fuera
+      document.addEventListener('click', (event) => {
+        const target = event.target as HTMLElement;
+        const notificationPanel = document.querySelector('.notification-panel');
+        const notificationButton = document.querySelector('.notification-button');
 
-      if (this.mostrarPanelNotificaciones &&
+        if (this.mostrarPanelNotificaciones &&
           notificationPanel &&
           !notificationPanel.contains(target) &&
           notificationButton &&
           !notificationButton.contains(target)) {
-        this.mostrarPanelNotificaciones = false;
-      }
-    });
-  }
-}
-
-ngOnDestroy(): void {
-  this.limpiarMapa();
-}
-
-/**
- * Limpia el mapa y libera los recursos
- */
-limpiarMapa(): void {
-  if (this.mapa && isPlatformBrowser(this.platformId)) {
-    try {
-      this.mapa.remove();
-      console.log('Mapa limpiado correctamente');
-    } catch (error) {
-      console.log('Error al limpiar el mapa:', error);
+          this.mostrarPanelNotificaciones = false;
+        }
+      });
     }
   }
-  this.mapa = null;
-  this.grupoMarcadores = null;
-  this.marcadores = [];
-}
+
+  ngOnDestroy(): void {
+    this.limpiarMapa();
+  }
+
+  /**
+   * Limpia el mapa y libera los recursos
+   */
+  limpiarMapa(): void {
+    if (this.mapa && isPlatformBrowser(this.platformId)) {
+      try {
+        this.mapa.remove();
+        console.log('Mapa limpiado correctamente');
+      } catch (error) {
+        console.log('Error al limpiar el mapa:', error);
+      }
+    }
+    this.mapa = null;
+    this.grupoMarcadores = null;
+    this.marcadores = [];
+  }
   // ========== GESTIÓN DE USUARIO ==========
   loadUser(): void {
     const userId = this.tokenService.getUserId();
@@ -763,11 +763,11 @@ limpiarMapa(): void {
 
   // ========== GESTIÓN DE ARCHIVOS ==========
   esImagen(tipoArchivo: string): boolean {
-  return tipoArchivo.toUpperCase() === 'IMAGEN';
+    return tipoArchivo.toUpperCase() === 'IMAGEN';
   }
 
   esVideo(tipoArchivo: string): boolean {
-   return tipoArchivo.toUpperCase() === 'VIDEO';
+    return tipoArchivo.toUpperCase() === 'VIDEO';
   }
 
   formatearTamanoArchivo(tamanoBytes: number): string {
@@ -786,8 +786,6 @@ limpiarMapa(): void {
   }
 
   obtenerThumbnailVideo(archivo: any): string {
-    // Para videos, podríamos usar una imagen por defecto o generar un thumbnail
-    // Por ahora retornamos una imagen por defecto
     return 'assets/img/video-thumbnail-default.svg';
   }
 
@@ -821,7 +819,6 @@ limpiarMapa(): void {
     this.incendioSeleccionado = null;
 
     // Si estamos en la vista de mapa, necesitamos reinicializar el mapa
-    // para asegurar que se muestre correctamente después de cerrar el modal
     if (this.vistaActual === 'mapa' && isPlatformBrowser(this.platformId)) {
       setTimeout(() => {
         if (this.mapa) {
@@ -891,7 +888,6 @@ limpiarMapa(): void {
     setInterval(() => {
       if (this.userInfo?.idUsuario) {
         this.actualizarContadorNotificaciones();
-        // Solo recargar todas las notificaciones si estamos en la vista de notificaciones
         if (this.vistaActual === 'notificaciones') {
           this.cargarNotificaciones();
         }
@@ -934,7 +930,6 @@ limpiarMapa(): void {
         next: (response: ResponseNotificacion) => {
           this.cargandoNotificaciones = false;
           if (response.type === 'success') {
-            // Actualizar todas las notificaciones localmente
             this.notificaciones.forEach(notif => {
               if (!notif.leida) {
                 notif.leida = true;
@@ -1008,7 +1003,6 @@ limpiarMapa(): void {
           if (response.type === 'success') {
             this.cerrarModalAlertaGeneral();
             console.log('Alerta general creada exitosamente');
-            // Mostrar mensaje de éxito
             this.error = '';
           } else {
             this.error = response.listMessage?.join(', ') || 'Error al crear la alerta general';
@@ -1050,7 +1044,6 @@ limpiarMapa(): void {
 
   /**
    * Obtiene la clase CSS según la prioridad de la notificación
-   * Como no hay campo prioridad en la BD, usamos el tipo para determinar la importancia
    */
   obtenerClasePrioridad(tipo: string): string {
     switch (tipo.toUpperCase()) {
@@ -1141,7 +1134,6 @@ limpiarMapa(): void {
           }
         } catch (error) {
           console.log('Error al redimensionar mapa, recreando:', error);
-          // Si hay error, recrear el mapa
           this.mapa = null;
           this.inicializarMapa();
         }
@@ -1175,20 +1167,17 @@ limpiarMapa(): void {
     const contenedorMapa = document.getElementById('mapa-incendios');
     if (!contenedorMapa) {
       console.error('Contenedor del mapa no encontrado');
-      setTimeout(() => this.crearMapa(), 200); // Reintentar en 200ms
+      setTimeout(() => this.crearMapa(), 200);
       return;
     }
 
-    // Limpiar el contenedor completamente
     contenedorMapa.innerHTML = '';
 
-    // Asegurar que el contenedor tenga dimensiones
     if (contenedorMapa.offsetHeight === 0) {
       contenedorMapa.style.height = '600px';
     }
 
     try {
-      // Coordenadas centrales de Perú (Lima)
       const centroLatitud = -12.0464;
       const centroLongitud = -77.0428;
 
@@ -1201,17 +1190,24 @@ limpiarMapa(): void {
         maxZoom: 18,
         minZoom: 3
       }).addTo(this.mapa);
+      // Definir capas base
+      const baseMaps = {
+        "OpenStreetMap": this.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+        "Satélite": this.L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'),
+        "Topográfico": this.L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png')
+      };
+
+      // Añadir control de capas base al mapa
+      this.L.control.layers(baseMaps, {}, { position: 'bottomright', collapsed: true }).addTo(this.mapa);
+      baseMaps["OpenStreetMap"].addTo(this.mapa);
 
       // Crear grupo de marcadores
       this.grupoMarcadores = this.L.layerGroup().addTo(this.mapa);
 
-      // Configurar iconos personalizados para Leaflet
       this.configurarIconosLeaflet();
 
-      // Setup funciones globales
       this.setupGlobalFunctions();
 
-      // Forzar redimensionamiento del mapa
       setTimeout(() => {
         if (this.mapa) {
           this.mapa.invalidateSize();
@@ -1276,8 +1272,8 @@ limpiarMapa(): void {
       html: svgIcon,
       className: 'custom-fire-marker',
       iconSize: [size, size],
-      iconAnchor: [size/2, size/2],
-      popupAnchor: [0, -size/2]
+      iconAnchor: [size / 2, size / 2],
+      popupAnchor: [0, -size / 2]
     });
   }
 

@@ -35,5 +35,82 @@
     "tipo": "Laya:",
     "tamano": "Saya:",
     "cerrar": "Wichqay"
+  },
+  "summary": {
+    "soporteDescripcion": "Yanapay",
+    "incidentesDescripcion": "Laya willakuykuna",
+    "lugaresDescripcion": "Qhawasqa llaqtakuna"
+  },
+  "prevention": {
+    "titulo": "¡Nina kañaykunata hark'ay!",
+    "subtitulo": "Peru llaqtapi yunga llaqtakunapi hark'ay yachaykuna",
+    "descargarPdf": "PDF Urquy",
+    "noHagasFogatas": "Ama nina ruway",
+    "noHagasFogatasDesc": "Ama yunka llaqtakunapi utaq waqaychasqa llaqtakunapi nina ruwaychu, aswanta ch'aki timpu kaqpi.",
+    "reportaHumo": "Qosñi tujyaykunata willakuy",
+    "reportaHumoDesc": "911 utaq COEN (113) kaqman waqyay yunka llaqtakunapi qosñi tujyaykunata rikuspan.",
+    "noDejesBasura": "Ama qopa utaq qhespiyokunata saqiychu",
+    "noDejesBasuraDesc": "Qhespiyokuna inti k'anchaytan huñuspa nina ruwayta atinku.",
+    "educaNinos": "Warmakunata yachachiy",
+    "educaNinosDesc": "Paykunaman niyki imayna mana ninawan utaq k'anchiykuwan pukllanankupaq.",
+    "revisaCables": "Waska t'inkiykunata qhaway",
+    "revisaCablesDesc": "Ama enchufekuna hunt'achiyta. Waska pantaykunam nina kañaykunata qallarichinkuman.",
+    "noQuemes": "Ama qopakunata ruphachichu",
+    "noQuemesDesc": "Urqu llaqtakunapi, ama mana saqillay chakra qopakunata ruphachichu.",
+    "porcentaje": "90%",
+    "mensajeConciencia": "nina kañaykunaqa runamanta kankuman.",
+    "tuPrevencion": "¡Qampa hark'ayniyki kawsaykunata pachamamatapas qhespinanpaq!",
+    "ubicacionTitulo": "Maypi kachkan — Mapa kay suyu",
+    "apurimac": "Apurímac"
+  },
+  "newReport": {
+    "title": "Nina Kañay Emergencia Willakuy",
+    "subtitle": "Yunka nina kañayta willakunaykipaq hunt'ay",
+    "form": {
+      "labels": {
+        "description": "Nina kañaypa willariniyin",
+        "descriptionPlaceholder": "Imayna rikunki willakuy: nina sayaynin, qosñi, wayra purinanta, hukkunatapas...",
+        "mediaFiles": "Retratokuna utaq videokuna (munaspayki)",
+        "uploadText": "Ñit'iy utaq apachiy retratokuna videokunatawan",
+        "uploadInfo": "Soportan: JPG, PNG, GIF, MP4, WebM (sapa kaq 10MB, pisqa archivokama)",
+        "submitButton": "Nina emergencia willakuyta kachay",
+        "submittingFiles": "Archivokunata wichayku...",
+        "submittingReport": "Willakuyta kachayku...",
+        "uploadTime": "Hatun archivokuna askha minutokuna wichakunankupaq",
+        "vegetationType": "Imayna sachakuna ruwasqa",
+        "vegetationSelect": "Sachakuna laya akllana",
+        "fireSource": "Nina kañaypa qallariq",
+        "fireSourceSelect": "Nina qallariq akllana",
+        "affectedArea": "Ruwasqa llaqta (hectáreas)",
+        "areaPlaceholder": "Kay hina: 2.5",
+        "areaInfo": "Hectáreakunapi qillqay (1 hectárea = 10,000 m²)"
+      }
+    },
+    "location": {
+      "title": "GPS Maypi",
+      "status": {
+        "gettingLocation": "Maypi kaqta tarispa...",
+        "automatic": "GPS kikin maypi kaq",
+        "manual": "Makiwan akllasqa maypi",
+        "acquired": "GPS maypi kaqta tarisqa",
+        "manualCoords": "Makiwan maypi kaq"
+      },
+      "buttons": {
+        "searchCity": "Llaqtata maskay",
+        "getLocation": "GPS maypi kaytay",
+        "retry": "Wakmanta ruwana"
+      }
+    },
+    "citySearch": {
+      "placeholder": "Llaqtakunata maskay...",
+      "searching": "Maskaspa...",
+      "noResults": "Mana llaqtakuna tarisqa",
+      "nearbyTitle": "Qampa maypi kaqman aswan kayllapiña llaqtakuna",
+      "searchingNearby": "Kaylla llaqtakunata maskaspa...",
+      "noNearbyResults": "Mana kaylla llaqtakuna tarisqa",
+      "allowLocation": "Maypi kaqta saqiy kaylla llaqtakunata rikunaykipaq",
+      "searchInstruction": "Utaq iskay letrakunamanta maskanaykipaq qillqay",
+      "searchResults": "Maskaypa tarininkuna"
+    }
   }
 }
