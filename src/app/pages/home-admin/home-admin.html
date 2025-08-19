@@ -1,12 +1,22 @@
 <div class="min-h-screen bg-gray-50">
+
+  <!-- Overlay para móvil -->
+  <div *ngIf="esPantallaPequena && menuAbierto" class="fixed inset-0 z-40 bg-black/50 lg:hidden" (click)="cerrarMenu()">
+  </div>
+
   <!-- Sidebar -->
-  <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg">
+  <div
+    class="sidebar fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out"
+    [class.translate-x-0]="!esPantallaPequena || menuAbierto"
+    [class.-translate-x-full]="esPantallaPequena && !menuAbierto">
     <!-- Logo/Header -->
     <div class="flex items-center justify-center h-16 px-4 bg-gradient-to-r from-orange-500 to-red-600">
-      <div class="flex items-center gap-2">
-        <img src="assets/img/logo-fire.png" alt="logo" class="size-12">
-        <span class="text-xl font-bold text-white">ApuNina Admin</span>
-      </div>
+      <a href="/dashboard">
+        <div class="flex items-center gap-2">
+          <img src="assets/img/logo-fire.png" alt="logo" class="size-12">
+          <span class="text-xl font-bold text-white">ApuNina Admin</span>
+        </div>
+      </a>
     </div>
 
     <!-- Navigation Menu -->
@@ -129,30 +139,43 @@
   </div>
 
   <!-- Main Content -->
-  <div class="ml-64 min-h-screen">
+  <div class="transition-all duration-300 ease-in-out" [class.ml-64]="!esPantallaPequena || menuAbierto"
+    [class.ml-0]="esPantallaPequena && !menuAbierto">
     <!-- Top Bar -->
     <header class="bg-white shadow-sm border-b border-gray-200">
       <div class="px-6 py-4">
         <div class="flex items-center justify-between">
-          <div>
-            <h1 class="text-2xl font-semibold text-gray-900">
-              {{ vistaActual === 'dashboard' ? 'Dashboard' :
-              vistaActual === 'mapa' ? 'Mapa de Incendios' :
-              vistaActual === 'incendios' ? 'Gestión de Incendios' :
-              vistaActual === 'reportes' ? 'Reportes Recientes' :
-              vistaActual === 'estadisticas' ? 'Estadísticas' :
-              vistaActual === 'notificaciones' ? 'Notificaciones' :
-              'Panel de Administración' }}
-            </h1>
-            <p class="text-sm text-gray-600 mt-1">
-              {{ vistaActual === 'dashboard' ? 'Resumen general del sistema de monitoreo' :
-              vistaActual === 'mapa' ? 'Visualización geográfica de incendios activos y reportes recientes' :
-              vistaActual === 'incendios' ? 'Administra y monitorea todos los incendios reportados' :
-              vistaActual === 'reportes' ? 'Revisa los reportes más recientes' :
-              vistaActual === 'estadisticas' ? 'Analiza las métricas del sistema' :
-              vistaActual === 'notificaciones' ? 'Gestiona las notificaciones del sistema y alertas generales' :
-              '' }}
-            </p>
+          <div class="flex items-center gap-4">
+            <!-- Botón de menú hamburguesa para móvil -->
+            <button *ngIf="esPantallaPequena" (click)="toggleMenu()"
+              class="menu-toggle lg:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
+              <span class="sr-only">Abrir menú</span>
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                </path>
+              </svg>
+            </button>
+
+            <div>
+              <h1 class="text-2xl font-semibold text-gray-900">
+                {{ vistaActual === 'dashboard' ? 'Dashboard' :
+                vistaActual === 'mapa' ? 'Mapa de Incendios' :
+                vistaActual === 'incendios' ? 'Gestión de Incendios' :
+                vistaActual === 'reportes' ? 'Reportes Recientes' :
+                vistaActual === 'estadisticas' ? 'Estadísticas' :
+                vistaActual === 'notificaciones' ? 'Notificaciones' :
+                'Panel de Administración' }}
+              </h1>
+              <p class="text-sm text-gray-600 mt-1 hidden sm:block">
+                {{ vistaActual === 'dashboard' ? 'Resumen general del sistema de monitoreo' :
+                vistaActual === 'mapa' ? 'Visualización geográfica de incendios activos y reportes recientes' :
+                vistaActual === 'incendios' ? 'Administra y monitorea todos los incendios reportados' :
+                vistaActual === 'reportes' ? 'Revisa los reportes más recientes' :
+                vistaActual === 'estadisticas' ? 'Analiza las métricas del sistema' :
+                vistaActual === 'notificaciones' ? 'Gestiona las notificaciones del sistema y alertas generales' :
+                '' }}
+              </p>
+            </div>
           </div>
           <div class="flex items-center gap-4">
             <!-- Botón de Notificaciones -->
@@ -769,7 +792,7 @@
             <div class="flex items-center justify-between">
               <h3 class="text-lg font-medium text-gray-900">Historial de Incendios Extinguidos</h3>
               <div class="flex gap-2">
-                <button (click)="abrirModalExportacion()"
+                <button (click)="abrirModalExportacionExtinguido()"
                   class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm">
                   Exportar Historial
                 </button>
@@ -1313,7 +1336,8 @@
             class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">
             Cancelar
           </button>
-          <button type="submit" [disabled]="!actualizacionForm.valid || procesandoActualizacion||userInfo?.nombreRol === 'ONG'"
+          <button type="submit"
+            [disabled]="!actualizacionForm.valid || procesandoActualizacion||userInfo?.nombreRol === 'ONG'"
             class="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed">
             <span *ngIf="procesandoActualizacion" class="inline-flex items-center">
               <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
@@ -1324,7 +1348,7 @@
               </svg>
               Actualizando...
             </span>
-           @if(!procesandoActualizacion){ <span>Actualizar Estado</span>
+            @if(!procesandoActualizacion){ <span>Actualizar Estado</span>
             }
           </button>
         </div>
@@ -1387,6 +1411,95 @@
           </button>
 
           <button (click)="exportarDatos('excel')" [disabled]="cargando"
+            class="w-full flex items-center justify-between p-3 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50">
+            <div class="flex items-center gap-3">
+              <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+              <div>
+                <p class="font-medium">Excel</p>
+                <p class="text-xs text-gray-500">Archivo .xlsx con formato avanzado</p>
+              </div>
+            </div>
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </button>
+
+        </div>
+
+        <div *ngIf="cargando" class="flex items-center justify-center py-4">
+          <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-orange-500"></div>
+          <span class="ml-2 text-sm text-gray-600">Generando archivo...</span>
+        </div>
+      </div>
+
+      <div class="flex justify-end mt-6">
+        <button (click)="cerrarModalExportacion()" [disabled]="cargando"
+          class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 disabled:opacity-50">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- modal exportacion incendios Extinguidos -->
+  <div *ngIf="mostrarModalExportacionExtinguido" class="fixed inset-0 bg-black/50 overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 max-w-md shadow-lg rounded-md bg-white">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-medium text-gray-900">Exportar Datos</h3>
+        <button (click)="cerrarModalExportacionExtinguido()" class="text-gray-400 hover:text-gray-600">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <p class="text-sm text-gray-600 mb-4">
+          Seleccione el formato de exportación. Los datos se exportarán según los filtros actuales aplicados.
+        </p>
+
+        <div class="space-y-3">
+          <button (click)="exportarExtinguidos('json')" [disabled]="cargando"
+            class="w-full flex items-center justify-between p-3 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50">
+            <div class="flex items-center gap-3">
+              <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+              <div>
+                <p class="font-medium">JSON</p>
+                <p class="text-xs text-gray-500">Formato estructurado para desarrollo</p>
+              </div>
+            </div>
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </button>
+
+          <button (click)="exportarExtinguidos('csv')" [disabled]="cargando"
+            class="w-full flex items-center justify-between p-3 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50">
+            <div class="flex items-center gap-3">
+              <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <div>
+                <p class="font-medium">CSV</p>
+                <p class="text-xs text-gray-500">Compatible con Excel y hojas de cálculo</p>
+              </div>
+            </div>
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </button>
+
+          <button (click)="exportarExtinguidos('excel')" [disabled]="cargando"
             class="w-full flex items-center justify-between p-3 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50">
             <div class="flex items-center gap-3">
               <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -301,4 +301,55 @@ export class IncendioService {
     const url = params ? `${this.apiIncendio}/exportar/excel?${params}` : `${this.apiIncendio}/exportar/excel`;
     return this.httpClient.get(url, { responseType: 'blob' });
   }
+
+  exportarExtinguidosJSON(filtros?: any): Observable<string> {
+    let params = '';
+    if (filtros) {
+      const searchParams = new URLSearchParams();
+      Object.keys(filtros).forEach(key => {
+        if (filtros[key] !== null && filtros[key] !== undefined && filtros[key] !== '') {
+          searchParams.append(key, filtros[key].toString());
+        }
+      });
+      params = searchParams.toString();
+    }
+    const url = params
+      ? `${this.apiIncendio}/exportar/extinguidos/json?${params}`
+      : `${this.apiIncendio}/exportar/extinguidos/json`;
+    return this.httpClient.get(url, { responseType: 'text' });
+  }
+
+  exportarExtinguidosCSV(filtros?: any): Observable<string> {
+    let params = '';
+    if (filtros) {
+      const searchParams = new URLSearchParams();
+      Object.keys(filtros).forEach(key => {
+        if (filtros[key] !== null && filtros[key] !== undefined && filtros[key] !== '') {
+          searchParams.append(key, filtros[key].toString());
+        }
+      });
+      params = searchParams.toString();
+    }
+    const url = params
+      ? `${this.apiIncendio}/exportar/extinguidos/csv?${params}`
+      : `${this.apiIncendio}/exportar/extinguidos/csv`;
+    return this.httpClient.get(url, { responseType: 'text' });
+  }
+
+  exportarExtinguidosExcel(filtros?: any): Observable<Blob> {
+    let params = '';
+    if (filtros) {
+      const searchParams = new URLSearchParams();
+      Object.keys(filtros).forEach(key => {
+        if (filtros[key] !== null && filtros[key] !== undefined && filtros[key] !== '') {
+          searchParams.append(key, filtros[key].toString());
+        }
+      });
+      params = searchParams.toString();
+    }
+    const url = params
+      ? `${this.apiIncendio}/exportar/extinguidos/excel?${params}`
+      : `${this.apiIncendio}/exportar/extinguidos/excel`;
+    return this.httpClient.get(url, { responseType: 'blob' });
+  }
 }

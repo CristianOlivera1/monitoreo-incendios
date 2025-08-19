@@ -1,3 +1,79 @@
+/* Estilos para la vista previa de video con icono de play */
+.video-preview {
+  position: relative;
+  overflow: hidden;
+}
+
+.video-preview video {
+  pointer-events: none; /* Evitar que se reproduzca al hacer clic */
+  transition: transform 0.3s ease-in-out;
+}
+
+.video-preview:hover video {
+  transform: scale(1.05);
+}
+
+.video-overlay {
+  background: linear-gradient(45deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%);
+}
+
+.play-button {
+  transition: all 0.3s ease-in-out;
+  transform: scale(1);
+}
+
+.video-preview:hover .play-button {
+  transform: scale(1.1);
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.play-icon {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.video-info-badge {
+  backdrop-filter: blur(8px);
+  transition: opacity 0.2s ease-in-out;
+}
+
+.video-preview:hover .video-info-badge {
+  opacity: 1;
+}
+
+/* Animación del icono de play */
+@keyframes playPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.play-button:hover .play-icon {
+  animation: playPulse 1s infinite;
+}
+
+/* Estilos responsivos para la vista previa de video */
+@media (max-width: 640px) {
+  .play-button {
+    padding: 0.375rem;
+  }
+
+  .play-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .video-info-badge {
+    font-size: 0.625rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
+
 /* Estilos para el componente de información de incendios recientes */
 
 /* Animaciones para la carga */

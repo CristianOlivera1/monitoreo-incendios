@@ -541,9 +541,6 @@ public class BusinessIncendio {
   }
 
   private String extraerRutaDeUrl(String url) {
-    // Extraer la ruta del archivo de la URL de Supabase
-    // Formato típico:
-    // https://[proyecto].supabase.co/storage/v1/object/public/[bucket]/[ruta]
     if (url != null && url.contains("/storage/v1/object/public/")) {
       int index = url.indexOf("/storage/v1/object/public/");
       String rutaCompleta = url.substring(index + "/storage/v1/object/public/".length());

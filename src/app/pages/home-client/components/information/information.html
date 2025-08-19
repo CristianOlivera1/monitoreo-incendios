@@ -141,20 +141,46 @@
             </div>
 
             <!-- Vista previa de video -->
-            <div *ngIf="esVideo(archivo)" class="w-full h-full bg-gray-900 flex items-center justify-center">
-              <div class="text-center">
-                <svg class="w-8 h-8 text-white mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293H15" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                </svg>
-                <div *ngIf="archivo.tamanhoArchivo" class="text-xs text-white opacity-75">{{ formatearTamano(archivo.tamanhoArchivo) }}</div>
+            <div *ngIf="esVideo(archivo)" class="w-full h-full relative video-preview">
+              <!-- Video como imagen de fondo -->
+              <video [src]="archivo.urlArchivo"
+                     class="w-full h-full object-cover"
+                     muted
+                     preload="metadata"
+                     #videoElement>
+              </video>
+
+              <!-- Overlay oscuro sutil -->
+              <div class="absolute inset-0 video-overlay"></div>
+
+              <!-- Icono de play centrado -->
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div class="play-button bg-black bg-opacity-50 rounded-full p-2 group-hover:bg-opacity-70 transition-all duration-200">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48" class="text-white play-icon">
+                    <defs>
+                      <mask id="SVGu4ff0bvt">
+                        <g fill="none" stroke-linejoin="round" stroke-width="4">
+                          <path fill="#fff" stroke="#fff" d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20Z" />
+                          <path fill="#000" stroke="#000" d="M20 24v-6.928l6 3.464L32 24l-6 3.464l-6 3.464z" />
+                        </g>
+                      </mask>
+                    </defs>
+                    <path fill="currentColor" d="M0 0h48v48H0z" mask="url(#SVGu4ff0bvt)" />
+                  </svg>
+                </div>
               </div>
-              <div class="absolute inset-0 group-hover:bg-opacity-20 transition-all duration-200 flex items-center justify-center">
-                <svg class="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293H15" />
-                </svg>
+
+              <!-- Información del archivo en la esquina inferior -->
+              <div class="absolute bottom-1 right-1">
+                <div class="video-info-badge bg-black bg-opacity-60 text-white text-xs px-1.5 py-0.5 rounded">
+                  <div class="flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    <span *ngIf="archivo.tamanhoArchivo">{{ formatearTamano(archivo.tamanhoArchivo) }}</span>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -263,19 +289,19 @@
         </div>
 
         <!-- Contenido del modal -->
-        <div class="p-6 max-h-96 overflow-auto">
+        <div class="p-6 h-7xl overflow-auto">
           <!-- Vista previa de imagen -->
           <div *ngIf="archivoSeleccionado && esImagen(archivoSeleccionado)" class="text-center">
             <img [src]="archivoSeleccionado.urlArchivo"
               [alt]="archivoSeleccionado.nombreArchivo"
-              class="max-w-full max-h-80 mx-auto rounded-lg shadow-lg">
+              class="w-full max-h-100 mx-auto rounded-lg shadow-lg">
           </div>
 
           <!-- Vista previa de video -->
           <div *ngIf="archivoSeleccionado && esVideo(archivoSeleccionado)" class="text-center">
             <video [src]="archivoSeleccionado.urlArchivo"
               controls
-              class="max-w-full max-h-80 mx-auto rounded-lg shadow-lg">
+              class="w-full max-h-100 mx-auto rounded-lg shadow-lg">
               Tu navegador no soporta la reproducción de video.
             </video>
           </div>

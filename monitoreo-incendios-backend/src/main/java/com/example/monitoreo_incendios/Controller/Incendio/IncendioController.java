@@ -525,4 +525,114 @@ public class IncendioController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    // ========== ENDPOINTS PARA EXPORTAR INCENDIOS EXTINGUIDOS ==========
+
+    @GetMapping("/exportar/extinguidos/json")
+    public ResponseEntity<String> exportarIncendiosExtinguidosJson(
+            @RequestParam(required = false) String fechaInicio,
+            @RequestParam(required = false) String fechaFin,
+            @RequestParam(required = false) String pais,
+            @RequestParam(required = false) String region,
+            @RequestParam(required = false) String nombreCiudad,
+            @RequestParam(required = false) String nivelUrgencia,
+            @RequestParam(required = false) Float areaMinima,
+            @RequestParam(required = false) Float areaMaxima) {
+        try {
+            DtoFiltroIncendio filtro = new DtoFiltroIncendio();
+            filtro.setEstado("EXTINGUIDO"); // Filtrar solo incendios extinguidos
+            filtro.setFechaInicio(fechaInicio);
+            filtro.setFechaFin(fechaFin);
+            filtro.setPais(pais);
+            filtro.setRegion(region);
+            filtro.setNombreCiudad(nombreCiudad);
+            filtro.setNivelUrgencia(nivelUrgencia);
+            filtro.setAreaMinima(areaMinima);
+            filtro.setAreaMaxima(areaMaxima);
+
+            String jsonData = businessIncendio.exportarAJson(filtro);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=incendios_extinguidos.json");
+
+            return new ResponseEntity<>(jsonData, headers, HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Error al exportar incendios extinguidos: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/exportar/extinguidos/csv")
+    public ResponseEntity<String> exportarIncendiosExtinguidosCsv(
+            @RequestParam(required = false) String fechaInicio,
+            @RequestParam(required = false) String fechaFin,
+            @RequestParam(required = false) String pais,
+            @RequestParam(required = false) String region,
+            @RequestParam(required = false) String nombreCiudad,
+            @RequestParam(required = false) String nivelUrgencia,
+            @RequestParam(required = false) Float areaMinima,
+            @RequestParam(required = false) Float areaMaxima) {
+        try {
+            DtoFiltroIncendio filtro = new DtoFiltroIncendio();
+            filtro.setEstado("EXTINGUIDO"); // Filtrar solo incendios extinguidos
+            filtro.setFechaInicio(fechaInicio);
+            filtro.setFechaFin(fechaFin);
+            filtro.setPais(pais);
+            filtro.setRegion(region);
+            filtro.setNombreCiudad(nombreCiudad);
+            filtro.setNivelUrgencia(nivelUrgencia);
+            filtro.setAreaMinima(areaMinima);
+            filtro.setAreaMaxima(areaMaxima);
+
+            String csvData = businessIncendio.exportarACsv(filtro);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType("text/csv"));
+            headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=incendios_extinguidos.csv");
+
+            return new ResponseEntity<>(csvData, headers, HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Error al exportar incendios extinguidos: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/exportar/extinguidos/excel")
+    public ResponseEntity<byte[]> exportarIncendiosExtinguidosExcel(
+            @RequestParam(required = false) String fechaInicio,
+            @RequestParam(required = false) String fechaFin,
+            @RequestParam(required = false) String pais,
+            @RequestParam(required = false) String region,
+            @RequestParam(required = false) String nombreCiudad,
+            @RequestParam(required = false) String nivelUrgencia,
+            @RequestParam(required = false) Float areaMinima,
+            @RequestParam(required = false) Float areaMaxima) {
+        try {
+            DtoFiltroIncendio filtro = new DtoFiltroIncendio();
+            filtro.setEstado("EXTINGUIDO"); // Filtrar solo incendios extinguidos
+            filtro.setFechaInicio(fechaInicio);
+            filtro.setFechaFin(fechaFin);
+            filtro.setPais(pais);
+            filtro.setRegion(region);
+            filtro.setNombreCiudad(nombreCiudad);
+            filtro.setNivelUrgencia(nivelUrgencia);
+            filtro.setAreaMinima(areaMinima);
+            filtro.setAreaMaxima(areaMaxima);
+
+            byte[] excelData = businessIncendio.exportarAExcel(filtro);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+            headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=incendios_extinguidos.xlsx");
+
+            return new ResponseEntity<>(excelData, headers, HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

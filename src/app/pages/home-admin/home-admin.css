@@ -1,4 +1,46 @@
 /* ============================================ */
+/* ESTILOS PARA EL SIDEBAR RESPONSIVE */
+/* ============================================ */
+
+/* Sidebar principal */
+.sidebar {
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Overlay para móvil */
+@media (max-width: 1023px) {
+  .sidebar {
+    position: fixed;
+    z-index: 50;
+  }
+}
+
+/* Botón de menú hamburguesa */
+.menu-toggle {
+  transition: all 0.2s ease-in-out;
+}
+
+.menu-toggle:hover {
+  transform: scale(1.05);
+}
+
+.menu-toggle:active {
+  transform: scale(0.95);
+}
+
+/* Animaciones para el contenido principal */
+.main-content {
+  transition: margin-left 0.3s ease-in-out;
+}
+
+/* Estados responsive */
+@media (min-width: 1024px) {
+  .sidebar {
+    transform: translateX(0) !important;
+  }
+}
+
+/* ============================================ */
 /* ESTILOS PARA EL MAPA DE INCENDIOS */
 /* ============================================ */
 
@@ -572,6 +614,19 @@
     margin-top: 20px;
     max-width: none;
   }
+
+  /* Ajustes para el sidebar en tablet */
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.translate-x-0 {
+    transform: translateX(0);
+  }
+
+  .sidebar.-translate-x-full {
+    transform: translateX(-100%);
+  }
 }
 
 @media (max-width: 768px) {
@@ -597,5 +652,55 @@
 
   .mapa-botones {
     flex-direction: row;
+  }
+
+  /* Ajustes específicos para móvil */
+  .notification-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    margin-top: 0;
+    border-radius: 0;
+    max-height: 100vh;
+    height: 100vh;
+    z-index: 60;
+  }
+
+  /* Grid responsive para dashboard */
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .dashboard-grid.sm-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Padding ajustado para móvil */
+  .mobile-padding {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Sidebar en móvil pequeño */
+  .sidebar {
+    width: 280px;
+  }
+
+  /* Ajustes de texto para pantallas muy pequeñas */
+  .text-responsive {
+    font-size: 0.875rem;
+  }
+
+  .title-responsive {
+    font-size: 1.25rem;
+  }
+
+  /* Botones más pequeños en móvil */
+  .btn-mobile {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
   }
 }

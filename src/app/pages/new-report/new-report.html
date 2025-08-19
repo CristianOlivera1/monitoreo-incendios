@@ -13,7 +13,7 @@
           <svg class="w-6 h-6" viewBox="0 0 128 128">
             <use xlink:href="assets/sprite.svg#firecolor"></use>
           </svg>
-           {{ 'newReport.title' | translate }}
+          {{ 'newReport.title' | translate }}
         </h2>
         <p class="text-sm">{{ 'newReport.subtitle' | translate }}</p>
       </div>
@@ -23,9 +23,11 @@
         <div *ngIf="showSuccess" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
           <span class="block sm:inline">¡Reporte enviado exitosamente! Las autoridades han sido notificadas.</span>
           <span class="absolute top-0 bottom-0 right-0 px-4 py-3" (click)="closeSuccess()">
-            <svg class="fill-current h-6 w-6 text-green-500 cursor-pointer" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+            <svg class="fill-current h-6 w-6 text-green-500 cursor-pointer" role="button"
+              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
               <title>Cerrar</title>
-              <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/>
+              <path
+                d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
             </svg>
           </span>
         </div>
@@ -33,9 +35,11 @@
         <div *ngIf="showError" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
           <span class="block sm:inline">{{errorMessage}}</span>
           <span class="absolute top-0 bottom-0 right-0 px-4 py-3" (click)="closeError()">
-            <svg class="fill-current h-6 w-6 text-red-500 cursor-pointer" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+            <svg class="fill-current h-6 w-6 text-red-500 cursor-pointer" role="button"
+              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
               <title>Cerrar</title>
-              <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/>
+              <path
+                d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
             </svg>
           </span>
         </div>
@@ -43,7 +47,8 @@
         <!-- Tipo de vegetación y fuente de incendio -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{{ 'newReport.form.labels.vegetationType' | translate }} *</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ 'newReport.form.labels.vegetationType' |
+              translate }} *</label>
             <select formControlName="tipoVegetacion"
               class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               [class.border-red-500]="isFieldInvalid('tipoVegetacion')">
@@ -60,7 +65,8 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{{ 'newReport.form.labels.fireSource' | translate }} *</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ 'newReport.form.labels.fireSource' |
+              translate }} *</label>
             <select formControlName="fuenteIncendio"
               class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               [class.border-red-500]="isFieldInvalid('fuenteIncendio')">
@@ -77,8 +83,10 @@
 
         <!-- Área estimada afectada -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">{{ 'newReport.form.labels.affectedArea' | translate }} *</label>
-          <input type="number" formControlName="areaAfectada" step="0.1" min="0.1" [placeholder]="'newReport.form.labels.areaPlaceholder' | translate"
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{ 'newReport.form.labels.affectedArea' |
+            translate }} *</label>
+          <input type="number" formControlName="areaAfectada" step="0.1" min="0.1"
+            [placeholder]="'newReport.form.labels.areaPlaceholder' | translate"
             class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
             [class.border-red-500]="isFieldInvalid('areaAfectada')" />
           <div *ngIf="isFieldInvalid('areaAfectada')" class="text-red-500 text-xs mt-1">
@@ -89,7 +97,8 @@
 
         <!-- Descripción -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">{{ 'newReport.form.labels.description' | translate }}</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{ 'newReport.form.labels.description' | translate
+            }}</label>
           <textarea rows="4" formControlName="descripcion"
             [placeholder]="'newReport.form.labels.descriptionPlaceholder' | translate"
             class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
@@ -99,20 +108,76 @@
           </div>
         </div>
 
-      <!-- Fotos y vídeos -->
+        <!-- Fotos y vídeos -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">{{ 'newReport.form.labels.mediaFiles' | translate }}</label>
+          <label class="block text-sm font-medium text-gray-700 mb-2">{{ 'newReport.form.labels.mediaFiles' | translate
+            }}</label>
 
           <!-- Área de carga -->
-          <div (click)="fileInput.click()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)"
-            [class.border-blue-500]="isDragOver" [class.bg-blue-50]="isDragOver"
+          <div (click)="fileInput.click()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+            (drop)="onDrop($event)" [class.border-blue-500]="isDragOver" [class.bg-blue-50]="isDragOver"
             class="border-2 border-dashed border-gray-300 rounded-md py-10 flex flex-col items-center justify-center text-center text-sm text-gray-500 cursor-pointer hover:border-gray-400 transition-colors">
-            <div class="text-2xl">⬆️</div>
+            <div class="text-2xl"><svg class="size-32" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24">
+                <mask id="SVGumqnbTTu">
+                  <g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                    <path stroke-dasharray="64" stroke-dashoffset="64"
+                      d="M7 19h11c2.21 0 4 -1.79 4 -4c0 -2.21 -1.79 -4 -4 -4h-1v-1c0 -2.76 -2.24 -5 -5 -5c-2.42 0 -4.44 1.72 -4.9 4h-0.1c-2.76 0 -5 2.24 -5 5c0 2.76 2.24 5 5 5Z">
+                      <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="64;0" />
+                      <set fill="freeze" attributeName="opacity" begin="0.7s" to="0" />
+                    </path>
+                    <g fill="#fff" stroke="none" opacity="0">
+                      <circle cx="12" cy="10" r="6">
+                        <animate attributeName="cx" begin="0.7s" dur="30s" repeatCount="indefinite"
+                          values="12;11;12;13;12" />
+                      </circle>
+                      <rect width="9" height="8" x="8" y="12" />
+                      <rect width="15" height="12" x="1" y="8" rx="6">
+                        <animate attributeName="x" begin="0.7s" dur="21s" repeatCount="indefinite" values="1;0;1;2;1" />
+                      </rect>
+                      <rect width="13" height="10" x="10" y="10" rx="5">
+                        <animate attributeName="x" begin="0.7s" dur="17s" repeatCount="indefinite"
+                          values="10;9;10;11;10" />
+                      </rect>
+                      <set fill="freeze" attributeName="opacity" begin="0.7s" to="1" />
+                    </g>
+                    <g fill="#000" fill-opacity="0" stroke="none">
+                      <circle cx="12" cy="10" r="4">
+                        <animate attributeName="cx" begin="0.7s" dur="30s" repeatCount="indefinite"
+                          values="12;11;12;13;12" />
+                      </circle>
+                      <rect width="9" height="6" x="8" y="12" />
+                      <rect width="11" height="8" x="3" y="10" rx="4">
+                        <animate attributeName="x" begin="0.7s" dur="21s" repeatCount="indefinite" values="3;2;3;4;3" />
+                      </rect>
+                      <rect width="9" height="6" x="12" y="12" rx="3">
+                        <animate attributeName="x" begin="0.7s" dur="17s" repeatCount="indefinite"
+                          values="12;11;12;13;12" />
+                      </rect>
+                      <set fill="freeze" attributeName="fill-opacity" begin="0.7s" to="1" />
+                      <animate fill="freeze" attributeName="opacity" begin="0.7s" dur="0.5s" values="1;0" />
+                    </g>
+                    <g fill="#000" stroke="none">
+                      <path d="M10 17h4v0h-4z">
+                        <animate fill="freeze" attributeName="d" begin="1.3s" dur="0.2s"
+                          values="M10 17h4v0h-4z;M10 17h4v-5h-4z" />
+                      </path>
+                      <path d="M7 13h10l-5 0z">
+                        <animate fill="freeze" attributeName="d" begin="1.5s" dur="0.1s"
+                          values="M7 13h10l-5 0z;M7 13h10l-5 -5z" />
+                        <animateMotion begin="1.6s" calcMode="linear" dur="1.5s" keyPoints="0;0.25;0.5;0.75;1"
+                          keyTimes="0;0.1;0.5;0.8;1" path="M0 0v-1v2z" repeatCount="indefinite" />
+                      </path>
+                    </g>
+                  </g>
+                </mask>
+                <rect width="24" height="24" fill="#0aa5ff" mask="url(#SVGumqnbTTu)" />
+              </svg></div>
             <p class="mt-2">{{ 'newReport.form.labels.uploadText' | translate }}</p>
             <p class="text-xs text-gray-400">{{ 'newReport.form.labels.uploadInfo' | translate }}</p>
           </div>
 
-          <input #fileInput type="file" multiple accept="image/*,video/*" (change)="onFileSelected($event)" class="hidden" />
+          <input #fileInput type="file" multiple accept="image/*,video/*" (change)="onFileSelected($event)"
+            class="hidden" />
 
           <!-- Vista previa de archivos -->
           <div *ngIf="selectedFiles.length > 0" class="mt-4 grid grid-cols-2 md:grid-cols-3 gap-2">
@@ -120,7 +185,8 @@
               <!-- Preview for images -->
               <div *ngIf="isImageFile(file)" class="relative">
                 <img [src]="getFilePreview(i)" [alt]="file.name" class="w-full h-24 object-cover">
-                <button (click)="removeFile(i)" type="button" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
+                <button (click)="removeFile(i)" type="button"
+                  class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
                   ×
                 </button>
               </div>
@@ -131,7 +197,8 @@
                   <div class="text-2xl">🎥</div>
                   <div class="text-xs text-gray-600 truncate px-1">{{file.name}}</div>
                 </div>
-                <button (click)="removeFile(i)" type="button" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
+                <button (click)="removeFile(i)" type="button"
+                  class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
                   ×
                 </button>
               </div>
@@ -143,10 +210,13 @@
         <div>
           <button type="submit" [disabled]="isSubmitting || reportForm.invalid"
             class="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold py-3 rounded hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
-            <div *ngIf="isSubmitting" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
+            <div *ngIf="isSubmitting"
+              class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
             <span *ngIf="!isSubmitting">{{ 'newReport.form.labels.submitButton' | translate }}</span>
-            <span *ngIf="isSubmitting && selectedFiles.length > 0">{{ 'newReport.form.labels.submittingFiles' | translate }}</span>
-            <span *ngIf="isSubmitting && selectedFiles.length === 0">{{ 'newReport.form.labels.submittingReport' | translate }}</span>
+            <span *ngIf="isSubmitting && selectedFiles.length > 0">{{ 'newReport.form.labels.submittingFiles' |
+              translate }}</span>
+            <span *ngIf="isSubmitting && selectedFiles.length === 0">{{ 'newReport.form.labels.submittingReport' |
+              translate }}</span>
           </button>
 
           <!-- Información adicional sobre archivos grandes -->
@@ -161,7 +231,9 @@
 
     <div class="bg-white rounded-xl p-6 shadow-lg flex flex-col gap-6">
       <div>
-        <h3 class="text-xl font-bold flex items-center gap-2"><svg class="w-6 h-6" viewBox="0 0 24 24"><use xlink:href="/assets/sprite.svg#gps" /></svg> {{ 'newReport.location.title' | translate }}</h3>
+        <h3 class="text-xl font-bold flex items-center gap-2"><svg class="w-6 h-6" viewBox="0 0 24 24">
+            <use xlink:href="/assets/sprite.svg#gps" />
+          </svg> {{ 'newReport.location.title' | translate }}</h3>
         <!-- Estado de carga de ubicación -->
         <div *ngIf="isGettingLocation" class="text-sm text-blue-600 flex items-center gap-2 mt-2">
           <div class="animate-spin h-4 w-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
@@ -187,11 +259,14 @@
         <!-- Información de ubicación -->
         <p class="text-green-600 font-medium mt-2"
           *ngIf="selectedLocation.isAutomatic && !isGettingLocation && !locationError && !selectedLocation.cityName">
-          {{ 'newReport.location.status.acquired' | translate }}: Lat: {{selectedLocation.latitude}} – Long: {{selectedLocation.longitude}}
+          {{ 'newReport.location.status.acquired' | translate }}: Lat: {{selectedLocation.latitude}} – Long:
+          {{selectedLocation.longitude}}
         </p>
 
         <div class="text-green-600 font-medium mt-2" *ngIf="selectedLocation.cityName && !isGettingLocation">
-          <p class="font-semibold"> <svg class="w-4 h-4 inline-block mr-1" viewBox="0 0 24 24"><use xlink:href="/assets/sprite.svg#ubication" /></svg> {{selectedLocation.cityName}}</p>
+          <p class="font-semibold"> <svg class="w-4 h-4 inline-block mr-1" viewBox="0 0 24 24">
+              <use xlink:href="/assets/sprite.svg#ubication" />
+            </svg> {{selectedLocation.cityName}}</p>
           <p class="text-sm">{{selectedLocation.country}}
             <span *ngIf="selectedLocation.region"> • {{selectedLocation.region}}</span>
             <span *ngIf="selectedLocation.population > 0"> • {{selectedLocation.population | number}} hab.</span>
@@ -199,20 +274,22 @@
           <p class="text-xs text-gray-600">Lat: {{selectedLocation.latitude}} – Long: {{selectedLocation.longitude}}</p>
         </div>
 
-        <p class="text-green-600 font-medium mt-2" *ngIf="!selectedLocation.isAutomatic && !selectedLocation.cityName && !isGettingLocation">
-          {{ 'newReport.location.status.manualCoords' | translate }}: Lat: {{selectedLocation.latitude}} – Long: {{selectedLocation.longitude}}
+        <p class="text-green-600 font-medium mt-2"
+          *ngIf="!selectedLocation.isAutomatic && !selectedLocation.cityName && !isGettingLocation">
+          {{ 'newReport.location.status.manualCoords' | translate }}: Lat: {{selectedLocation.latitude}} – Long:
+          {{selectedLocation.longitude}}
         </p>
       </div>
       <button (click)="openModal()"
         class="w-full border border-blue-500 text-blue-600 font-medium rounded py-2 hover:bg-blue-50 transition flex items-center justify-center gap-2">
-          <svg width="24" height="24" viewBox="0 0 24 24">
+        <svg width="24" height="24" viewBox="0 0 24 24">
           <use xlink:href="/assets/sprite.svg#search" />
         </svg>
         {{ 'newReport.location.buttons.searchCity' | translate }}
       </button>
       <button (click)="retryLocation()"
         class="w-full border border-green-500 text-green-600 font-medium rounded py-2 hover:bg-green-50 transition flex items-center justify-center gap-2">
-      <svg class="size-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <svg class="size-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
           <use xlink:href="/assets/sprite.svg#reload" />
         </svg>
         {{ 'newReport.location.buttons.getLocation' | translate }}
@@ -232,8 +309,7 @@
 
     <div class="relative bg-white rounded-md border shadow-md w-80 p-0 z-50 max-h-96 flex flex-col modal-content">
       <div class="flex items-center border-b px-3">
-        <svg width="24" height="24" viewBox="0 0 24 24"
-          class="mr-2 h-4 w-4 shrink-0 opacity-50">
+        <svg width="24" height="24" viewBox="0 0 24 24" class="mr-2 h-4 w-4 shrink-0 opacity-50">
           <use xlink:href="/assets/sprite.svg#search" />
         </svg>
         <input [(ngModel)]="searchTerm" (input)="onSearchInput()" (keydown)="onKeydown($event)"
@@ -257,8 +333,7 @@
               </div>
             </div>
 
-            <div *ngIf="!isLoading && cities.length === 0"
-              class="px-3 py-2 text-sm text-gray-500">
+            <div *ngIf="!isLoading && cities.length === 0" class="px-3 py-2 text-sm text-gray-500">
               {{ 'newReport.citySearch.noResults' | translate }}
             </div>
 
@@ -276,13 +351,14 @@
 
           <!-- Ciudades cercanas cuando no hay búsqueda -->
           <ng-container *ngIf="searchTerm.length < 2">
-            <div class="px-2 py-1.5 text-xs font-medium text-gray-600" *ngIf="nearbyCities.length > 0 || isLoadingNearby">
+            <div class="px-2 py-1.5 text-xs font-medium text-gray-600"
+              *ngIf="nearbyCities.length > 0 || isLoadingNearby">
               <div class="flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
                 {{ 'newReport.citySearch.nearbyTitle' | translate }}
               </div>
@@ -300,9 +376,9 @@
               <div class="text-center">
                 <svg class="w-8 h-8 mx-auto text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
                 {{ 'newReport.citySearch.noNearbyResults' | translate }}
               </div>
@@ -313,9 +389,9 @@
               <div class="flex items-center gap-2">
                 <svg class="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
                 <div class="flex-1">
                   <div class="font-medium">{{city.name}}</div>
@@ -328,13 +404,14 @@
               </div>
             </div>
 
-            <div *ngIf="!isLoadingNearby && !selectedLocation.latitude" class="px-3 py-2 text-sm text-gray-500 text-center">
+            <div *ngIf="!isLoadingNearby && !selectedLocation.latitude"
+              class="px-3 py-2 text-sm text-gray-500 text-center">
               <div class="py-4">
                 <svg class="w-8 h-8 mx-auto text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
                 <p class="text-sm">{{ 'newReport.citySearch.allowLocation' | translate }}</p>
                 <p class="text-xs mt-1">{{ 'newReport.citySearch.searchInstruction' | translate }}</p>

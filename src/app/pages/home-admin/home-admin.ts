@@ -69,6 +69,10 @@ export class HomeAdmin implements OnInit, OnDestroy {
   showPopover: boolean = false;
   @ViewChild('popoverMenu') popoverMenu!: ElementRef;
 
+  // Estado del menú responsive
+  menuAbierto: boolean = false;
+  esPantallaPequena: boolean = false;
+
   // Estados de la aplicación
   vistaActual: 'dashboard' | 'mapa' | 'incendios' | 'reportes' | 'historial' | 'estadisticas' | 'notificaciones' = 'dashboard';
   cargando: boolean = false;
@@ -145,6 +149,7 @@ export class HomeAdmin implements OnInit, OnDestroy {
   // Estados de modales
   mostrarModalActualizacion: boolean = false;
   mostrarModalExportacion: boolean = false;
+  mostrarModalExportacionExtinguido: boolean = false;
   mostrarModalArchivo: boolean = false;
   mostrarModalAlertaGeneral: boolean = false;
   procesandoActualizacion: boolean = false;
@@ -193,11 +198,21 @@ export class HomeAdmin implements OnInit, OnDestroy {
         this.fechaActual = new Date();
       }, 60000);
 
+      // Verificar tamaño de pantalla inicial
+      this.verificarTamanoPantalla();
+
+      // Listener para cambios de tamaño de ventana
+      window.addEventListener('resize', () => {
+        this.verificarTamanoPantalla();
+      });
+
       // Listener para cerrar panel de notificaciones al hacer clic fuera
       document.addEventListener('click', (event) => {
         const target = event.target as HTMLElement;
         const notificationPanel = document.querySelector('.notification-panel');
         const notificationButton = document.querySelector('.notification-button');
+        const sidebar = document.querySelector('.sidebar');
+        const menuButton = document.querySelector('.menu-toggle');
 
         if (this.mostrarPanelNotificaciones &&
           notificationPanel &&
@@ -205,6 +220,15 @@ export class HomeAdmin implements OnInit, OnDestroy {
           notificationButton &&
           !notificationButton.contains(target)) {
           this.mostrarPanelNotificaciones = false;
+        }
+
+        // Cerrar menú en dispositivos móviles cuando se hace clic fuera
+        if (this.esPantallaPequena && this.menuAbierto &&
+          sidebar &&
+          !sidebar.contains(target) &&
+          menuButton &&
+          !menuButton.contains(target)) {
+          this.cerrarMenu();
         }
       });
     }
@@ -275,6 +299,11 @@ export class HomeAdmin implements OnInit, OnDestroy {
     const vistaAnterior = this.vistaActual;
     this.vistaActual = vista;
     this.error = '';
+
+    // Cerrar menú en dispositivos móviles al cambiar vista
+    if (this.esPantallaPequena) {
+      this.cerrarMenu();
+    }
 
     // Limpiar el mapa si cambiamos desde la vista de mapa a otra vista
     if (vistaAnterior === 'mapa' && vista !== 'mapa') {
@@ -600,6 +629,14 @@ export class HomeAdmin implements OnInit, OnDestroy {
     this.mostrarModalExportacion = false;
   }
 
+  abrirModalExportacionExtinguido(): void {
+    this.mostrarModalExportacionExtinguido = true;
+  }
+
+  cerrarModalExportacionExtinguido(): void {
+    this.mostrarModalExportacionExtinguido = false;
+  }
+
   // ========== FUNCIONES DE EXPORTACIÓN ==========
   exportarDatos(formato: 'json' | 'csv' | 'excel'): void {
     this.cargando = true;
@@ -653,6 +690,68 @@ export class HomeAdmin implements OnInit, OnDestroy {
           error: (error) => {
             this.cargando = false;
             this.error = 'Error al exportar datos en formato Excel';
+            console.error('Error:', error);
+          }
+        });
+        break;
+    }
+  }
+
+  exportarExtinguidos(formato: 'json' | 'csv' | 'excel'): void {
+    this.cargando = true;
+    const filtros = this.filtroForm.value;
+
+    // Limpiar filtros vacíos
+    Object.keys(filtros).forEach(key => {
+      if (filtros[key] === '' || filtros[key] === null || filtros[key] === undefined) {
+        delete filtros[key];
+      }
+    });
+
+    // Forzar estado EXTINGUIDO
+    filtros.estado = 'EXTINGUIDO';
+
+    switch (formato) {
+      case 'json':
+        this.incendioService.exportarExtinguidosJSON(filtros).subscribe({
+          next: (data) => {
+            this.descargarArchivo(data, 'incendios_extinguidos.json', 'application/json');
+            this.cargando = false;
+            this.cerrarModalExportacionExtinguido();
+          },
+          error: (error) => {
+            this.cargando = false;
+            this.error = 'Error al exportar datos extinguidos en formato JSON';
+            console.error('Error:', error);
+          }
+        });
+        break;
+
+      case 'csv':
+        this.incendioService.exportarExtinguidosCSV(filtros).subscribe({
+          next: (data) => {
+            this.descargarArchivo(data, 'incendios_extinguidos.csv', 'text/csv');
+            this.cargando = false;
+            this.cerrarModalExportacionExtinguido();
+          },
+          error: (error) => {
+            this.cargando = false;
+            this.error = 'Error al exportar datos extinguidos en formato CSV';
+            console.error('Error:', error);
+          }
+        });
+        break;
+
+      case 'excel':
+        this.incendioService.exportarExtinguidosExcel(filtros).subscribe({
+          next: (blob) => {
+            this.descargarBlob(blob, 'incendios_extinguidos.xlsx');
+            this.cargando = false;
+            this.cerrarModalExportacionExtinguido();
+          },
+          error: (error) => {
+            this.cargando = false;
+            this.error = 'Error al exportar datos extinguidos en formato Excel';
             console.error('Error:', error);
           }
         });
@@ -1583,6 +1682,46 @@ export class HomeAdmin implements OnInit, OnDestroy {
 
   cerrarInfoPanel(): void {
     this.incendioSeleccionado = null;
+  }
+
+  // ===== MÉTODOS PARA MENÚ RESPONSIVE =====
+
+  /**
+   * Verifica el tamaño de la pantalla para determinar si es móvil
+   */
+  verificarTamanoPantalla(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.esPantallaPequena = window.innerWidth < 1024; // lg breakpoint
+
+      // Si la pantalla se hace grande, asegurar que el menú esté abierto
+      if (!this.esPantallaPequena) {
+        this.menuAbierto = true;
+      } else {
+        // En pantallas pequeñas, cerrar menú por defecto
+        this.menuAbierto = false;
+      }
+    }
+  }
+
+  /**
+   * Alterna la visibilidad del menú en dispositivos móviles
+   */
+  toggleMenu(): void {
+    this.menuAbierto = !this.menuAbierto;
+  }
+
+  /**
+   * Abre el menú
+   */
+  abrirMenu(): void {
+    this.menuAbierto = true;
+  }
+
+  /**
+   * Cierra el menú
+   */
+  cerrarMenu(): void {
+    this.menuAbierto = false;
   }
 
 }
