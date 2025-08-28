@@ -1,4 +1,5 @@
 # Sistema de Monitoreo de Incendios Backend y Frontend
+<img width="1148" height="860" alt="screenshot_1x_postspark_2025-08-28_18-18-51 (1)" src="https://github.com/user-attachments/assets/b43987d0-7315-4655-9b1c-62846ef8ddc7" />
 
 ## Descripción
 Este sistema permite a los usuarios reportar incendios forestales y a los administradores gestionar y monitorear estos reportes. Incluye funcionalidades de notificaciones, exportación de datos y seguimiento del estado de los incendios.
