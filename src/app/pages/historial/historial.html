@@ -46,44 +46,23 @@
               </option>
             </select>
           </div>
-
-          <div class="form-group">
-            <label for="fechaInicio">Fecha Inicio</label>
-            <input type="date" formControlName="fechaInicio" id="fechaInicio" class="form-control">
-          </div>
-
-          <div class="form-group">
-            <label for="fechaFin">Fecha Fin</label>
-            <input type="date" formControlName="fechaFin" id="fechaFin" class="form-control">
-          </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label for="nombreCiudad">Ciudad</label>
-            <input type="text" formControlName="nombreCiudad" id="nombreCiudad"
-                   class="form-control" placeholder="Nombre de la ciudad">
+            <input type="text" formControlName="nombreCiudad" id="nombreCiudad" class="form-control"
+              placeholder="Nombre de la ciudad">
           </div>
 
-          <div class="form-group">
-            <label for="areaMinima">Área Mínima (hectáreas)</label>
-            <input type="number" formControlName="areaMinima" id="areaMinima"
-                   class="form-control" placeholder="0" min="0">
-          </div>
-
-          <div class="form-group">
-            <label for="areaMaxima">Área Máxima (hectáreas)</label>
-            <input type="number" formControlName="areaMaxima" id="areaMaxima"
-                   class="form-control" placeholder="1000" min="0">
-          </div>
         </div>
 
         <div class="form-actions">
           <button type="button" class="btn btn-primary" (click)="aplicarFiltros()">
-            <i class="icon-search"></i> Aplicar Filtros
+            Aplicar Filtros
           </button>
           <button type="button" class="btn btn-secondary" (click)="limpiarFiltros()">
-            <i class="icon-refresh"></i> Limpiar
+            Limpiar
           </button>
         </div>
       </form>
@@ -132,17 +111,25 @@
 
         <div class="card-actions">
           <button class="btn btn-info btn-sm" (click)="verDetalle(incendio)">
-            <i class="icon-eye"></i> Ver Detalle
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M9.75 12a2.25 2.25 0 1 1 4.5 0a2.25 2.25 0 0 1-4.5 0" />
+              <path fill="currentColor" fill-rule="evenodd"
+                d="M2 12c0 1.64.425 2.191 1.275 3.296C4.972 17.5 7.818 20 12 20s7.028-2.5 8.725-4.704C21.575 14.192 22 13.639 22 12c0-1.64-.425-2.191-1.275-3.296C19.028 6.5 16.182 4 12 4S4.972 6.5 3.275 8.704C2.425 9.81 2 10.361 2 12m10-3.75a3.75 3.75 0 1 0 0 7.5a3.75 3.75 0 0 0 0-7.5"
+                clip-rule="evenodd" />
+            </svg>
           </button>
-          <button *ngIf="puedeEditar(incendio)"
-                  class="btn btn-warning btn-sm"
-                  (click)="iniciarEdicion(incendio)">
-            <i class="icon-edit"></i> Editar
+          <button *ngIf="puedeEditar(incendio)" class="btn btn-warning btn-sm" (click)="iniciarEdicion(incendio)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 28 28">
+              <path fill="currentColor"
+                d="M19.289 3.15a3.932 3.932 0 1 1 5.56 5.56l-1.54 1.54l-5.56-5.56zm-2.6 2.6L4.502 17.937c-.44.44-.76.986-.928 1.586l-1.547 5.525a.75.75 0 0 0 .924.924l5.524-1.547a3.6 3.6 0 0 0 1.587-.928L22.25 11.311z" />
+            </svg>
           </button>
-          <button *ngIf="puedeEliminar(incendio)"
-                  class="btn btn-danger btn-sm"
-                  (click)="confirmarEliminacion(incendio)">
-            <i class="icon-delete"></i> Eliminar
+          <button *ngIf="puedeEliminar(incendio)" class="btn btn-danger btn-sm"
+            (click)="confirmarEliminacion(incendio)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+              <path fill="currentColor"
+                d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z" />
+            </svg>
           </button>
         </div>
       </div>
@@ -157,9 +144,7 @@
 
     <!-- Paginación -->
     <div *ngIf="totalPaginas > 1" class="paginacion">
-      <button class="btn btn-secondary"
-              [disabled]="paginaActual === 0"
-              (click)="paginaAnterior()">
+      <button class="btn btn-secondary" [disabled]="paginaActual === 0" (click)="paginaAnterior()">
         <i class="icon-arrow-left"></i> Anterior
       </button>
 
@@ -167,9 +152,7 @@
         Página {{ paginaActual + 1 }} de {{ totalPaginas }}
       </span>
 
-      <button class="btn btn-secondary"
-              [disabled]="paginaActual >= totalPaginas - 1"
-              (click)="paginaSiguiente()">
+      <button class="btn btn-secondary" [disabled]="paginaActual >= totalPaginas - 1" (click)="paginaSiguiente()">
         Siguiente <i class="icon-arrow-right"></i>
       </button>
     </div>
@@ -179,7 +162,10 @@
   <div *ngIf="modoVista === 'detalle' && incendioSeleccionado" class="detalle-view">
     <div class="detalle-header">
       <button class="btn btn-secondary" (click)="volverALista()">
-        <i class="icon-arrow-left"></i> Volver a la lista
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M5 12h14M5 12l6 6m-6-6l6-6" />
+        </svg> Volver a la lista
       </button>
       <h2>Detalle del Reporte</h2>
     </div>
@@ -258,7 +244,8 @@
         </div>
 
         <!-- Archivos -->
-        <div class="info-section" *ngIf="incendioSeleccionado.archivosSubidos && incendioSeleccionado.archivosSubidos.length > 0">
+        <div class="info-section"
+          *ngIf="incendioSeleccionado.archivosSubidos && incendioSeleccionado.archivosSubidos.length > 0">
           <h3>Archivos Adjuntos</h3>
           <div class="archivos-grid">
             <div *ngFor="let archivo of incendioSeleccionado.archivosSubidos" class="archivo-item">
@@ -271,12 +258,19 @@
               </div>
               <div class="archivo-actions">
                 <a [href]="archivo.urlArchivo" target="_blank" class="btn btn-sm btn-info">
-                  <i class="icon-download"></i> Ver
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M9.75 12a2.25 2.25 0 1 1 4.5 0a2.25 2.25 0 0 1-4.5 0" />
+                    <path fill="currentColor" fill-rule="evenodd"
+                      d="M2 12c0 1.64.425 2.191 1.275 3.296C4.972 17.5 7.818 20 12 20s7.028-2.5 8.725-4.704C21.575 14.192 22 13.639 22 12c0-1.64-.425-2.191-1.275-3.296C19.028 6.5 16.182 4 12 4S4.972 6.5 3.275 8.704C2.425 9.81 2 10.361 2 12m10-3.75a3.75 3.75 0 1 0 0 7.5a3.75 3.75 0 0 0 0-7.5"
+                      clip-rule="evenodd" />
+                  </svg> Ver
                 </a>
-                <button *ngIf="puedeEditar(incendioSeleccionado)"
-                        class="btn btn-sm btn-danger"
-                        (click)="eliminarArchivo(archivo.idArchivo)">
-                  <i class="icon-delete"></i>
+                <button *ngIf="puedeEditar(incendioSeleccionado)" class="btn btn-sm btn-danger"
+                  (click)="eliminarArchivo(archivo.idArchivo)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="currentColor"
+                      d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z" />
+                  </svg> Eliminar
                 </button>
               </div>
             </div>
@@ -284,7 +278,8 @@
         </div>
 
         <!-- Comentarios -->
-        <div class="info-section" *ngIf="incendioSeleccionado.comentarios && incendioSeleccionado.comentarios.length > 0">
+        <div class="info-section"
+          *ngIf="incendioSeleccionado.comentarios && incendioSeleccionado.comentarios.length > 0">
           <h3>Comentarios y Acciones</h3>
           <div class="comentarios-list">
             <div *ngFor="let comentario of incendioSeleccionado.comentarios" class="comentario-item">
@@ -302,15 +297,19 @@
       </div>
 
       <div class="detalle-actions">
-        <button *ngIf="puedeEditar(incendioSeleccionado)"
-                class="btn btn-warning"
-                (click)="iniciarEdicion(incendioSeleccionado)">
-          <i class="icon-edit"></i> Editar Reporte
+        <button *ngIf="puedeEditar(incendioSeleccionado)" class="btn btn-warning"
+          (click)="iniciarEdicion(incendioSeleccionado)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 28 28">
+            <path fill="currentColor"
+              d="M19.289 3.15a3.932 3.932 0 1 1 5.56 5.56l-1.54 1.54l-5.56-5.56zm-2.6 2.6L4.502 17.937c-.44.44-.76.986-.928 1.586l-1.547 5.525a.75.75 0 0 0 .924.924l5.524-1.547a3.6 3.6 0 0 0 1.587-.928L22.25 11.311z" />
+          </svg> Editar Reporte
         </button>
-        <button *ngIf="puedeEliminar(incendioSeleccionado)"
-                class="btn btn-danger"
-                (click)="confirmarEliminacion(incendioSeleccionado)">
-          <i class="icon-delete"></i> Eliminar Reporte
+        <button *ngIf="puedeEliminar(incendioSeleccionado)" class="btn btn-danger"
+          (click)="confirmarEliminacion(incendioSeleccionado)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path fill="currentColor"
+              d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z" />
+          </svg> Eliminar Reporte
         </button>
       </div>
     </div>
@@ -320,7 +319,10 @@
   <div *ngIf="modoVista === 'editar' && editandoIncendio" class="editar-view">
     <div class="editar-header">
       <button class="btn btn-secondary" (click)="cancelarEdicion()">
-        <i class="icon-arrow-left"></i> Cancelar
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M5 12h14M5 12l6 6m-6-6l6-6" />
+        </svg> Cancelar
       </button>
       <h2>Editar Reporte</h2>
     </div>
@@ -347,8 +349,8 @@
 
           <div class="form-group">
             <label for="areaAfectada">Área Afectada (hectáreas) *</label>
-            <input type="number" formControlName="areaAfectada" id="areaAfectada"
-                   class="form-control" required min="0" step="0.1">
+            <input type="number" formControlName="areaAfectada" id="areaAfectada" class="form-control" required min="0"
+              step="0.1">
           </div>
         </div>
       </div>
@@ -358,14 +360,12 @@
         <div class="form-row">
           <div class="form-group">
             <label for="nombreCiudad">Ciudad *</label>
-            <input type="text" formControlName="nombreCiudad" id="nombreCiudad"
-                   class="form-control" required>
+            <input type="text" formControlName="nombreCiudad" id="nombreCiudad" class="form-control" required>
           </div>
 
           <div class="form-group">
             <label for="pais">País *</label>
-            <input type="text" formControlName="pais" id="pais"
-                   class="form-control" required>
+            <input type="text" formControlName="pais" id="pais" class="form-control" required>
           </div>
 
           <div class="form-group">
@@ -375,22 +375,19 @@
 
           <div class="form-group">
             <label for="poblacion">Población</label>
-            <input type="number" formControlName="poblacion" id="poblacion"
-                   class="form-control" min="0">
+            <input type="number" formControlName="poblacion" id="poblacion" class="form-control" min="0">
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label for="latitud">Latitud *</label>
-            <input type="number" formControlName="latitud" id="latitud"
-                   class="form-control" required step="any">
+            <input type="number" formControlName="latitud" id="latitud" class="form-control" required step="any">
           </div>
 
           <div class="form-group">
             <label for="longitud">Longitud *</label>
-            <input type="number" formControlName="longitud" id="longitud"
-                   class="form-control" required step="any">
+            <input type="number" formControlName="longitud" id="longitud" class="form-control" required step="any">
           </div>
         </div>
       </div>
@@ -399,18 +396,23 @@
         <h3>Descripción</h3>
         <div class="form-group">
           <label for="descripcion">Descripción del Incendio *</label>
-          <textarea formControlName="descripcion" id="descripcion"
-                    class="form-control" rows="4" required
-                    placeholder="Describe los detalles del incendio..."></textarea>
+          <textarea formControlName="descripcion" id="descripcion" class="form-control" rows="4" required
+            placeholder="Describe los detalles del incendio..."></textarea>
         </div>
       </div>
 
       <div class="form-actions">
         <button type="submit" class="btn btn-primary" [disabled]="editForm.invalid || cargando">
-          <i class="icon-save"></i> Guardar Cambios
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path fill="currentColor"
+              d="M21 7v12q0 .825-.587 1.413T19 21H5q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h12zm-9 11q1.25 0 2.125-.875T15 15t-.875-2.125T12 12t-2.125.875T9 15t.875 2.125T12 18m-6-8h9V6H6z" />
+          </svg> Guardar Cambios
         </button>
         <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()">
-          <i class="icon-cancel"></i> Cancelar
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path fill="currentColor"
+              d="m12 13.4l2.9 2.9q.275.275.7.275t.7-.275t.275-.7t-.275-.7L13.4 12l2.9-2.9q.275-.275.275-.7t-.275-.7t-.7-.275t-.7.275L12 10.6L9.1 7.7q-.275-.275-.7-.275t-.7.275t-.275.7t.275.7l2.9 2.9l-2.9 2.9q-.275.275-.275.7t.275.7t.7.275t.7-.275zm0 8.6q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22" />
+          </svg> Cancelar
         </button>
       </div>
     </form>

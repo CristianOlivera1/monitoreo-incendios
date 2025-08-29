@@ -13,7 +13,7 @@ import com.example.monitoreo_incendios.Entity.TUser;
 public interface RepoUser extends JpaRepository<TUser, String> {
 
    Optional<TUser> findByEmail(String email);
-   
+
    List<TUser> findByRolTipo(TRol.TipoRol tipoRol);
 
 }

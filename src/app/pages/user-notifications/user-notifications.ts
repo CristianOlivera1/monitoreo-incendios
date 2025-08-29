@@ -316,14 +316,4 @@ export class UserNotifications implements OnInit {
   trackByNotificacion(index: number, notificacion: DtoNotificacion): string {
     return notificacion.idNotificacion;
   }
-
-  /**
-   * Navega al detalle del incendio si existe
-   */
-  verIncendioRelacionado(idIncendio: string): void {
-    if (idIncendio) {
-      // Navegar al detalle del incendio
-      this.router.navigate(['/incendio', idIncendio]);
-    }
-  }
 }

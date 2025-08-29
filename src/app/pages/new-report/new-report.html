@@ -8,17 +8,36 @@
 
     <div class="lg:col-span-2 bg-white rounded-xl p-6 shadow-lg">
 
-      <div class="bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-md p-4 mb-6">
-        <h2 class="text-xl font-bold flex items-center gap-2 mb-2">
-          <svg class="w-6 h-6" viewBox="0 0 128 128">
-            <use xlink:href="assets/sprite.svg#firecolor"></use>
-          </svg>
-          {{ 'newReport.title' | translate }}
-        </h2>
-        <p class="text-sm">{{ 'newReport.subtitle' | translate }}</p>
-      </div>
+        <div class="bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-md p-4 mb-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-xl font-bold flex items-center gap-2 mb-2">
+                <svg class="w-6 h-6" viewBox="0 0 128 128">
+                  <use xlink:href="assets/sprite.svg#firecolor"></use>
+                </svg>
+                {{ 'newReport.title' | translate }}
+              </h2>
+              <p class="text-sm">{{ 'newReport.subtitle' | translate }}</p>
+            </div>
 
-      <form [formGroup]="reportForm" (ngSubmit)="onSubmit()" class="space-y-6 pt-3">
+            <!-- Botón para limpiar datos guardados -->
+            <button
+              type="button"
+              (click)="clearAllSavedData()"
+              class="bg-white/10 hover:bg-opacity-30 border border-gray-300 text-white text-xs px-3 py-1.5 rounded-md transition-all duration-200 flex items-center gap-1"
+              title="Limpiar todos los datos guardados">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+	<g fill="none" stroke="currentColor" stroke-width="1">
+		<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m21 3l-8 8.5m-3.554-.415c-2.48.952-4.463.789-6.446.003c.5 6.443 3.504 8.92 7.509 9.912c0 0 3.017-2.134 3.452-7.193c.047-.548.07-.821-.043-1.13c-.114-.309-.338-.53-.785-.973c-.736-.728-1.103-1.092-1.54-1.184c-.437-.09-1.007.128-2.147.565" />
+		<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.5 16.446S7 16.93 9.5 15" />
+		<path stroke-width="1.5" d="M8.5 7.25a1.25 1.25 0 1 1-2.5 0a1.25 1.25 0 0 1 2.5 0Z" />
+		<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4v.1" />
+	</g>
+</svg>
+              Limpiar
+            </button>
+          </div>
+        </div>      <form [formGroup]="reportForm" (ngSubmit)="onSubmit()" class="space-y-6 pt-3">
 
         <div *ngIf="showSuccess" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
           <span class="block sm:inline">¡Reporte enviado exitosamente! Las autoridades han sido notificadas.</span>

@@ -70,9 +70,8 @@ export class Historial implements OnInit {
       fechaInicio: [''],
       fechaFin: [''],
       nombreCiudad: [''],
-      nivelUrgencia: [''],
-      areaMinima: [''],
-      areaMaxima: ['']
+      nivelUrgencia: ['']
+
     });
 
     this.editForm = this.fb.group({

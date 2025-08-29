@@ -1,5 +1,5 @@
-import { Component, inject, ViewChild, ElementRef, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, ViewChild, ElementRef, OnDestroy, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -35,11 +35,16 @@ export class NewReport implements OnDestroy {
   private router = inject(Router);
   private incendioService = inject(IncendioService);
   private tokenService = inject(TokenService);
+  private platformId = inject(PLATFORM_ID);
 
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
   // Form
   reportForm!: FormGroup;
+
+  // Persistence key for localStorage
+  private readonly FORM_STORAGE_KEY = 'new-report-form-data';
+  private readonly LOCATION_STORAGE_KEY = 'new-report-location-data';
 
   // Modal and search
   isModalOpen = false;
@@ -74,9 +79,15 @@ export class NewReport implements OnDestroy {
   showError = false;
   errorMessage = '';
 
+  // Persistencia
+  hasSavedData = false;
+
   constructor() {
     this.initializeForm();
     this.setupSearch();
+    this.loadFormData();
+    this.checkForSavedData();
+    this.setupFormPersistence();
     this.getCurrentLocation();
   }
 
@@ -87,6 +98,160 @@ export class NewReport implements OnDestroy {
       areaAfectada: ['', [Validators.required, Validators.min(0.1)]],
       descripcion: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(1000)]]
     });
+  }
+
+  // Verificar si existen datos guardados
+  private checkForSavedData() {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    const formData = localStorage.getItem(this.FORM_STORAGE_KEY);
+    const locationData = localStorage.getItem(this.LOCATION_STORAGE_KEY);
+
+    this.hasSavedData = !!(formData || locationData);
+  }
+
+  // Configurar persistencia automática del formulario
+  private setupFormPersistence() {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    // Guardar automáticamente cuando cambian los valores del formulario
+    this.reportForm.valueChanges.pipe(
+      debounceTime(500) // Esperar 500ms después del último cambio
+    ).subscribe(formData => {
+      this.saveFormData(formData);
+    });
+  }
+
+  // Guardar datos del formulario en localStorage
+  private saveFormData(formData: any) {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    try {
+      const dataToSave = {
+        formData,
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem(this.FORM_STORAGE_KEY, JSON.stringify(dataToSave));
+      this.hasSavedData = true;
+      console.log('📝 Datos del formulario guardados automáticamente');
+    } catch (error) {
+      console.warn('Error al guardar datos del formulario:', error);
+    }
+  }
+
+  // Cargar datos del formulario desde localStorage
+  private loadFormData() {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    try {
+      const savedData = localStorage.getItem(this.FORM_STORAGE_KEY);
+      if (savedData) {
+        const { formData, timestamp } = JSON.parse(savedData);
+
+        // Verificar que los datos no sean muy antiguos (más de 7 días)
+        const saveDate = new Date(timestamp);
+        const now = new Date();
+        const daysDiff = (now.getTime() - saveDate.getTime()) / (1000 * 3600 * 24);
+
+        if (daysDiff <= 7) {
+          // Restaurar valores del formulario
+          this.reportForm.patchValue(formData, { emitEvent: false });
+          this.hasSavedData = true;
+          console.log('📄 Datos del formulario restaurados desde localStorage');
+        } else {
+          // Limpiar datos antiguos
+          this.clearFormData();
+        }
+      }
+    } catch (error) {
+      console.warn('Error al cargar datos del formulario:', error);
+      this.clearFormData();
+    }
+  }
+
+  // Guardar datos de ubicación
+  private saveLocationData() {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    try {
+      const locationData = {
+        selectedLocation: this.selectedLocation,
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem(this.LOCATION_STORAGE_KEY, JSON.stringify(locationData));
+      console.log('📍 Datos de ubicación guardados');
+    } catch (error) {
+      console.warn('Error al guardar datos de ubicación:', error);
+    }
+  }
+
+  // Cargar datos de ubicación
+  private loadLocationData() {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    try {
+      const savedData = localStorage.getItem(this.LOCATION_STORAGE_KEY);
+      if (savedData) {
+        const { selectedLocation, timestamp } = JSON.parse(savedData);
+
+        // Verificar que los datos no sean muy antiguos (más de 1 día para ubicación)
+        const saveDate = new Date(timestamp);
+        const now = new Date();
+        const hoursDiff = (now.getTime() - saveDate.getTime()) / (1000 * 3600);
+
+        if (hoursDiff <= 24) {
+          this.selectedLocation = selectedLocation;
+          this.hasSavedData = true;
+          console.log('📍 Datos de ubicación restaurados');
+          return true;
+        } else {
+          // Limpiar datos antiguos de ubicación
+          this.clearLocationData();
+        }
+      }
+    } catch (error) {
+      console.warn('Error al cargar datos de ubicación:', error);
+      this.clearLocationData();
+    }
+    return false;
+  }
+
+  // Limpiar datos guardados del formulario
+  private clearFormData() {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    try {
+      localStorage.removeItem(this.FORM_STORAGE_KEY);
+      console.log('🗑️ Datos del formulario eliminados');
+    } catch (error) {
+      console.warn('Error al limpiar datos del formulario:', error);
+    }
+  }
+
+  // Limpiar datos guardados de ubicación
+  private clearLocationData() {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    try {
+      localStorage.removeItem(this.LOCATION_STORAGE_KEY);
+      console.log('🗑️ Datos de ubicación eliminados');
+    } catch (error) {
+      console.warn('Error al limpiar datos de ubicación:', error);
+    }
+  }
+
+  // Método público para limpiar todos los datos guardados
+  clearAllSavedData() {
+    this.clearFormData();
+    this.clearLocationData();
+    this.reportForm.reset();
+    this.selectedFiles = [];
+    this.filePreviewUrls.forEach(url => {
+      if (url) URL.revokeObjectURL(url);
+    });
+    this.filePreviewUrls = [];
+    this.hasSavedData = false;
+    this.getCurrentLocation();
   }
 
   private setupSearch() {
@@ -243,6 +408,9 @@ export class NewReport implements OnDestroy {
     this.selectedLocation.population = city.population || 0;
 
     console.log('Ciudad actualizada con información completa:', this.selectedLocation);
+
+    // Guardar ubicación actualizada
+    this.saveLocationData();
   }
 
   openModal() {
@@ -287,6 +455,9 @@ export class NewReport implements OnDestroy {
 
     // Get complete city information
     this.getCityInfoByName(city.name);
+
+    // Guardar datos de ubicación
+    this.saveLocationData();
   }
 
   // Handle keyboard events
@@ -298,6 +469,12 @@ export class NewReport implements OnDestroy {
 
   // Geolocation methods
   getCurrentLocation() {
+    // Primero intentar cargar ubicación guardada
+    if (this.loadLocationData()) {
+      this.loadNearbyCities();
+      return;
+    }
+
     if (!navigator.geolocation) {
       this.locationError = 'La geolocalización no está soportada por este navegador';
       return;
@@ -325,6 +502,9 @@ export class NewReport implements OnDestroy {
 
         // Recargar ciudades cercanas con la nueva ubicación
         this.loadNearbyCities();
+
+        // Guardar ubicación
+        this.saveLocationData();
       },
       (error) => {
         this.isGettingLocation = false;
@@ -517,6 +697,9 @@ export class NewReport implements OnDestroy {
         this.showSuccessMessage('¡Reporte enviado exitosamente! Las autoridades han sido notificadas.');
         this.resetForm();
 
+        // Limpiar datos guardados después del envío exitoso
+        this.clearAllSavedData();
+
         // Redirect after success
         setTimeout(() => {
           this.router.navigate(['/']);
@@ -535,6 +718,9 @@ export class NewReport implements OnDestroy {
         // Esperar un momento y mostrar mensaje de éxito condicional
         this.showSuccessMessage('El reporte se está procesando. Si los archivos son grandes, puede tomar algunos minutos completar la subida.');
 
+        // Limpiar datos guardados después del envío
+        this.clearAllSavedData();
+
         setTimeout(() => {
           this.resetForm();
           this.router.navigate(['/']);
@@ -544,6 +730,9 @@ export class NewReport implements OnDestroy {
         // Status 201 significa que se creó exitosamente
         this.showSuccessMessage('¡Reporte enviado exitosamente! Las autoridades han sido notificadas.');
         this.resetForm();
+
+        // Limpiar datos guardados después del envío exitoso
+        this.clearAllSavedData();
 
         setTimeout(() => {
           this.router.navigate(['/']);
@@ -634,6 +823,7 @@ export class NewReport implements OnDestroy {
   }
 
   ngOnDestroy() {
+    // Limpiar URLs de archivos
     this.filePreviewUrls.forEach(url => {
       if (url) URL.revokeObjectURL(url);
     });

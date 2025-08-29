@@ -194,7 +194,7 @@
 }
 
 .btn-sm {
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 0.8rem;
   font-size: 0.75rem;
 }
 
@@ -628,19 +628,9 @@
 }
 
 /* Icons (usando caracteres unicode como placeholder) */
-.icon-search::before { content: "🔍"; }
 .icon-refresh::before { content: "🔄"; }
-.icon-eye::before { content: "👁️"; }
-.icon-edit::before { content: "✏️"; }
-.icon-delete::before { content: "🗑️"; }
-.icon-arrow-left::before { content: "←"; }
-.icon-arrow-right::before { content: "→"; }
-.icon-location::before { content: "📍"; }
 .icon-file::before { content: "📄"; }
 .icon-image::before { content: "🖼️"; }
 .icon-video::before { content: "🎥"; }
-.icon-download::before { content: "⬇️"; }
-.icon-save::before { content: "💾"; }
-.icon-cancel::before { content: "❌"; }
 .icon-error::before { content: "⚠️"; }
 .icon-empty::before { content: "📭"; }
